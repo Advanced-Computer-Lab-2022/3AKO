@@ -1,6 +1,8 @@
 require('dotenv').config()
 
 const adminRouter = require('./routes/adminRouter')
+const individualTraineeRouter = require('./routes/individualTraineeRouter')
+
 const express = require('express')
 const mongoose = require('mongoose')
 
@@ -28,3 +30,5 @@ mongoose.connect(process.env.MONGO_URI)
     })
 
 app.use('/admin', adminRouter)    
+app.use('/individualTrainee', individualTraineeRouter)    
+
