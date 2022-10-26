@@ -4,6 +4,7 @@ const adminRouter = require('./routes/adminRouter')
 const courseRouter = require('./routes/courseRouter')
 const individualTraineeRouter = require('./routes/individualTraineeRouter')
 
+const corporateTraineeRouter = require('./routes/corporateTraineeRouter')
 const express = require('express')
 const mongoose = require('mongoose')
 
@@ -30,7 +31,8 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(err)
     })
 
-app.use('/admin', adminRouter)    
+app.use('/admin', adminRouter)
+app.use('/corporateTrainee', corporateTraineeRouter) 
 app.use('/course', courseRouter)    
 app.use('/individualTrainee', individualTraineeRouter)    
 

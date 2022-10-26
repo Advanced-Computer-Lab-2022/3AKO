@@ -163,7 +163,7 @@ const courseSchema = new Schema({
     numOfViews : {
         type : Number,
         required : true,
-        default : 0,
+        default : 0
     }
     
     
