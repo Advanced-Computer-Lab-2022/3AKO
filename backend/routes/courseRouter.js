@@ -4,7 +4,6 @@ const {createCourse,searchForCourses} = require('../controllers/courseController
 
 const router = express.Router()
 
-router.post('/', createCourse)
 
 router.get('/search', searchForCourses)
 

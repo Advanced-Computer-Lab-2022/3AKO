@@ -4,8 +4,9 @@ const courseModel = require('../models/courseModel')
 const instructorModel = require('../models/instructorModel')
 
 const createCourse = async (req, res) => {
-    const instrucrtorId = req.params
+    const {id} = req.params
     try{
+        req.body["instrucrtorId"]=id
         const course = await courseModel.create(req.body)
         res.send(course)
     }catch(err){

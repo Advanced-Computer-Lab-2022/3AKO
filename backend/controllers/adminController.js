@@ -1,6 +1,8 @@
 
 const adminModel = require('../models/adminModel')
 
+const instructorModel = require('../models/instructorModel')
+
 const addAdmin = async (req, res) => {
     const {username, password} = req.body
 
@@ -13,10 +15,10 @@ const addAdmin = async (req, res) => {
 }
 
 const addInstructor = async (req, res) => {
-    const {username, password} = req.body
+    const {username, password, email} = req.body
 
     try {
-        const instructor = await adminModel.create({username, password}) 
+        const instructor = await instructorModel.create({username, password, email}) 
         res.status(200).json(instructor)
     }catch(err){
         res.status(400).json({error : err.message})

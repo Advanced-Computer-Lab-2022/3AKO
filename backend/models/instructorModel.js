@@ -14,32 +14,28 @@ const instructorSchema = new Schema({
     },
     courses : {
         type : [{ type : mongoose.ObjectId, ref: 'courseModel' }],
-        required : true
+        required : false
     },
     email : {
         type : String,
         required : true,
         unique : true
     },
-    firstName : {
+    name : {
         type : String,
-        required : true
-    },
-    lastName : {
-        type : String,
-        required : true
+        required : false
     },
     gender : {
         type : String,
-        required : true
+        required : false
     },
     country : {
         type : String,
-        required : true
+        required : false
     },
     rating : {
         type : Number,
-        required : true,
+        required : false,
         max : 5,
         min : 0,
         default : 0

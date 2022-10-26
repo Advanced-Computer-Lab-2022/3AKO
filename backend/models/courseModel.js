@@ -137,8 +137,8 @@ const courseSchema = new Schema({
         required : true
     },
     instrucrtorId : {
-        type : mongoose.ObjectId
-        // required : true
+        type : mongoose.ObjectId,
+        required : true
     },
     promotion :{
         sale : {
