@@ -27,6 +27,7 @@ const individualTraineeSchema = new Schema({
         type : String,
         required : true
     },
+    // remove country ??
     country:{
         type : String,
         required : true
