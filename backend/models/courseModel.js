@@ -16,7 +16,7 @@ const lessonSchema = mongoose.Schema({
         required : true
     },
     readings :{
-        type : String,
+        type : String
     }
 })
 
@@ -137,7 +137,7 @@ const courseSchema = new Schema({
         required : true
     },
     instrucrtorId : {
-        type : mongoose.ObjectId,
+        type : mongoose.ObjectId
         // required : true
     },
     promotion :{
@@ -151,7 +151,7 @@ const courseSchema = new Schema({
     numOfViews : {
         type : Number,
         required : true,
-        default : 0,
+        default : 0
     }
     
     
