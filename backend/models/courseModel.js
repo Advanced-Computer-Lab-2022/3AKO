@@ -16,7 +16,11 @@ const lessonSchema = mongoose.Schema({
         required : true
     },
     readings :{
-        type : String
+        type : String,
+    },
+    position : {
+        type : Number,
+        required : true 
     }
 })
 
@@ -72,7 +76,7 @@ const questionSchema = mongoose.Schema({
 
 })
 
-const quizSchema = mongoose.Schema({
+const excerciseSchema = mongoose.Schema({
     title : {
         type : String,
         required : true
@@ -80,6 +84,10 @@ const quizSchema = mongoose.Schema({
     questions :{
         type : [questionSchema],
         required : true
+    },
+    position :{
+        type : Number,
+        required :true
     }
 
 })
@@ -90,8 +98,12 @@ const subtitleSchema =mongoose.Schema({
         required : true
     },
     lessons :{
-        type : [lessonSchema,quizSchema],
+        type : [lessonSchema],
         required : true
+    },
+    excercises : {
+        type : [excerciseSchema],
+        required : true,
     }
 
     

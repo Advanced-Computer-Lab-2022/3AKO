@@ -32,15 +32,17 @@ const individualTraineeSchema = new Schema({
         type : String,
         required : true
     },
-    //check if the ref syntax work
-    //check if the pair work
-    coursesIdList :{
-        type: [{ type : mongoose.ObjectId, ref: 'course', grade: Number }]
-        
-    },
-    grades :{
-        type: [{ type : mongoose.ObjectId, ref: 'quiz', grade: Number }]
 
+
+    //check if the ref syntax work
+    coursesList :{
+        type: [{courseId:{ type : mongoose.ObjectId, ref: 'course'},
+
+                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: Number} ]}, 
+
+                lessonsList:{type: [{type : mongoose.ObjectId, ref: 'lesson'}]}, 
+
+                progress: Number}]
     }
 }, {timestamps : true})
 
