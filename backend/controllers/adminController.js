@@ -1,5 +1,5 @@
 
-const adminModel = require('../routes/adminModel')
+const adminModel = require('../models/adminModel')
 
 const addAdmin = async (req, res) => {
     const {username, password} = req.body

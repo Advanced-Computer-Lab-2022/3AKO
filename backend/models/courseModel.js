@@ -12,7 +12,7 @@ const lessonSchema = mongoose.Schema({
     }
     ,
     videoURL :{
-        type : URL,
+        type : String,
         required : true
     },
     readings :{
@@ -111,8 +111,7 @@ const courseSchema = new Schema({
 
     },
     previewVideo :{
-        type : URL,
-        required : true
+        type : String
 
     },
     subject : {
@@ -139,15 +138,14 @@ const courseSchema = new Schema({
     },
     instrucrtorId : {
         type : mongoose.ObjectId,
-        required : true
+        // required : true
     },
     promotion :{
         sale : {
             type : Number
         },
         byInstructor :{
-            type : Boolean,
-            required : true
+            type : Boolean
         }
     },
     numOfViews : {
