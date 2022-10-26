@@ -33,7 +33,7 @@ const individualTraineeSchema = new Schema({
         required : true
     },
 
-    
+
     //check if the ref syntax work
     coursesList :{
         type: [{courseId:{ type : mongoose.ObjectId, ref: 'course'},
