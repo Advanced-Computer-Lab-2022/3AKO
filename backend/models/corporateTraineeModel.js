@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
+const courseModel = require('../models/courseModel')
 
 const courseList = new Schema({
     courseId : {
@@ -11,7 +12,7 @@ const courseList = new Schema({
         type : Number,
         default : 0
     }
-})
+},{autoCreate : false, _id : false})
 
 const corporateTraineeSchema = new Schema({
     username : {
@@ -40,9 +41,8 @@ const corporateTraineeSchema = new Schema({
     }
     
 })
-const corporateTrainee = mongoose.model('CorporateTrainee' , corporateTraineeSchema)
+const corporateTrainee = mongoose.model('corporateTrainee' , corporateTraineeSchema)
 const course = mongoose.model('Course' ,courseList) 
-
 module.exports = {
     corporateTrainee,
     course
