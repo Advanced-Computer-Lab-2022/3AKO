@@ -1,3 +1,4 @@
+const courseModel = require("../models/courseModel");
 const instructorModel = require("../models/instructorModel");
 
 const getInstructor = async (req,res)=>{
@@ -19,13 +20,31 @@ const addInstructor = async (req, res) => {
 const viewMyCourses = async (req,res)=>{
     const {id} = req.params
     try {
-    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title -_id')
-    const courses = instructorCourses.courses    
-    res.send(instructorCourses)
+    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title subject -_id')
+    const {courses} = instructorCourses    
+    res.send(courses)
     } catch (err) {
         res.send({error:err.message})
     }
 }
+const filterOnSubject = async (req, res) => {
+    const {id} = req.params
+    const {subject} = req.body
+    try{
+    const {courses} = await instructorModel.findOne({'_id':id}).select('courses -_id')
+    var x = []    
+        for (let index = 0; index < courses.length; index++) {
+            const element = courses[index];
+            const courseInfo = await courseModel.findOne({'_id':element,'subject':subject}).select('title -_id')
+            if(courseInfo)
+            x.push(courseInfo)
+        }
+    res.send(x)
+} catch (err) {
+    res.send({error:err.message})
+}
+}
 
 
-module.exports = {getInstructor,addInstructor,viewMyCourses}
+
+module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject}
