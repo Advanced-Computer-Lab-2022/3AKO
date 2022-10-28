@@ -14,7 +14,8 @@ const instructorSchema = new Schema({
     },
     courses : {
         type : [{ type : mongoose.ObjectId, ref: 'courseModel' }],
-        required : false
+        required : true,
+        default : []
     },
     email : {
         type : String,

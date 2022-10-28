@@ -27,14 +27,17 @@ const corporateTraineeSchema = new Schema({
         type : String,
         required : false
     },
+    //3ayzen course list kman lel pending courses
     courseList : {
         type : [courseList],
         default : []
     },
+    //leeh el notes hena 3nd el user nafso, mesh gowa el course list. 3ayzeen access el lessons mn hena 
     notes : {
         type : [String],
         default : []
     },
+    //el complaints hena elmafrod tkon bt-reference el complaints elly el admin hayshofha 
     complaints : {
         type : [String],
         default : []

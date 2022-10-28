@@ -1,0 +1,3 @@
+corporateTraineeModel.js
+
+add students (ind.Trainees & corp.Trainees) list in the courseModel
