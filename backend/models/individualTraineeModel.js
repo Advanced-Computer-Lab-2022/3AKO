@@ -11,11 +11,7 @@ const individualTraineeSchema = new Schema({
         type : String,
         required : true
     },
-    firstName:{
-        type : String,
-        required : true
-    },
-    lastName:{
+    name:{
         type : String,
         required : true
     },
@@ -25,7 +21,7 @@ const individualTraineeSchema = new Schema({
     },
     gender:{
         type : String,
-        required : true
+        required : false
     },
     // remove country ??
     country:{
@@ -38,11 +34,13 @@ const individualTraineeSchema = new Schema({
     coursesList :{
         type: [{courseId:{ type : mongoose.ObjectId, ref: 'course'},
 
-                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: Number} ]}, 
+                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: Number, _id:false} ]}, 
 
                 lessonsList:{type: [{type : mongoose.ObjectId, ref: 'lesson'}]}, 
 
-                progress: Number}]
+                progress: Number,
+                _id: false
+            }]
     }
 }, {timestamps : true})
 

@@ -99,11 +99,13 @@ const subtitleSchema =mongoose.Schema({
     },
     lessons :{
         type : [lessonSchema],
-        required : true
+        required : true,
+        default:[]
     },
     excercises : {
         type : [excerciseSchema],
         required : true,
+        default : []
     }
 
     
@@ -132,7 +134,8 @@ const courseSchema = new Schema({
     },
     subtitles : {
        type : [subtitleSchema],
-       required : true
+       required : true,
+       default : []
     },
     rating : {
         type : Number,
