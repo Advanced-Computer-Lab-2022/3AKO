@@ -4,7 +4,7 @@ const { default: mongoose } = require('mongoose')
 
 const {corporateTrainee,course} = require('../models/corporateTraineeModel')
 
-const {addCoporateTrainee, getAll, getOne, addCourse} = require('../controllers/corporateTraineeController')
+const {addCoporateTrainee, getAll, getOne, addCourse, requestCourse} = require('../controllers/corporateTraineeController')
 
 const router = express.Router()
 
@@ -15,5 +15,9 @@ router.get('/getAll', getAll)
 router.get('/getOne/:id', getOne)
 
 router.patch('/addCourse/:id', addCourse)
+
+router.patch('/requestCourse/:id',requestCourse )
+
+
 
 module.exports = router

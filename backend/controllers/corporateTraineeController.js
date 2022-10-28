@@ -44,4 +44,16 @@ const addCourse = async (req,res) => {
         res.status(400).json({error : err.message})
     }
 }
-module.exports = {addCoporateTrainee, getAll, getOne, addCourse}
+
+const requestCourse= async(req, res) => {
+    try{
+        const corporateTraineeId=await req.params.id
+        const{courseId} = req.body
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{pendingRequests:{courseId:courseId}}})
+        res.status(200).json({courseId})
+    }catch(err){
+        res.status(400).json({error : err.message})
+    }
+}
+
+module.exports = {addCoporateTrainee, getAll, getOne, addCourse, requestCourse}

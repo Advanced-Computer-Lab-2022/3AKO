@@ -11,7 +11,9 @@ const courseList = new Schema({
     progress : {
         type : Number,
         default : 0
-    }
+    },
+    
+
 },{autoCreate : false, _id : false})
 
 const corporateTraineeSchema = new Schema({
@@ -31,6 +33,22 @@ const corporateTraineeSchema = new Schema({
         type : [courseList],
         default : []
     },
+    pendingRequests : {
+        type : [
+            {
+                courseId :{ 
+                    type : mongoose.Schema.Types.ObjectId,
+                    required : true
+                },
+                status : {
+                    type : String,
+                    default : "pendding" 
+                },
+                _id : false
+        }
+        ]
+    }
+    ,
     notes : {
         type : [String],
         default : []
