@@ -1,5 +1,5 @@
 const {createCourse} = require("../controllers/courseController")
-const {getInstructor} = require("../controllers/instructorController")
+const {getInstructor,viewMyCourses} = require("../controllers/instructorController")
 
 const express = require("express")
 const router = express.Router()
@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.post("/:id/createCourse",createCourse)
 router.get("/getInstructor/:id",getInstructor)
+router.get("/viewMyCourses/:id",viewMyCourses)
 
 
 module.exports = router
