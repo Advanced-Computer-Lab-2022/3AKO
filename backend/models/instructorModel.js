@@ -13,7 +13,7 @@ const instructorSchema = new Schema({
         required : true
     },
     courses : {
-        type : [{ type : mongoose.ObjectId, ref: 'courseModel' }],
+        type : [{ type : mongoose.Types.ObjectId, ref: 'course' }],
         required : true,
         default : []
     },

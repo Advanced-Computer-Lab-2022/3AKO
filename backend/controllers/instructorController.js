@@ -16,4 +16,16 @@ const addInstructor = async (req, res) => {
     }
 }
 
-module.exports = {getInstructor,addInstructor}
+const viewMyCourses = async (req,res)=>{
+    const {id} = req.params
+    try {
+    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title -_id')
+    const courses = instructorCourses.courses    
+    res.send(instructorCourses)
+    } catch (err) {
+        res.send({error:err.message})
+    }
+}
+
+
+module.exports = {getInstructor,addInstructor,viewMyCourses}
