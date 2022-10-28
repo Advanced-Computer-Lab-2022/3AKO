@@ -34,7 +34,7 @@ const individualTraineeSchema = new Schema({
     coursesList :{
         type: [{courseId:{ type : mongoose.ObjectId, ref: 'course'},
 
-                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: Number, _id:false} ]}, 
+                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: {type : Number, required : true}, _id:false} ]}, 
 
                 lessonsList:{type: [{type : mongoose.ObjectId, ref: 'lesson'}]}, 
 

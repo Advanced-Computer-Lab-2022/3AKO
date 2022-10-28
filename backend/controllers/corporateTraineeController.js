@@ -56,4 +56,25 @@ const requestCourse= async(req, res) => {
     }
 }
 
-module.exports = {addCoporateTrainee, getAll, getOne, addCourse, requestCourse}
+const addLesson = async(req, res) => {
+    try{
+        const corporateTraineeId=await req.params.id
+        const{courseId,lessonId} = req.body
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.lessonsList':lessonId}})
+        res.status(200).json({newCourseList})
+    }catch(err){
+        res.status(400).json({error : err.message})
+    }
+} 
+const addExercise = async(req, res) => {
+    try{
+        const corporateTraineeId=await req.params.id
+        const{courseId,exerciseId,grade} = req.body
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.exercisesList':{exercisesId:exerciseId,grade:grade}}})
+        res.status(200).json({newCourseList})
+    }catch(err){
+        res.status(400).json({error : err.message})
+    }
+} 
+
+module.exports = {addCoporateTrainee, getAll, getOne, addCourse, requestCourse, addLesson, addExercise}

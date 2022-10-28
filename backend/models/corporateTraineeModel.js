@@ -12,6 +12,16 @@ const courseList = new Schema({
         type : Number,
         default : 0
     },
+    exercisesList : {
+        type: [{
+            exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, 
+            grade:{ type : Number, required : true}}]
+    },
+    lessonsList : {
+        type: [{type : mongoose.ObjectId, ref: 'lesson'}]
+    }
+
+
     
 
 },{autoCreate : false, _id : false})

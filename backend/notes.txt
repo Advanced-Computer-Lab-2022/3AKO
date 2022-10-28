@@ -1,3 +1,5 @@
 corporateTraineeModel.js
 
 add students (ind.Trainees & corp.Trainees) list in the courseModel
+
+individual questions grade and maximum grade need be added
