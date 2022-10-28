@@ -8,13 +8,14 @@ const createCourse = async (req, res) => {
     try{
         req.body["instrucrtorId"]=id
         const course = await courseModel.create(req.body)
+        const instructorCourses = await instructorModel.updateOne({_id:id},{$addToSet:{courses:course}})
         res.send(course)
     }catch(err){
         res.status(400).json({error : err.message})
     }   
 }
 
-const getAllCoures = async (req, res) => {
+const getAllCourses = async (req, res) => {
     const allCoures = await courseModel.find({})
     res.send(allCoures)
 }
@@ -43,7 +44,7 @@ const searchForCourses = async (req, res) => {
 }
 
 module.exports = {
-    getAllCoures,
+    getAllCourses,
     filterOnSubject,
     filterOnRating,
     createCourse,
