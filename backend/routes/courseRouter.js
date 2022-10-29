@@ -5,7 +5,7 @@ const {getAllCourses,searchForCourses} = require('../controllers/courseControlle
 const router = express.Router()
 
 
-router.get('/search', searchForCourses)
+router.get('/search/:searchKey', searchForCourses)
 router.get('/courses', getAllCourses)
 
 

@@ -16,30 +16,44 @@ const createCourse = async (req, res) => {
 }
 
 const getAllCourses = async (req, res) => {
-    const allCoures = await courseModel.find({})
+    const allCoures = await courseModel.find({},{_id :0, totalHours:1,title:1,rating:1,promotion:1})
     res.send(allCoures)
 }
 
-const filterOnSubject = async (req, res) => {
-    const {subject} = req.body
+const filterOnSubject = async (subject) => {
+    if(subject != null){
     const courses = await courseModel.find({'subject' : subject})
-    res.send(courses)
+    }
+    else {
+        const courses = {}
+    }
+   return courses;
 }
 
-const filterOnRating = async (req, res) => {
-    const minRating = req.body
-    const courses = await courseModel.find({'rating' : {$gt : minRating}})
-    res.send(courses)
+const filterOnRating = async (minRating) => {
+    
+    const courses = await courseModel.find({'rating' : {$gte : minRating}})
+    return courses;
 }
+
+const filterOnPrice = async (minPrice,maxPrice) => {
+    
+    const courses = await courseModel.find({'price' : $and[ {$gte : minPrice },{$lte : maxPrice }]})
+    return courses;
+}
+
+const filter = async (req,res) =>{
+    const {} = req.body
+    const priceFiltered = filterOnPrice();
+    const subjectFiltered = filterOnSubject();
+}
+
 
 const searchForCourses = async (req, res) => {
-    const {title, subject, firstName, lastName} = req.body
-    const instructorId = await instructorModel.find({'firstName' : firstName, 'lastName' : lastName},{_id : 1})
-    if(title == null){
-
-    }else {
-        
-    }
+    const {searchKey} = req.params
+    const instructorId = await instructorModel.find({'name' : searchKey.toLowerCase()},{_id : 1})
+    const courses = await courseModel.find( { $or: [ { instrucrtorId: instructorId },{ title: searchKey.toLowerCase()},{subject : searchKey}] } )
+    
     res.send(courses)
 }
 
@@ -48,5 +62,5 @@ module.exports = {
     filterOnSubject,
     filterOnRating,
     createCourse,
-    searchForCourses 
+    searchForCourses
 }
