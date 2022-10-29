@@ -1,12 +1,12 @@
 const express = require('express')
 
-const {getAllCourses,searchForCourses} = require('../controllers/courseController')
+const {getAllCourses,searchForCourses,getCourseInfo} = require('../controllers/courseController')
 
 const router = express.Router()
 
 
 router.get('/search/:searchKey', searchForCourses)
 router.get('/courses', getAllCourses)
-
+router.get('/getCourseInfo/:courseId', getCourseInfo)
 
 module.exports = router
