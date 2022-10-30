@@ -4,6 +4,7 @@ const {addIndividualTrainee} = require('../controllers/individualTraineeControll
 
 const router = express.Router()
 
-router.post('/', addIndividualTrainee)
+router.post('/add', addIndividualTrainee)
+
 
 module.exports = router
