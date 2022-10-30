@@ -1,14 +1,12 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
-import RatingInfo from "./RatingInfo";
-import {useParams} from 'react-router-dom'
-const CourseView = (props) => {
-    const {courseId} = useParams()
-    const currency = props.currency
+
+
+const CourseView = () => {
     const [courseData, setCourseData] = useState(null)
     useEffect(()=>{    
         const start=async()=>{
-            const newData = await fetch(`/course/getCourseInfo/${courseId}`)
+            const newData = await fetch(`/course/getCourseInfo/635977a729582539eb13961e`)
             const json = await newData.json()
             console.log(json.title);
             if(newData.ok){
@@ -17,7 +15,6 @@ const CourseView = (props) => {
         }
         start()
     },[])
-    
     return (
 
 

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import CourseView from './CourseView';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom' 
 import Home from './Home';
+import CountryModal from "./components/CountryModal";
+import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
 
  
