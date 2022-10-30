@@ -31,7 +31,7 @@ const CourseView = (props) => {
                 <RatingInfo rating={courseData.rating} price = {courseData.price} promotion={courseData.promotion} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo>
                 <h2>{courseData.subject}</h2>
                 <p>Subtitles :</p>
-                <ol>{courseData.subtitles.map(sub => <li>{sub}</li>)}</ol>
+                <ol>{courseData.subtitles.map(sub => <li>{sub.title}</li>)}</ol>
                 <p>Learning Outcomes :</p>
                 <ul>{courseData.outlines.map((outline) => <li>{outline}</li>)}</ul>
                 <div className="video">

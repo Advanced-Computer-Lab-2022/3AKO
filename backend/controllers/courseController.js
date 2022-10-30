@@ -52,17 +52,27 @@ const searchForCourses = async (req, res) => {
     res.send(courses)
 }
 
-const getCourseInfo= async (req, res) => {
+// const getCourseInfo= async (req, res) => {
+//     try{
+//         const courseId = req.params.courseId        
+//         const courseData = await (courseModel.find({_id:courseId}).select('-_id').lean())
+//         const courseInfo= JSON.parse(JSON.stringify(courseData))
+//         courseInfo[0].subtitles=courseInfo[0].subtitles.map(sub => sub.title)
+//         res.status(200).json(courseInfo[0])
+//     }catch(err){
+//         res.status(400).json({error:err.message})
+//     }
+// }
+const getCourseInfo = async (req, res) => {
     try{
-        const courseId = req.params.courseId        
-        const courseData = await (courseModel.find({_id:courseId}).select('-_id').lean())
-        const courseInfo= JSON.parse(JSON.stringify(courseData))
-        courseInfo[0].subtitles=courseInfo[0].subtitles.map(sub => sub.title)
-        res.status(200).json(courseInfo[0])
+        const courseId = req.params.courseId
+        const courseData = await courseModel.find({_id:courseId},'title outlines summary previewVideo subject subtitles.title rating price totalHours instrucrtorId promotion numOfViews')
+        res.status(200).json(courseData[0])
     }catch(err){
         res.status(400).json({error:err.message})
     }
 }
+
 
 module.exports = {
     getAllCourses,
