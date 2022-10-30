@@ -74,5 +74,6 @@ module.exports = {
     filterOnSubject,
     filterOnRating,
     createCourse,
-    searchForCourses 
+    searchForCourses,
+    getCourseInfo
 }
