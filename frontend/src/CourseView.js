@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
-import RatingInfo from "./RatingInfo";
+import RatingInfo from './RatingInfo';
 
-const CourseView = (props) => {
-    const courseId = props.courseId
-    const currency = props.currency
+
+const CourseView = () => {
     const [courseData, setCourseData] = useState(null)
     useEffect(()=>{    
         const start=async()=>{
-            const newData = await fetch(`/course/getCourseInfo/${courseId}`)
+            const newData = await fetch(`/course/getCourseInfo/635977a729582539eb13961e`)
             const json = await newData.json()
             console.log(json.title);
             if(newData.ok){
@@ -17,7 +16,6 @@ const CourseView = (props) => {
         }
         start()
     },[])
-    
     return (
 
 
@@ -28,7 +26,7 @@ const CourseView = (props) => {
             {courseData && <div className="courseView">
                 <h1>{courseData.title}</h1>
                 <p>{courseData.summary}</p>
-                <RatingInfo rating={courseData.rating} price = {courseData.price} promotion={courseData.promotion} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo>
+                {/* <RatingInfo rating={courseData.rating} price = {courseData.price} promotion={courseData.promotion} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo> */}
                 <h2>{courseData.subject}</h2>
                 <p>Subtitles :</p>
                 <ol>{courseData.subtitles.map(sub => <li>{sub.title}</li>)}</ol>
