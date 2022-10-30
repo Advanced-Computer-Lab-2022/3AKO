@@ -115,8 +115,8 @@ const courseSchema = new Schema({
         type : String,
         required : true
     },
-    outline :{
-        type: String,
+    outlines :{
+        type: [String],
         required : true
     },
     summary : {
@@ -155,6 +155,10 @@ const courseSchema = new Schema({
         type : mongoose.ObjectId,
         required : true
     },
+    instrucrtorName : {
+        type : String,
+        required : true
+    },
     promotion :{
         sale : {
             type : Number
@@ -167,6 +171,10 @@ const courseSchema = new Schema({
         type : Number,
         required : true,
         default : 0
+    },
+    imageURL :{
+        type : String,
+        default : "https://www.google.com/url?sa=i&url=https%3A%2F%2Ftheconversation.com%2Fthe-50-great-books-on-education-24934&psig=AOvVaw2y1QPujW8vq-OTh5Nspo2J&ust=1667236771520000&source=images&cd=vfe&ved=0CA0QjRxqFwoTCJjM8I27iPsCFQAAAAAdAAAAABAE"
     }
     
     
