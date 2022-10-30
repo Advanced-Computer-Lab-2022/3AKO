@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
   return (
     <div className="App">
-      <CountryModal/>
+      <CountryModal />
       <CourseView courseId={"635977a729582539eb13961e"} currency={"$"}></CourseView>
     </div>
     
