@@ -22,7 +22,8 @@ const viewMyCourses = async (req,res)=>{
     try {
     const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title subject -_id')
     const {courses} = instructorCourses    
-    res.send(courses)
+    var jsonArray = JSON.parse(JSON.stringify(courses))
+    res.send(jsonArray)
     } catch (err) {
         res.send({error:err.message})
     }
