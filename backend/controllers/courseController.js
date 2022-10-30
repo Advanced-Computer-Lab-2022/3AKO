@@ -71,12 +71,27 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try{
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({_id:courseId},'title outlines summary previewVideo subject subtitles.title rating price totalHours instrucrtorId promotion numOfViews')
+        const courseData = await courseModel.find({_id:courseId},'title outlines summary previewVideo subject subtitles.title rating price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
         res.status(200).json(courseData[0])
     }catch(err){
         res.status(400).json({error:err.message})
     }
 }
+const searchByText = async (req, res) => {
+    try{
+        const text=req.params.text
+        console.log(text);
+        const courses =  await courseModel.find({$or: [{ title: {"$regex": text,"$options": "i"}},
+            {subject: {"$regex": text,"$options": "i"}},
+            {instrucrtorName: {"$regex": text,"$options": "i"}}]},
+            'title outlines summary previewVideo subject subtitles.title rating price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+        res.status(200).json(courses)
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
+    
+}
+
 
 
 module.exports = {
@@ -85,5 +100,6 @@ module.exports = {
     filterOnRating,
     createCourse,
     searchForCourses,
-    getCourseInfo
+    getCourseInfo,
+    searchByText
 }

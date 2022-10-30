@@ -156,7 +156,8 @@ const courseSchema = new Schema({
         required : true
     },
     instrucrtorName : {
-        type : String
+        type : String,
+        required : true
     },
     promotion :{
         sale : {
