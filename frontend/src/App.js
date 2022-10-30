@@ -4,7 +4,7 @@ import CourseView from './CourseView';
 function App() {
   return (
     <div className="App">
-      <h2>"welcome Home"</h2>
+      <CourseView courseId={"635977a729582539eb13961e"} currency={"$"}></CourseView>
     </div>
     
   );
