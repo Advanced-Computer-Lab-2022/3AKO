@@ -42,6 +42,11 @@ const filterOnPrice = async (minPrice,maxPrice) => {
     return courses;
 }
 
+const filter = async (req,res) =>{
+    const {} = req.body
+    const priceFiltered = filterOnPrice();
+    const subjectFiltered = filterOnSubject();
+}
 
 
 const searchForCourses = async (req, res) => {
@@ -69,6 +74,5 @@ module.exports = {
     filterOnSubject,
     filterOnRating,
     createCourse,
-    searchForCourses,
-    getCourseInfo
+    searchForCourses 
 }
