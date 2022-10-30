@@ -20,7 +20,7 @@ const addInstructor = async (req, res) => {
 const viewMyCourses = async (req,res)=>{
     const {id} = req.params
     try {
-    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title subject -_id')
+    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title subject')
     const {courses} = instructorCourses    
     var jsonArray = JSON.parse(JSON.stringify(courses))
     res.send(jsonArray)
