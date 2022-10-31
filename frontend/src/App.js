@@ -5,6 +5,7 @@ import Home from "./Home";
 import CountryModal from "./components/CountryModal";
 import InstructorCourses from "./instructorCoursesView";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AddCourse from "./AddCourse";
 function App() {
   return (
     <Router>
@@ -19,6 +20,10 @@ function App() {
           <Route exact path="/course/:courseId">
             <CourseView />
           </Route>
+          <Route exact path="/instructor/addCourse/:instructorId">
+            <AddCourse />
+          </Route>
+
 
           <Route exact path = "/instructor">
             <InstructorCourses />
