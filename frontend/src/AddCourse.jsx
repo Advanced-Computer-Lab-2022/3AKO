@@ -21,7 +21,10 @@ const AddCourse = () => {
         subtitles:[]
      })
      const handelExtraValues = e => {
-        if(e.target.value=='') return
+        if(e.target.value==''){
+            alert('you need to fill in a value')
+            return
+        }
         setExtravalues({
             ...extraValues,
             [e.target.name]: [...extraValues[[e.target.name]],e.target.value]
@@ -38,12 +41,21 @@ const AddCourse = () => {
       };
 
       const handleSubmit = event => {
-        event.preventDefault();
+        const valid=true;
+        (Object.values(allValues)).every(item => {
+            if(!item){
+                alert("You need to fill all the neccessery data marked with *")
+                return false
+            }
+        })
+        if(!valid) return
+
         const courseData = {...allValues,...extraValues}
         try{
             axios.post(`http://localhost:5000/instructor/addCourse/${instructorId}`,courseData)
               .then((response) => {
                 console.log(response.data);
+                alert("course added succefully")
               })
               .catch((error) => {
                 console.log(error);
@@ -57,19 +69,19 @@ const AddCourse = () => {
     return ( 
         <div className="addcourse">
         
-            <p>Course title</p>
+            <p>* Course title</p>
             <input type="text" placeholder='Title ie. Introduction to ...' id="title" name="title" onChange={handleChange} value={allValues.title}/>
-            <p>Subject</p>
+            <p>* Subject</p>
             <input type="text" placeholder='Subject ie. Computer Science' id="subject" name="subject" onChange={handleChange} value={allValues.subject}/>
-            <p>Summary</p>
+            <p>* Summary</p>
             <input type="text" placeholder='Summary of the course' id="summary" name="summary" onChange={handleChange} value={allValues.summary}/>
-            <p>Preview video link</p>
+            <p>* Preview video link</p>
             <input type="text" placeholder='Preview video link' id="previewVideo" name="previewVideo" onChange={handleChange} value={allValues.previewVideo}/>
-            <p>Course fees</p>
+            <p>* Course fees</p>
             <input type="number" placeholder='Course fees per month in US dollars' id="price" name="price" onChange={handleChange} value={allValues.price}/>
-            <p>Course hours</p>
+            <p>* Course hours</p>
             <input type="number" placeholder='Total course hours' id="totalHours" name="totalHours" onChange={handleChange} value={allValues.totalHours}/>
-            <p>Image link</p>
+            <p>* Image link</p>
             <input type="text" placeholder='Add a course image link' id="imageURL" name="imageURL" onChange={handleChange} value={allValues.imageURL}/>
             
             <ol>Outlines: {extraValues.outlines.map(x => <li>{x}</li>)}</ol>
@@ -83,8 +95,6 @@ const AddCourse = () => {
             <form onSubmit={handleSubmit}>
                 <button type="submit">Add course</button>
             </form>
-            <h2>Message: {allValues.title}</h2>
-            <h2>Message: {extraValues.outlines|99}</h2>
         </div>
      );
 }
