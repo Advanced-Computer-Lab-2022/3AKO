@@ -25,8 +25,11 @@ const CountryModal = (props) => {
   useEffect(() => {
     const getCountry = async () => {
       setLoading(true);
+      
       const res = await axios.get("/utils/country");
-      setCountry(res.data);
+      if(res.data)
+        setCountry(res.data);
+      
       setLoading(false);
     };
     getCountry();
@@ -37,9 +40,10 @@ const CountryModal = (props) => {
       const res = await axios.get("/utils/exchangeFromUSD", {
         params: { country: country },
       });
-      handleExchangeRate(res.data, iso2ToCurrency[country]);
+      if (res.data && country)
+          await handleExchangeRate(res.data, iso2ToCurrency[country]);
+
     };  
-    
     getExchangeRate();
   }, [country]);
 
