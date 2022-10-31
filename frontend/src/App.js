@@ -32,7 +32,7 @@ function App() {
             <Home />
           </Route>
           <Route exact path="/course/:courseId">
-            <CourseView/>
+            <CourseView exchangeRate={exchangeRate} currency={currency}/>
           </Route>
           <Route exact path="/instructor/addCourse/:instructorId">
             <AddCourse />
@@ -67,7 +67,6 @@ function App() {
         </Switch>
         
       </div>
-      <div>{currency + "******" + exchangeRate}</div>
     </Router>
   );
 }

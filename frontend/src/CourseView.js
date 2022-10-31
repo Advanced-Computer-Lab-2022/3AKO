@@ -3,9 +3,16 @@ import { useState,useEffect } from "react";
 import RatingInfo from './RatingInfo';
 import {useParams} from 'react-router-dom'
 
-const CourseView = () => {
+const CourseView = (props) => {
     const {courseId} = useParams()
     const [courseData, setCourseData] = useState(null)
+    const [exchangeRate, setExchangeRate] = useState(props.exchangeRate);
+    const [currency, setCurrency] = useState(props.currency);
+    useEffect(()=>{
+        console.log("hahahahahahah"+props.currency);
+        setExchangeRate(props.exchangeRate)
+        setCurrency(props.currency)
+    },[props.currency])
     useEffect(()=>{ 
         const start=async()=>{
             const newData = await fetch(`/course/getCourseInfo/${courseId}`)
@@ -26,7 +33,7 @@ const CourseView = () => {
             {courseData && <div className="courseView">
                 <h1>{courseData.title}</h1>
                 <p>{courseData.summary}</p>
-                { <RatingInfo rating={courseData.rating} price = {courseData.price} promotion={(new Date(courseData.promotion.saleEndDate)>new Date()? courseData.promotion.saleByInstructor:0)} views={courseData.numOfViews} hours={courseData.totalHours} currency={"USD"}></RatingInfo> }
+                { <RatingInfo rating={courseData.rating} price = {courseData.price*exchangeRate} promotion={(new Date(courseData.promotion.saleEndDate)>new Date()? courseData.promotion.saleByInstructor:0)} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo> }
                 <h2>{courseData.subject}</h2>
                 <p>Subtitles :</p>
                 <ol>{courseData.subtitles.map(sub => <li>{sub.title}</li>)}</ol>
