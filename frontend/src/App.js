@@ -9,6 +9,7 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
+import { useEffect, useState } from "react";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
