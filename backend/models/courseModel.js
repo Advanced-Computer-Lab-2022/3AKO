@@ -22,7 +22,7 @@ const lessonSchema = mongoose.Schema({
         type : Number,
         required : true 
     }
-})
+},{autoCreate : false})
 
 const questionSchema = mongoose.Schema({
     question : {
@@ -74,7 +74,7 @@ const questionSchema = mongoose.Schema({
         }
     }   
 
-})
+},{autoCreate : false})
 
 const excerciseSchema = mongoose.Schema({
     title : {
@@ -90,7 +90,7 @@ const excerciseSchema = mongoose.Schema({
         required :true
     }
 
-})
+},{autoCreate : false})
 
 const subtitleSchema =mongoose.Schema({
     title : {
@@ -109,7 +109,7 @@ const subtitleSchema =mongoose.Schema({
     }
 
     
-})
+},{autoCreate : false})
 const courseSchema = new Schema({
     title : {
         type : String,
@@ -160,16 +160,21 @@ const courseSchema = new Schema({
         required : true
     },
     promotion :{
-        sale : {
-            type : Number
+        saleByInstrctor : {
+            type : Number,
+            default : 0
         },
-        byInstructor :{
-            type : Boolean
+        saleEndDate : {
+            type : Date,
+            default : '2020-01-01'
+        },
+        saleByAdmin :{
+            type : Number,
+            default : 0
         }
     },
     numOfViews : {
         type : Number,
-        required : true,
         default : 0
     },
     imageURL :{
@@ -180,4 +185,8 @@ const courseSchema = new Schema({
     
 }, {timestamps : true})
 
-module.exports = mongoose.model('course', courseSchema)
+const courseModel = mongoose.model('course', courseSchema)
+const subtitlesModel = mongoose.model('subtitlesModel', subtitleSchema)
+const lessonsModel = mongoose.model('lessonsModel', lessonSchema)
+const exerciseModel = mongoose.model('exerciseModel',excerciseSchema)
+module.exports = {courseModel, subtitlesModel, lessonsModel, exerciseModel}
