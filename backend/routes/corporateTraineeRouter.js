@@ -8,8 +8,6 @@ const {addCoporateTrainee, getAll, getOne, addCourse, requestCourse, addLesson, 
 
 const router = express.Router()
 
-router.post('/addTrainee', addCoporateTrainee)
-
 router.get('/getAll', getAll)
 
 router.get('/getOne/:id', getOne)
