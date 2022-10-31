@@ -7,15 +7,19 @@ async function getCountryUtil() {
   return data.country;
 }
 
-async function countryToCurrencyUtil() {
-  currency = iso2ToCurrency[await getCountryUtil()];
+async function countryToCurrencyUtil(country) {
+  if(country){
+    currency = iso2ToCurrency[country];
+  }else{
+    currency = iso2ToCurrency[await getCountryUtil()];
+  }
   return currency;
 }
 
-async function exchangeFromUSDUtil() {
+async function exchangeFromUSDUtil(country) {
   let response = await fetch(
     "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd/" +
-      (await countryToCurrencyUtil()).toLowerCase() +
+      (await countryToCurrencyUtil(country)).toLowerCase() +
       ".json"
   );
   let data = await response.json();
