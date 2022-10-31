@@ -12,15 +12,24 @@ const Home = () => {
           setCourses(coursesJson);
         }
       }
+
+      // const handleserach = (value) =>{
+
+      // }
   
   
       fetchCourses()
     })
     return ( 
+      <div>
+        {/* <div className="searchBar">
+          <input type="text" placeholder='search' onSubmit={(e)=>{handleserach(e.target.value)}} />
+        </div> */}
         <div className="courses">
         {courses && courses.map((course)=> (
         <CourseCard course={course} key={course._id} />
       ))}</div>
+      </div>
     );
 }
  
