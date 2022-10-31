@@ -3,6 +3,7 @@ import CourseView from "./CourseView";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import CountryModal from "./components/CountryModal";
+import InstructorCourses from "./instructorCoursesView";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddCourse from "./AddCourse";
 function App() {
@@ -23,6 +24,10 @@ function App() {
             <AddCourse />
           </Route>
 
+
+          <Route exact path = "/instructor">
+            <InstructorCourses />
+          </Route>
         </Switch>
       </div>
     </Router>
