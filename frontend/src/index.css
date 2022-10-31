@@ -59,4 +59,18 @@
   display: flex;
   justify-content: space-between;
 }
+ .courses{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction:  row;
+  column-gap: 20px;
+  row-gap: 20px;
+} 
+.courseCard { 
+  background-color: lightgray;
+  border-radius: 15px;
+  padding: 20px;
+  width: 30%;
+ 
+}
 
