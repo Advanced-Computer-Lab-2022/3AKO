@@ -16,7 +16,7 @@ const createCourse = async (req, res) => {
 }
 
 const getAllCourses = async (req, res) => {
-    const allCoures = await courseModel.find({},{_id :0, totalHours:1,title:1,rating:1,promotion:1})
+    const allCoures = await courseModel.find({})
     res.send(allCoures)
 }
 

@@ -6,13 +6,16 @@ import Form from "react-bootstrap/Form";
 import ReactCountryFlag from "react-country-flag";
 
 import iso2ToCountry from "../data/iso2ToCountry.json";
+import iso2ToCurrency from "../data/iso2ToCurrency.json";
+const CountryModal = (props) => {
+  const handleExchangeRate = props.handleExchangeRate;
 
-const CountryModal = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [loading, setLoading] = useState(false);
+
   const [country, setCountry] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,12 +25,24 @@ const CountryModal = () => {
   useEffect(() => {
     const getCountry = async () => {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/utils/country");
+      const res = await axios.get("/utils/country");
       setCountry(res.data);
       setLoading(false);
     };
     getCountry();
   }, []);
+
+  useEffect(() => {
+    const getExchangeRate = async () => {
+      const res = await axios.get("/utils/exchangeFromUSD", {
+        params: { country: country },
+      });
+      handleExchangeRate(res.data, iso2ToCurrency[country]);
+    };  
+    
+    getExchangeRate();
+  }, [country]);
+
   if (loading) return <div>loading...</div>;
   const entries = Object.entries(iso2ToCountry);
   entries.sort((a, b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
@@ -35,7 +50,7 @@ const CountryModal = () => {
     <div>
       <button
         onClick={handleShow}
-       style={{
+        style={{
           background: "#ccc",
           color: "black",
           border: "1px solid #888",
@@ -75,5 +90,4 @@ const CountryModal = () => {
     </div>
   );
 };
-
-export default CountryModal;
+export { CountryModal };
