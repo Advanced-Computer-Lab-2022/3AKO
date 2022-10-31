@@ -139,8 +139,9 @@ const courseSchema = new Schema({
     },
     rating : {
         type : Number,
-        min : 0,
-        max : 5
+        min : 1,
+        max : 5,
+        default: 5
     },
     price : {
         type : Number,
@@ -167,10 +168,6 @@ const courseSchema = new Schema({
         saleEndDate : {
             type : Date,
             default : '2020-01-01'
-        },
-        saleByAdmin :{
-            type : Number,
-            default : 0
         }
     },
     numOfViews : {
