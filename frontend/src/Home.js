@@ -2,29 +2,44 @@ import CourseCard from './courseCard';
 import { useState, useEffect } from 'react';
 const Home = () => {
 
-    const [courses,setCourses] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [courses,setCourses] = useState(null);
+  const [allCourses,setAllCourses] = useState(null);
+    
     useEffect(()=>{
       const fetchCourses =async ()=>{
         const response = await fetch("/course/courses");
         const coursesJson = await response.json()
+        
   
         if(response.ok){
           setCourses(coursesJson);
+          setAllCourses(coursesJson);
         }
       }
 
-      // const handleserach = (value) =>{
-
-      // }
-  
-  
       fetchCourses()
-    })
+    },[])
+
+    const handleClick = () =>{
+      const newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase())  );
+      console.log(courses);
+      console.log(newCourses)
+      console.log(allCourses)
+      setCourses(newCourses);
+
+    }
+    const handleChange = event => {
+      setSearchValue(event.target.value);
+  
+      console.log('value is:', event.target.value);
+    };
     return ( 
       <div>
-        {/* <div className="searchBar">
-          <input type="text" placeholder='search' onSubmit={(e)=>{handleserach(e.target.value)}} />
-        </div> */}
+        { <div className="searchBar">
+          <input type="text" placeholder='search' value={searchValue} onChange={handleChange} />
+          <button onClick={handleClick}>search</button>
+        </div> }
         <div className="courses">
         {courses && courses.map((course)=> (
         <CourseCard course={course} key={course._id} />
