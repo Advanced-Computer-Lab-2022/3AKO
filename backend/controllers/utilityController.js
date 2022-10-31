@@ -1,4 +1,4 @@
-const { getCountryUtil } = require("../utils/countyUtils");
+const { getCountryUtil, exchangeFromUSDUtil } = require("../utils/countyUtils");
 
 const getCountry = async (req, res, next) => {
   try {
@@ -8,4 +8,12 @@ const getCountry = async (req, res, next) => {
   }
 };
 
-module.exports = { getCountry };
+const exchangeFromUSD = async (req, res, next) => {
+  try {
+    res.json(await exchangeFromUSDUtil(req.query.country));
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getCountry, exchangeFromUSD };

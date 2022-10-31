@@ -2,18 +2,34 @@
 import CourseView from "./CourseView";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Home";
-import CountryModal from "./components/CountryModal";
+import {CountryModal} from "./components/CountryModal";
 import InstructorCourses from "./instructorCoursesView";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
 
 function App() {
+
+  const [exchangeRate, setExchangeRate] = useState(0);
+  const [currency, setCurrency] = useState("");
+
+  const handleExchangeRate = (value,curr) => {
+    setExchangeRate(value);
+    setCurrency(curr);
+    console.log(value+" "+curr)
+  };
+
+
+
   return (
     <Router>
-      <div className="App">          
-        <CountryModal />
+      <div className="App">
+        <CountryModal
+          handleExchangeRate={handleExchangeRate}
+        />
+
         <h2>welcome Home</h2>
         <Switch>
           <Route exact path="/">
@@ -21,11 +37,25 @@ function App() {
             <Home />
           </Route>
           <Route exact path="/course/:courseId">
-            <CourseView />
+            <CourseView/>
+          </Route>
+          <Route exact path="/instructor/addCourse/:instructorId">
+            <AddCourse />
+          </Route>
+          <Route exact path = "/instructor/:id">
+            <InstructorCourses />
           </Route>
 
-          <Route exact path = "/instructor">
-            <InstructorCourses />
+          <Route exact path = "/addInstructor">
+            <AddInstructor />
+          </Route>
+
+          <Route exact path = "/addAdmin">
+            <AddAdmin />
+          </Route>
+
+          <Route exact path = "/admin/addCorporateTrainee">
+            <AddCorporateTrainee />
           </Route>
 
           <Route exact path = "/addInstructor">

@@ -1,4 +1,4 @@
-const courseModel = require("../models/courseModel");
+const {courseModel, subtitlesModel, lessonsModel, exerciseModel} = require("../models/courseModel");
 const instructorModel = require("../models/instructorModel");
 
 const getInstructor = async (req,res)=>{
@@ -46,6 +46,26 @@ const filterOnSubject = async (req, res) => {
 }
 }
 
+const addCourse = async (req, res) => {
+    try{
+        const instrucrtorId = req.params.id
+        const instrucrtorData = await instructorModel.find({_id:instrucrtorId},'name -_id')
+        const instrucrtorName = instrucrtorData[0].name
+        const {title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL} = req.body
+        // subtitles taken from the json is an array of the titles of the subtitles
+        const subParemters = await subtitles.map(sub => {return {title:sub}})
+        const subtitlesData = await subtitlesModel.create(subParemters)
+        console.log(subtitlesData);
+        const course = await courseModel.create({title,outlines,summary,previewVideo,subject,subtitles:subtitlesData,price,totalHours,imageURL,instrucrtorId,instrucrtorName})
+        res.status(200).json(course)
+
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
 
 
-module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject}
+} 
+
+
+
+module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject,addCourse}
