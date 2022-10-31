@@ -23,9 +23,7 @@ function App() {
           <Route exact path="/instructor/addCourse/:instructorId">
             <AddCourse />
           </Route>
-
-
-          <Route exact path = "/instructor">
+          <Route exact path = "/instructor/:id">
             <InstructorCourses />
           </Route>
         </Switch>

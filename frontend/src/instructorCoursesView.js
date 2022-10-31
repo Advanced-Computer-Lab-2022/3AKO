@@ -1,33 +1,67 @@
-import { useEffect } from "react";
-import { useState } from "react";
-
+import { useEffect ,useState} from "react";
+import { useParams } from "react-router-dom";
+import { Select, MenuItem } from '@mui/material';
 
 const InstructorCourses = () => {
-    var [count,setcount] = useState(null)
+    const [courses,setcourses] = useState(null)
+    const [allCourses,setAllCourses] = useState(null)
+
+    const [subject,setSubject] = useState("All")
+    const {id} = useParams()
+
 
 useEffect(()=>{
+  
     const fetchCourses =async ()=>{
-      const response = await fetch("/instructor/viewMyCourses/63597146bdb0ff27cdf8e2f3");
+      const response = await fetch(`/instructor/viewMyCourses/${id}`);
       const coursesJson = await response.json()
 
       if(response.ok){
-        setcount(coursesJson);
+        setcourses(coursesJson);
+        setAllCourses(coursesJson);
       }
     }
     fetchCourses()
-  })
+  },[])
+
+
+
+  const handleChange = (e)=>{
+    setSubject(e.target.value)
+    console.log(subject)
+    console.log(courses)
+
+    if(e.target.value!=="All"){
+     const newcourses = allCourses.filter(course=>course.subject===e.target.value)
+     setcourses(newcourses)
+    }
+    else
+    setcourses(allCourses)
+     console.log(courses)
+
+  }
+
     return ( 
     <div className="instructor-courses">
         <title>show courses</title>
-        {/* <button onClick={handleClick}>show instructor courses</button> */}
-        {count&&count.map((course)=>(
+        {courses&&courses.map((course)=>(
             <div className = "instructor-course" key={course._id}>
                 <h1> {course.title}</h1>
                 <h2>{course.subject}</h2>
 
             </div>
         ))}
-        {/* <h2> {count}</h2> */}
+    <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={subject}
+    label="subject"
+    onChange={handleChange}>    
+    <MenuItem value={"All"}>All Courses</MenuItem>
+    <MenuItem value={"CS"}>CS</MenuItem>
+    <MenuItem value={"Chemistry"}>Chemistry</MenuItem>
+    <MenuItem value={"Math"}>Math</MenuItem>
+  </Select>
     </div> );
 }
  
