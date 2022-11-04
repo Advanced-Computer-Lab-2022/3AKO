@@ -12,22 +12,31 @@ const addInstructor = async (req, res) => {
     try {
         const instructor = await instructorModel.create({username, password, email}) 
         res.status(200).json(instructor)
-    }catch(err){
-        res.status(400).json({error : err.message})
+    }catch(error){
+        res.status(400).json({error : error.message})
     }
 }
 
 const viewMyCourses = async (req,res)=>{
     const {id} = req.params
     try {
-    const instructorCourses = await instructorModel.findOne({'_id':id}).select('courses -_id').populate('courses','title subject')
-    const {courses} = instructorCourses    
-    var jsonArray = JSON.parse(JSON.stringify(courses))
-    res.send(jsonArray)
+    const instructorCourses = await courseModel.find({'instrucrtorId' : id})
+    res.send(instructorCourses)
     } catch (err) {
         res.send({error:err.message})
     }
 }
+
+const viewMySubjects = async (req,res)=>{
+    const {id} = req.params
+    try {
+    const subjects = await courseModel.distinct('subject', {'instrucrtorId' : id})
+    res.send(subjects)
+    } catch (err) {
+        res.send({error:err.message})
+    }
+}
+
 const filterOnSubject = async (req, res) => {
     const {id} = req.params
     const {subject} = req.body
@@ -68,4 +77,4 @@ const addCourse = async (req, res) => {
 
 
 
-module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject,addCourse}
+module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject,addCourse,viewMySubjects}

@@ -8,8 +8,8 @@ const addCoporateTrainee = async (req, res) => {
     try {
         const CorporateTrainee = await corporateTrainee.create({username, password}) 
         res.status(200).json(CorporateTrainee)
-    }catch(err){
-        res.status(400).json({error : err.message})
+    }catch(error){
+        res.status(400).json({error : error.message})
     }
 }
 
