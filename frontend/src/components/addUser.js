@@ -6,7 +6,6 @@ const AddUser = ({fields, userType}) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
-    // const [userFields, setUserFields] = useState([])
     const [success, setSuccess] = useState(null)
     const [error, setError] = useState(null)
 
@@ -20,15 +19,16 @@ const AddUser = ({fields, userType}) => {
                 'Content-Type' :'application/json'
             }
         })
+        const responseJSON = await response.json()
         if(response.ok){
             setUsername('')
             setPassword('')
             setEmail('')
             setError(null)
             setSuccess(`${userType} Added Successfully`)
-        }
-        if(!response.ok){
-            setError(JSON.err)
+        } 
+        else {
+            setError(responseJSON.error)
             setSuccess(null)
         }
     }
@@ -36,38 +36,34 @@ const AddUser = ({fields, userType}) => {
     return (
         <form className="addUser" onSubmit = {handleAdd}>
             <h3>add {userType}</h3>
-            {/* {fields.map((field) => (
-                <>
-                    <label>{field}</label>
-                    <input 
-                        type = 'text'
-                        onChange = {(e) => setUserFields((userFields) => [userFields, e.target.value])}
-                        />
-                </>
-            ))} */}
+          
             <div>
                 <label>Username</label>
                 <input 
                     type="text" 
                     onChange={(e) => setUsername(e.target.value)}
-                    value = {username} />
+                    value = {username}
+                    required />
             </div>
             
 
            <div>
             <label>Password</label>
                 <input 
-                    type="text" 
+                    type="password" 
                     onChange={(e) => setPassword(e.target.value)}
-                    value = {password} />
+                    value = {password}
+                    required />
+                    
            </div>
 
             {fields === 3 && <div>
                 <label>Email</label>
                 <input 
-                    type="text" 
+                    type="email" 
                     onChange={(e) => setEmail(e.target.value)}
-                    value = {email} />
+                    value = {email}
+                    required />
             </div>}
 
             <button>Add {userType}</button> 

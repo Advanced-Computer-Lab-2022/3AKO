@@ -9,8 +9,8 @@ const addAdmin = async (req, res) => {
     try {
         const admin = await adminModel.create({username, password}) 
         res.status(200).json(admin)
-    }catch(err){
-        res.status(400).json({error : err.message})
+    }catch(error){
+        res.status(400).json({error : error.message})
     }
 }
 
