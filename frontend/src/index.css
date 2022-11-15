@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
-
+.App{
+  background: #EDEDED;
+}
 *{
-  margin:0;
+  margin:auto;
   font-family: "Poppins" sans-serif;
   color: #333;
 }
@@ -59,18 +61,21 @@
   display: flex;
   justify-content: space-between;
 }
- .courses{
+  .courses{
   display: flex;
   flex-wrap: wrap;
   flex-direction:  row;
   column-gap: 20px;
   row-gap: 20px;
+  column-count: 3;
+  margin: auto;
 } 
+/* 
 .courseCard { 
   background-color: lightgray;
   border-radius: 15px;
   padding: 20px;
   width: 30%;
  
-}
+} */
 

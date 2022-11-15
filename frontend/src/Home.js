@@ -21,12 +21,15 @@ const Home = () => {
       fetchCourses()
     },[])
 
-    const handleClick = () =>{
+    const handleClick = (e) =>{
+      if (e.key === 'Enter') {
+
       const newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase())  );
       console.log(courses);
       console.log(newCourses)
       console.log(allCourses)
       setCourses(newCourses);
+    }
 
     }
     const handleChange = event => {
@@ -37,7 +40,7 @@ const Home = () => {
     return ( 
       <div>
         { <div className="searchBar">
-          <input type="text" placeholder='search' value={searchValue} onChange={handleChange} />
+          <input type="search" placeholder='search' value={searchValue} onChange={handleChange} onKeyUp={handleClick} />
           <button onClick={handleClick}>search</button>
         </div> }
         <div className="courses">
