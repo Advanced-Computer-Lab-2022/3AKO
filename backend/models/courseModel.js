@@ -1,80 +1,74 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-
+const ratingSchema = mongoose.Schema({
+ratingValue :{
+    type : Number,
+    min : 1,
+    max : 5,
+    required : true
+},
+review : {
+    type : String,
+    default : ""
+},
+ReviwerId :{
+    type : mongoose.ObjectId,
+    required : true
+}
+},{autoCreate : false, _id : false})
 const lessonSchema = mongoose.Schema({
     title : {
         type : String,
         required: true
     },
     description :{
-        type : String
+        type : String,
+        default :""
     }
     ,
     videoURL :{
         type : String,
-        required : true
+        default: ""
     },
     readings :{
         type : String,
+        default:""
     },
     position : {
         type : Number,
         required : true 
     }
-},{autoCreate : false})
+},{autoCreate : false, _id : false})
 
 const questionSchema = mongoose.Schema({
     question : {
         type : String,
         require : true
     },
-    answer1 : {
-        value : {
+    choice1 : {
             type : String,
             required : true
-
-        },
-        isTrue : {
-            type :  Boolean,
-            required : true
-        }
     },
-    answer2 : {
-        value : {
+    choice2 : {
             type : String,
             required : true
-
-        },
-        isTrue : {
-            type :  Boolean,
-            required : true
-        }
     },
-    answer3 : {
-        value : {
+    choice3 : {
             type : String,
-            required : true
-
-        },
-        isTrue : {
-            type :  Boolean,
-            required : true
-        }
+            required : true 
     },
-    answer4 : {
-        value : {
+    choice4 : {
             type : String,
             required : true
-
         },
-        isTrue : {
-            type :  Boolean,
-            required : true
+        answer : {
+            type : Number,
+            required : true,
+            min : 1,
+            max : 4
         }
-    }   
-
-},{autoCreate : false})
+},{autoCreate : false, _id : false})
 
 const excerciseSchema = mongoose.Schema({
     title : {
@@ -90,7 +84,7 @@ const excerciseSchema = mongoose.Schema({
         required :true
     }
 
-},{autoCreate : false})
+},{autoCreate : false, _id : false})
 
 const subtitleSchema =mongoose.Schema({
     title : {
@@ -109,7 +103,7 @@ const subtitleSchema =mongoose.Schema({
     }
 
     
-},{autoCreate : false})
+},{autoCreate : false, _id : false})
 const courseSchema = new Schema({
     title : {
         type : String,
@@ -138,10 +132,8 @@ const courseSchema = new Schema({
        default : []
     },
     rating : {
-        type : Number,
-        min : 1,
-        max : 5,
-        default: 5
+
+       
     },
     price : {
         type : Number,
@@ -161,9 +153,11 @@ const courseSchema = new Schema({
         required : true
     },
     promotion :{
-        saleByInstrctor : {
+        discount : {
             type : Number,
-            default : 0
+            default : 0,
+            min : 0,
+            max : 100
         },
         saleEndDate : {
             type : Date,
@@ -186,4 +180,5 @@ const courseModel = mongoose.model('course', courseSchema)
 const subtitlesModel = mongoose.model('subtitlesModel', subtitleSchema)
 const lessonsModel = mongoose.model('lessonsModel', lessonSchema)
 const exerciseModel = mongoose.model('exerciseModel',excerciseSchema)
-module.exports = {courseModel, subtitlesModel, lessonsModel, exerciseModel}
+const questionModel = mongoose.model('questionModel',questionSchema)
+module.exports = {courseModel, subtitlesModel, lessonsModel, exerciseModel,questionModel}
