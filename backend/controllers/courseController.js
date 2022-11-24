@@ -20,6 +20,15 @@ const getAllCourses = async (req, res) => {
     res.send(allCoures)
 }
 
+const getAllSubjects = async (req,res)=>{
+    try {
+    const subjects = await courseModel.distinct('subject')
+    res.send(subjects)
+    } catch (err) {
+        res.send({error:err.message})
+    }
+}
+
 const filterOnSubject = async (subject) => {
     if(subject != null){
     const courses = await courseModel.find({'subject' : subject})
@@ -101,5 +110,6 @@ module.exports = {
     createCourse,
     searchForCourses,
     getCourseInfo,
-    searchByText
+    searchByText,
+    getAllSubjects
 }
