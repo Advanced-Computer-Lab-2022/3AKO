@@ -40,6 +40,10 @@ const instructorSchema = new Schema({
         max : 5,
         min : 0,
         default : 0
+    },
+    biography :{
+        type : String,
+        default : ""
     }
 
 }, {timestamps : true})

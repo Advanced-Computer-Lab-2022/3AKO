@@ -33,7 +33,26 @@ const getOne = async (req,res) => {
         res.status(400).json({error : err.message})
     }
 }
+const editPassword = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const {oldPassword,newPassword}= req.body
+        const passwordObj = await individualTraineeModel.findOne({_id:id},'password -_id').lean()
+        const password= JSON.parse(JSON.stringify(passwordObj)).password
+        console.log(password===oldPassword);
+        if(oldPassword===password){
+            const updatedTrainee = await individualTraineeModel.findOneAndUpdate({_id:id},{password:newPassword},{new:true,upsert:true})
+            res.status(200).json(updatedTrainee)
+        }
+        else{
+            res.status(400).json({error:"Wrong Password"})
+        }
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
+    }
+}
 
 
 
-module.exports = {addIndividualTrainee}
+module.exports = {addIndividualTrainee,editPassword}
