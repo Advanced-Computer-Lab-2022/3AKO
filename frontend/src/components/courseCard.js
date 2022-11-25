@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom'
-import "./stylesheets/courseCard.css";
+import "../stylesheets/courseCard.css";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import bootStarp from 'bootstrap';

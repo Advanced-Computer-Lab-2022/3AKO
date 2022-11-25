@@ -1,4 +1,4 @@
-import CourseCard from '../courseCard';
+import CourseCard from './courseCard';
 import { useEffect ,useState} from "react";
 import { Select, MenuItem } from '@mui/material';
 
@@ -24,6 +24,7 @@ useEffect(()=>{
       if(response.ok){
         setCourses(coursesJson)
         setAllCourses(coursesJson)
+        setSearchedCourses(coursesJson)
         setSubjects(subjectsJson)
       }
     }
@@ -32,7 +33,7 @@ useEffect(()=>{
 
 
 
-  const handleChange = (e) => {
+  const handleFilter = (e) => {
     
     //console.log(subject)
     //console.log(courses)
@@ -51,11 +52,15 @@ useEffect(()=>{
 
   }
 
-  const handleClick = (e) =>{
+  const handleSearch = (e) =>{
     if (e.key === 'Enter') {
-
-    const newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()) || ((course.instrucrtorName) !== undefined && (course.instrucrtorName.toLowerCase()).startsWith(searchValue.toLowerCase())));
-    newCourses.map((course)=>{
+      var newCourses;
+      if(instrucrtorFilter){
+        newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()) || ((course.instrucrtorName) !== undefined && (course.instrucrtorName.toLowerCase()).startsWith(searchValue.toLowerCase())));
+      }else {
+        newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()));
+      }
+      newCourses.map((course)=>{
       console.log(course.instrucrtorName)
     })
     setCourses(newCourses);
@@ -67,8 +72,8 @@ useEffect(()=>{
     return (
       <div>
         { <div className="searchBar">
-          <input type="search" placeholder='search' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onKeyUp={handleClick} />
-          <button onClick={handleClick}>search</button>
+          <input type="search" placeholder='search' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onKeyUp={handleSearch} />
+          <button onClick={handleSearch}>search</button>
         </div> }
         <div className="courses">
         {courses && courses.map((course)=> (
@@ -99,7 +104,7 @@ useEffect(()=>{
         <input type="string" onChange={(e) => SetInstructorName(e.target.value)} value={instrucrtorName}/>
     </div>
   }        
-      <button onClick={handleChange}>Apply</button>
+      <button onClick={handleFilter}>Apply</button>
     </div> 
     
     );
