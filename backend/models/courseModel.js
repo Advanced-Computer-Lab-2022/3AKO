@@ -84,7 +84,7 @@ const excerciseSchema = mongoose.Schema({
         required :true
     }
 
-},{autoCreate : false, _id : false})
+},{autoCreate : false})
 
 const subtitleSchema =mongoose.Schema({
     title : {
@@ -100,10 +100,14 @@ const subtitleSchema =mongoose.Schema({
         type : [excerciseSchema],
         required : true,
         default : []
+    },
+    totalHours : {
+        type : Number,
+        required : true
     }
 
     
-},{autoCreate : false, _id : false})
+},{autoCreate : false})
 const courseSchema = new Schema({
     title : {
         type : String,
@@ -132,8 +136,44 @@ const courseSchema = new Schema({
        default : []
     },
     rating : {
-
-       
+        1:{
+            type : Number,
+            default : 0
+        },
+        2:{
+            type : Number,
+            default : 0
+        },
+        3:{
+            type : Number,
+            default : 0
+        },
+        4:{
+            type : Number,
+            default : 0
+        },
+        5:{
+            type : Number,
+            default : 0
+        }
+    },
+    reviews :{
+        type : [{
+            rating : {
+                type : Number,
+                min : 1,
+                max : 5,
+                required : true
+            },
+            comment : {
+                type : String,
+                default : ""
+            },
+            reviewerId : {
+                type : mongoose.ObjectId,
+                required : true
+            }
+        }]
     },
     price : {
         type : Number,

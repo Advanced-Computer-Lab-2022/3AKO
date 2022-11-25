@@ -1,13 +1,13 @@
 
 const adminModel = require('../models/adminModel')
-
-const instructorModel = require('../models/instructorModel')
+const userModel = require("../models/userModel");
 
 const addAdmin = async (req, res) => {
     const {username, password} = req.body
 
     try {
-        const admin = await adminModel.create({username, password}) 
+        const user = await userModel.create({username,password,type:'admin'})
+        const admin = await adminModel.create({_id:user._id})
         res.status(200).json(admin)
     }catch(error){
         res.status(400).json({error : error.message})
@@ -15,7 +15,4 @@ const addAdmin = async (req, res) => {
 }
 
 
-
-module.exports = {
-    addAdmin
-}
+module.exports = {addAdmin}

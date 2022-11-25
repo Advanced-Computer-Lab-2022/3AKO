@@ -1,25 +1,41 @@
 const express = require('express')
 
-const { default: mongoose } = require('mongoose')
+const {getOne, requestCourse, addLessonRecord, addExerciseRecord, addCorporateInfo} = require('../controllers/corporateTraineeController')
 
-const {corporateTrainee,course} = require('../models/corporateTraineeModel')
+const {addComplaint} = require('../controllers/complaintController')
 
-const {addCoporateTrainee, getAll, getOne, addCourse, requestCourse, addLesson, addExercise,editPassword} = require('../controllers/corporateTraineeController')
+const {editPassword,editEmail} = require('../controllers/userController')
+
+const {loadSubtitle,loadExamAnswers,rateCourse} = require('../controllers/courseController')
+
+const {rateInstructor} = require('../controllers/instructorController')
 
 const router = express.Router()
 
-router.get('/getAll', getAll)
 
 router.get('/getOne/:id', getOne)
 
-router.patch('/addCourse/:id', addCourse)
-
 router.patch('/requestCourse/:id',requestCourse )
 
-router.patch('/addLesson/:id', addLesson)
+router.patch('/addLessonRecord/:id', addLessonRecord)
 
-router.patch('/addExercise/:id',addExercise)
+router.patch('/addExerciseRecord/:id',addExerciseRecord)
 
 router.patch('/editPassword/:id',editPassword)
+
+router.post('/addComplaint/:id',addComplaint)
+
+router.patch('/editEmail/:id',editEmail)
+
+router.patch('/addCorporateInfo/:id',addCorporateInfo)
+
+router.patch('/rateInstructor/:id',rateInstructor)
+
+router.patch('/rateCourse/:id',rateCourse)
+
+router.get('/loadSubtitle/:id',loadSubtitle)
+
+router.get('/loadExamAnswers/:id',loadExamAnswers)
+
 
 module.exports = router
