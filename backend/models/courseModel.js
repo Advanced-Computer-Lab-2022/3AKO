@@ -161,9 +161,11 @@ const courseSchema = new Schema({
         required : true
     },
     promotion :{
-        saleByInstrctor : {
+        percentage : {
             type : Number,
-            default : 0
+            default : 13,
+            min : 0,
+            max : 100
         },
         saleEndDate : {
             type : Date,
@@ -171,6 +173,10 @@ const courseSchema = new Schema({
         }
     },
     numOfViews : {
+        type : Number,
+        default : 0
+    },
+    numOfRatings : {
         type : Number,
         default : 0
     },

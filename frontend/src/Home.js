@@ -1,4 +1,4 @@
-import CourseCard from './courseCard';
+import CourseCard from './components/courseCard';
 import { useState, useEffect } from 'react';
 const Home = () => {
 
@@ -45,7 +45,7 @@ const Home = () => {
         </div> }
         <div className="courses">
         {courses && courses.map((course)=> (
-        <CourseCard course={course} key={course._id} />
+        <CourseCard course={course} key={course._id} isCorporateTrainee={false}/>
       ))}</div>
       </div>
     );
