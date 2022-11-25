@@ -34,6 +34,49 @@ const createCourse = async (req, res) => {
 
 } 
 
+const getAllSubjects = async (req,res)=>{
+    try {
+    const subjects = await courseModel.distinct('subject')
+    res.send(subjects)
+    } catch (err) {
+        res.send({error:err.message})
+    }
+}
+
+const getAllSubjects = async (req,res)=>{
+    try {
+    const subjects = await courseModel.distinct('subject')
+    res.send(subjects)
+    } catch (err) {
+        res.send({error:err.message})
+    }
+}
+const createCourse = async (req, res) => {
+    try{
+        const instrucrtorId = req.params.id
+        const instrucrtorData = await instructorModel.find({_id:instrucrtorId},'name -_id')
+        const instrucrtorName = instrucrtorData[0].name
+        const {title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL} = req.body
+        // subtitles taken from the json is an array of the titles of the subtitles
+        const subParemters = await subtitles.map(sub => {return {title:sub.title,totalHours:sub.totalHours}})
+        const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
+        const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        const match = previewVideo.match(reg)
+        if (match && match[1].length == 11) {
+            const course = await courseModel.create({title,outlines,summary,previewVideo:match[1],subject,subtitles:subtitlesData,price,totalHours,imageURL,instrucrtorId,instrucrtorName})
+            res.status(200).json(course)
+        }
+        else{
+            res.status(400).json({error:"Invalid Youtube Video Link"})
+        }
+
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
+
+
+} 
+
 const filterOnSubject = async (subject) => {
     if(subject != null){
     const courses = await courseModel.find({'subject' : subject})
@@ -303,5 +346,6 @@ module.exports = {
     loadExamAnswers,
     rateCourse
     ,viewMyCourses,instructorFilterOnSubject,viewMySubjects,addLesson
-    ,addSubVid,addPreviewLink,addExcercise,addQuestion,addPromotion
+    ,addSubVid,addPreviewLink,addExcercise,addQuestion,addPromotion,
+    getAllSubjects
 }
