@@ -1,13 +1,14 @@
 
 const individualTraineeModel = require('../models/individualTraineeModel')
-
+const userModel = require("../models/userModel");
 
 
 const addIndividualTrainee = async (req, res) => {
-    const {username, password, name, email, gender, country, coursesList} = req.body
+    const {username, password, name, email, gender, country} = req.body
 
     try {
-        const individualTrainee = await individualTraineeModel.create({username, password, name, email, gender, country, coursesList}) 
+        const user = await userModel.create({username,password,email,type:'individual trainee',country})
+        const individualTrainee = await individualTraineeModel.create({_id:user._id ,name, gender}) 
         res.status(200).json(individualTrainee)
     }catch(err){
         res.status(400).json({error : err.message})
@@ -33,7 +34,5 @@ const getOne = async (req,res) => {
         res.status(400).json({error : err.message})
     }
 }
-
-
 
 module.exports = {addIndividualTrainee}

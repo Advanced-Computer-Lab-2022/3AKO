@@ -1,5 +1,5 @@
-const {courseModel, subtitlesModel, lessonsModel, exerciseModel} = require("../models/courseModel");
 const instructorModel = require("../models/instructorModel");
+const userModel = require("../models/userModel");
 
 const getInstructor = async (req,res)=>{
     const {id} = req.params
@@ -7,74 +7,66 @@ const getInstructor = async (req,res)=>{
     res.send(instructor)
 }
 const addInstructor = async (req, res) => {
-    const {username, password, email} = req.body
+    const {username, password} = req.body
 
     try {
-        const instructor = await instructorModel.create({username, password, email}) 
+        const user = await userModel.create({username,password,type:'instructor'})
+        const instructor = await instructorModel.create({_id:user._id}) 
         res.status(200).json(instructor)
     }catch(error){
         res.status(400).json({error : error.message})
     }
 }
 
-const viewMyCourses = async (req,res)=>{
-    const {id} = req.params
-    try {
-    const instructorCourses = await courseModel.find({'instrucrtorId' : id})
-    res.send(instructorCourses)
-    } catch (err) {
-        res.send({error:err.message})
+
+const editBiography = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const {biography}= req.body
+        const updatedInstructor = await instructorModel.findOneAndUpdate({_id:id},{biography},{new:true,upsert:true})
+        res.status(200).json(updatedInstructor)
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
     }
 }
+const addInstructorInfo = async (req, res) => { // adds info for first time instructors
+    try{
+        const id = req.params.id;
+        const {name , gender, biography} = req.body
+        const updatedInstructor = await instructorModel.findOneAndUpdate({_id:id},{name,gender,biography},{new:true,upsert:true})
+        res.status(200).json(updatedInstructor)
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
 
-const viewMySubjects = async (req,res)=>{
-    const {id} = req.params
-    try {
-    const subjects = await courseModel.distinct('subject', {'instrucrtorId' : id})
-    res.send(subjects)
-    } catch (err) {
-        res.send({error:err.message})
     }
 }
-
-const filterOnSubject = async (req, res) => {
-    const {id} = req.params
-    const {subject} = req.body
+const setContractState = async (req, res) => { // used to either accept the contract or to later reject it
     try{
-    const {courses} = await instructorModel.findOne({'_id':id}).select('courses -_id')
-    var x = []    
-        for (let index = 0; index < courses.length; index++) {
-            const element = courses[index];
-            const courseInfo = await courseModel.findOne({'_id':element,'subject':subject}).select('title -_id')
-            if(courseInfo)
-            x.push(courseInfo)
-        }
-    res.send(x)
-} catch (err) {
-    res.send({error:err.message})
-}
-}
-
-const addCourse = async (req, res) => {
-    try{
-        const instrucrtorId = req.params.id
-        const instrucrtorData = await instructorModel.find({_id:instrucrtorId},'name -_id')
-        const instrucrtorName = instrucrtorData[0].name
-        const {title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL} = req.body
-        // subtitles taken from the json is an array of the titles of the subtitles
-        const subParemters = await subtitles.map(sub => {return {title:sub}})
-        const subtitlesData = await subtitlesModel.create(subParemters)
-        console.log(subtitlesData);
-        const course = await courseModel.create({title,outlines,summary,previewVideo,subject,subtitles:subtitlesData,price,totalHours,imageURL,instrucrtorId,instrucrtorName})
-        res.status(200).json(course)
-
+        const id = req.params.id;
+        const {state} =req.body //bollean 
+        const updatedInstructor = await instructorModel.findOneAndUpdate({_id:id},{consent:state},{new:true,upsert:true})
+        res.status(200).json(updatedInstructor)
     }catch(err){
         res.status(400).json({error:err.message})
     }
+}
+
+const rateInstructor = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const {rating , comment, instructorId } = req.body
+        const addedReview = await instructorModel.findOneAndUpdate({_id:instructorId},{$push:{reviews:{rating,comment,reviewerId:id}}},{new:true,upsert:true}).lean()
+        const Rating = addedReview.rating
+        Rating[""+rating]=Rating[""+rating]+1
+        const ret = await instructorModel.findOneAndUpdate({_id:instructorId},{rating:Rating},{new:true,upsert:true})
+        res.status(200).json(ret)
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
+    }
+}
 
 
-} 
-
-
-
-module.exports = {getInstructor,addInstructor,viewMyCourses,filterOnSubject,addCourse,viewMySubjects}
+module.exports = {getInstructor,addInstructor,editBiography,addInstructorInfo,setContractState,rateInstructor}

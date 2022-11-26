@@ -1,16 +1,27 @@
-const {createCourse} = require("../controllers/courseController")
-const {getInstructor,viewMyCourses,filterOnSubject,addCourse,viewMySubjects} = require("../controllers/instructorController")
-
+const {getInstructor,editBiography,addInstructorInfo,setContractState} = require("../controllers/instructorController")
+const {editPassword,editEmail} = require('../controllers/userController')
+const {createCourse,viewMyCourses,filterOnSubject,viewMySubjects,addLesson,addSubVid,addPreviewLink,addExcercise,addQuestion,addPromotion} = require("../controllers/courseController")
+const {addComplaint} = require('../controllers/complaintController')
 const express = require("express")
 const router = express.Router()
 
 
-router.post("/:id/createCourse",createCourse)
+router.post("/createCourse/:id",createCourse)
 router.get("/getInstructor/:id",getInstructor)
 router.get("/viewMyCourses/:id",viewMyCourses)
 router.get("/viewMySubjects/:id",viewMySubjects)
 router.get("/filterOnSubject/:id",filterOnSubject)
-router.post('/addCourse/:id', addCourse)
 
-
+router.patch('/setContractState/:id',setContractState)
+router.patch('/addInstructorInfo/:id',addInstructorInfo)
+router.patch('/addLesson/:id',addLesson)
+router.patch('/addSubtitleVideoLink/:id',addSubVid)
+router.patch('/addPreviewLink/:id',addPreviewLink)
+router.patch('/addExcercise/:id',addExcercise)
+router.patch('/addQuestion/:id',addQuestion)
+router.patch('/editEmail/:id',editEmail)
+router.patch('/editBiography/:id',editBiography)
+router.patch('/addPromotion/:id',addPromotion)
+router.patch('/editPassword/:id',editPassword)
+router.post('/addComplaint/:id',addComplaint)
 module.exports = router

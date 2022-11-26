@@ -2,19 +2,12 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const individualTraineeSchema = new Schema({
-    username : {
-        type : String,
-        required : true
-    },
-    password : {
-        type : String,
-        required : true
+    _id : {
+        type : mongoose.ObjectId,
+        require : true,
+        ref : "user"
     },
     name:{
-        type : String,
-        required : true
-    },
-    email:{
         type : String,
         required : true
     },
@@ -22,24 +15,27 @@ const individualTraineeSchema = new Schema({
         type : String,
         required : false
     },
-    // remove country ??
-    country:{
-        type : String,
-        required : true
-    },
-
-
-    //check if the ref syntax work
     coursesList :{
-        type: [{courseId:{ type : mongoose.ObjectId, ref: 'course'},
+        type: [{
+            courseId:{ type : mongoose.ObjectId, ref: 'course'},
 
-                exercisesList:{type: [{exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, grade: {type : Number, required : true}, _id:false} ]}, 
-
-                lessonsList:{type: [{type : mongoose.ObjectId, ref: 'lesson'}]}, 
-
-                progress: Number,
-                _id: false
+            exercisesList : {
+                type: [{
+                    exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, 
+                    grade:{ type : Number, required : true},
+                    answers : {type : [Number],required : true}}]
+            },
+            lessonsList : {
+                type: [{
+                    lessonId:{ type : mongoose.ObjectId, ref: 'lesson'},
+                    note:{type : String,default : ""}}]
+            }, 
+            progress: {type : Number, min : 0, max : 100, default : 0}
             }]
+    },
+    complaints :{
+        type : [mongoose.ObjectId],
+        default : []
     }
 }, {timestamps : true})
 

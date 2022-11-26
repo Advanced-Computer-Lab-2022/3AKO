@@ -41,23 +41,11 @@ function App() {
             <InstructorCourses />
           </Route>
 
-          <Route exact path = "/addInstructor">
+          <Route exact path = "/admin/addInstructor">
             <AddInstructor />
           </Route>
 
-          <Route exact path = "/addAdmin">
-            <AddAdmin />
-          </Route>
-
-          <Route exact path = "/admin/addCorporateTrainee">
-            <AddCorporateTrainee />
-          </Route>
-
-          <Route exact path = "/addInstructor">
-            <AddInstructor />
-          </Route>
-
-          <Route exact path = "/addAdmin">
+          <Route exact path = "/admin/addAdmin">
             <AddAdmin />
           </Route>
 

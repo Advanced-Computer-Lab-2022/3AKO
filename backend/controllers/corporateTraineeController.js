@@ -1,27 +1,20 @@
 const { default: mongoose } = require('mongoose')
 
-const {corporateTrainee,course} = require('../models/corporateTraineeModel')
+const {corporateTrainee,courseRecordModel} = require('../models/corporateTraineeModel')
+const userModel = require("../models/userModel");
 
-const addCoporateTrainee = async (req, res) => {
+const addCorporateTrainee = async (req, res) => {
     const {username, password} = req.body
 
     try {
-        const CorporateTrainee = await corporateTrainee.create({username, password}) 
+        const user = await userModel.create({username,password,type:'corporate trainee'})
+        const CorporateTrainee = await corporateTrainee.create({_id:user._id}) 
         res.status(200).json(CorporateTrainee)
     }catch(error){
         res.status(400).json({error : error.message})
     }
 }
 
-const getAll = async (req,res) => {
-    try{
-       
-        const CorporateTrainees = await corporateTrainee.find({})
-        res.status(200).json(CorporateTrainees)
-    }catch(err){
-        res.status(400).json({error : err.message})
-    }
-}
 
 const getOne = async (req,res) => {
     try{
@@ -33,12 +26,12 @@ const getOne = async (req,res) => {
     }
 }
 
-const addCourse = async (req,res) => {
+const addCourseToCorporate = async (req,res) => {
     try{
         const corporateTraineeId=await req.params.id
         const{courseId} = req.body
-        const newCourse = await new course({courseId:courseId})
-        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{courseList:newCourse}})
+        const newCourseRecord = await new courseRecordModel({courseId:courseId})
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{courseList:newCourseRecord}})
         res.status(200).json(newCourse)
     }catch(err){
         res.status(400).json({error : err.message})
@@ -49,32 +42,44 @@ const requestCourse= async(req, res) => {
     try{
         const corporateTraineeId=await req.params.id
         const{courseId} = req.body
-        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{pendingRequests:{courseId:courseId}}})
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{courseRequests:{courseId:courseId}}})
         res.status(200).json({courseId})
     }catch(err){
         res.status(400).json({error : err.message})
     }
 }
 
-const addLesson = async(req, res) => {
+const addLessonRecord = async(req, res) => {
     try{
         const corporateTraineeId=await req.params.id
         const{courseId,lessonId} = req.body
-        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.lessonsList':lessonId}})
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.lessonsList':{lessonId,note:""}}})
         res.status(200).json({newCourseList})
     }catch(err){
         res.status(400).json({error : err.message})
     }
 } 
-const addExercise = async(req, res) => {
+const addExerciseRecord = async(req, res) => {
     try{
         const corporateTraineeId=await req.params.id
-        const{courseId,exerciseId,grade} = req.body
-        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.exercisesList':{exercisesId:exerciseId,grade:grade}}})
+        const{courseId,exerciseId,grade,answers} = req.body
+        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.exercisesList':{exercisesId:exerciseId,grade:grade,answers}}})
         res.status(200).json({newCourseList})
     }catch(err){
         res.status(400).json({error : err.message})
     }
-} 
+}
+const addCorporateInfo = async (req, res) => { // adds info for first time instructors
+    try{
+        const id = req.params.id;
+        const {name , gender} = req.body
+        const updatedInstructor = await corporateTrainee.findOneAndUpdate({_id:id},{name,gender},{new:true,upsert:true})
+        res.status(200).json(updatedInstructor)
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
 
-module.exports = {addCoporateTrainee, getAll, getOne, addCourse, requestCourse, addLesson, addExercise}
+    }
+}
+
+module.exports = {addCorporateTrainee, getOne, addCourseToCorporate, requestCourse, addLessonRecord, addExerciseRecord, addCorporateInfo}
