@@ -1,4 +1,4 @@
-import CourseCard from '../courseCard';
+import CourseCard from './courseCard';
 import { useEffect ,useState} from "react";
 import { Select, MenuItem } from '@mui/material';
 

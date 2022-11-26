@@ -1,6 +1,5 @@
 
-import SearchAndFilter from "./components/components/searchAndFilter";
-import CourseCard from './components/courseCard';
+import SearchAndFilter from "./components/searchAndFilter";
 
 const Home = () => {
 
