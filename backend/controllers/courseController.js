@@ -1,12 +1,15 @@
 const mongoose = require('mongoose')
-const { db } = require('../models/complaintModel')
 
 const {courseModel, subtitlesModel, lessonsModel, exerciseModel,questionModel} = require('../models/courseModel')
 const instructorModel = require('../models/instructorModel')
 
 const getAllCourses = async (req, res) => {
-    const allCoures = await courseModel.find({})
-    res.send(allCoures)
+    try{
+        const allCoures = await courseModel.find({})
+        res.status(200).json(allCoures)
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
 }
 const createCourse = async (req, res) => {
     try{
@@ -37,9 +40,9 @@ const createCourse = async (req, res) => {
 const getAllSubjects = async (req,res)=>{
     try {
     const subjects = await courseModel.distinct('subject')
-    res.send(subjects)
+    res.status(200).json(subjects)
     } catch (err) {
-        res.send({error:err.message})
+        res.status(400).json({error:err.message})
     }
 }
 
@@ -74,11 +77,14 @@ const filter = async (req,res) =>{
 
 
 const searchForCourses = async (req, res) => {
-    const {searchKey} = req.params
-    const instructorId = await instructorModel.find({'name' : searchKey.toLowerCase()},{_id : 1})
-    const courses = await courseModel.find( { $or: [ { instrucrtorId: instructorId },{ title: searchKey.toLowerCase()},{subject : searchKey}] } )
-    
-    res.send(courses)
+    try{
+        const {searchKey} = req.params
+        const instructorId = await instructorModel.find({'name' : searchKey.toLowerCase()},{_id : 1})
+        const courses = await courseModel.find( { $or: [ { instrucrtorId: instructorId },{ title: searchKey.toLowerCase()},{subject : searchKey}] } )
+        res.status(200).json(courses)
+    }catch(err){
+        res.status(400).json({error:err.message})
+    }
 }
 
 // const getCourseInfo= async (req, res) => {
@@ -95,7 +101,7 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try{
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({_id:courseId},'title outlines summary previewVideo subject subtitles.title subtitles.totalHours rating reviews price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({_id:courseId},'title outlines summary previewVideo subject subtitles.title subtitles._id subtitles.totalHours rating reviews price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
         res.status(200).json(courseData[0])
     }catch(err){
         res.status(400).json({error:err.message})
