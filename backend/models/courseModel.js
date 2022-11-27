@@ -1,22 +1,6 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-const ratingSchema = mongoose.Schema({
-ratingValue :{
-    type : Number,
-    min : 1,
-    max : 5,
-    required : true
-},
-review : {
-    type : String,
-    default : ""
-},
-ReviwerId :{
-    type : mongoose.ObjectId,
-    required : true
-}
-},{autoCreate : false, _id : false})
 const lessonSchema = mongoose.Schema({
     title : {
         type : String,

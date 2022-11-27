@@ -1,9 +1,12 @@
 const express = require('express')
 
-const {addUser} = require('../controllers/userController')
+const {editPassword,editEmail} = require('../controllers/userController')
 
 const router = express.Router()
 
-router.post('/addUser',addUser)
+router.patch('/editEmail/:id',editEmail)
+
+router.patch('/editPassword/:id',editPassword)
+
 
 module.exports = router

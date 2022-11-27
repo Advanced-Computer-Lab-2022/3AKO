@@ -2,15 +2,14 @@ const express = require('express')
 
 const {addAdmin} = require('../controllers/adminController')
 const {addInstructor} = require('../controllers/instructorController')
-const {addCorporateTrainee,addCourseToCorporate} = require('../controllers/corporateTraineeController')
-const {editPassword,editEmail} = require('../controllers/userController')
+const {addCorporateTrainee} = require('../controllers/corporateTraineeController')
+const { addCourseToTrainee } = require('../controllers/traineeController')
 const router = express.Router()
 
 router.post('/addAdmin', addAdmin)
 router.post('/addInstructor', addInstructor)
 router.post('/addCorporateTrainee', addCorporateTrainee)
-router.patch('/editPassword/:id',editPassword)
-router.patch('addCourseToCorporate/:id',addCourseToCorporate)
+router.patch('addCourseToCorporate/:id',addCourseToTrainee)
 //router.patch('/editEmail/:id',editEmail)
 
 
