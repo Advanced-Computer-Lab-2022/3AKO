@@ -120,7 +120,7 @@ const viewMyCourses = async (req,res)=>{
     const {id} = req.params
     try {
     const instructorCourses = await courseModel.find({'instrucrtorId' : id})
-    res.send(instructorCourses)
+    res.json(instructorCourses)
     } catch (err) {
         res.send({error:err.message})
     }
@@ -130,7 +130,7 @@ const viewMySubjects = async (req,res)=>{
     const {id} = req.params
     try {
     const subjects = await courseModel.distinct('subject', {'instrucrtorId' : id})
-    res.send(subjects)
+    res.json(subjects)
     } catch (err) {
         res.send({error:err.message})
     }

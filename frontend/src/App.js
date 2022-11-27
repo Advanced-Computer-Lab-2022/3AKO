@@ -9,6 +9,8 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
+import MyCoursesTrainee from "./MyCoursesTrainee";
+import CourseMaterials from "./CourseMaterials"; 
 import { useEffect, useState } from "react";
 
 function App() {
@@ -51,6 +53,12 @@ function App() {
 
           <Route exact path = "/admin/addCorporateTrainee">
             <AddCorporateTrainee />
+          </Route>
+          <Route exact path = "/trainee/myCourses/:id">
+            <MyCoursesTrainee />
+          </Route>
+          <Route exact path = "/trainee/CourseMaterials/:id">
+            <CourseMaterials />
           </Route>
         </Switch>
         

@@ -1,8 +1,5 @@
 .coursecard { 
-    background-color: white;
-     width: 25%;
-  
-    border-radius: 5px;
+    color: black;
 }
 .coursecard img {
     width: 100%;
@@ -14,4 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.rating{
+    color: '#FFC700';
 }
