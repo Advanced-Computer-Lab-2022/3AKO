@@ -9,7 +9,8 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
-import { useEffect, useState } from "react";
+import PersonalInfo from "./personalInfo";
+import { useState } from "react";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -28,17 +29,23 @@ function App() {
         <h2>welcome Home</h2>
         <Switch>
           <Route exact path="/">
-
             <Home />
           </Route>
+
           <Route exact path="/course/:courseId">
             <CourseView exchangeRate={exchangeRate} currency={currency}/>
           </Route>
+
           <Route exact path="/instructor/addCourse/:instructorId">
             <AddCourse />
           </Route>
+
           <Route exact path = "/instructor/:id">
             <InstructorCourses />
+          </Route>
+
+          <Route exact path = "/instructor/profile/:id">
+            <PersonalInfo />
           </Route>
 
           <Route exact path = "/admin/addInstructor">

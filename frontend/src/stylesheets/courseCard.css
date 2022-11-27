@@ -1,11 +1,27 @@
-.coursecard { 
+.coursecard {
     background-color: white;
-     width: 25%;
-  
+    width: 25%;
+
     border-radius: 5px;
 }
+
 .coursecard img {
     width: 100%;
     height: 42%;
     border-radius: 5px 5px 0px 0px;
+}
+
+.priceEnroll {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rating {
+    color: #FFC700;
+}
+
+.cardLink {
+    text-decoration: none;
+    color: black;
 }
