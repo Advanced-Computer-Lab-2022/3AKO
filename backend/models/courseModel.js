@@ -192,6 +192,10 @@ const courseSchema = new Schema({
         type : Number,
         default : 0
     },
+    numOfRatings : {
+        type : Number,
+        default : 0
+    },
     imageURL :{
         type : String,
         default : "https://www.google.com/url?sa=i&url=https%3A%2F%2Ftheconversation.com%2Fthe-50-great-books-on-education-24934&psig=AOvVaw2y1QPujW8vq-OTh5Nspo2J&ust=1667236771520000&source=images&cd=vfe&ved=0CA0QjRxqFwoTCJjM8I27iPsCFQAAAAAdAAAAABAE"
