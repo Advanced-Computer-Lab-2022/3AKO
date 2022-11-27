@@ -1,8 +1,5 @@
 .coursecard {
-    background-color: white;
-    width: 25%;
-
-    border-radius: 5px;
+    color: black;
 }
 
 .coursecard img {
@@ -18,10 +15,5 @@
 }
 
 .rating {
-    color: #FFC700;
-}
-
-.cardLink {
-    text-decoration: none;
-    color: black;
+    color: '#FFC700';
 }

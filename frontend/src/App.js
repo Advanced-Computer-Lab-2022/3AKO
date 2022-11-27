@@ -9,6 +9,9 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
+import Lol from "./IncompleteInstructorCourse";
+import MyCoursesTrainee from "./MyCoursesTrainee";
+import CourseMaterials from "./CourseMaterials";
 import PersonalInfo from "./personalInfo";
 import { useState } from "react";
 
@@ -33,34 +36,47 @@ function App() {
           </Route>
 
           <Route exact path="/course/:courseId">
-            <CourseView exchangeRate={exchangeRate} currency={currency}/>
+            <CourseView exchangeRate={exchangeRate} currency={currency} />
           </Route>
 
           <Route exact path="/instructor/addCourse/:instructorId">
             <AddCourse />
           </Route>
 
-          <Route exact path = "/instructor/:id">
+          <Route exact path="/instructor/:id">
             <InstructorCourses />
           </Route>
 
-          <Route exact path = "/instructor/profile/:id">
+          <Route exact path="/instructor/profile/:id">
             <PersonalInfo />
           </Route>
 
-          <Route exact path = "/admin/addInstructor">
+          <Route exact path="/admin/addInstructor">
             <AddInstructor />
           </Route>
 
-          <Route exact path = "/admin/addAdmin">
+          <Route exact path="/admin/addAdmin">
             <AddAdmin />
           </Route>
 
-          <Route exact path = "/admin/addCorporateTrainee">
+          <Route exact path="/admin/addCorporateTrainee">
             <AddCorporateTrainee />
           </Route>
+          <Route exact path="/trainee/myCourses/:id">
+            <MyCoursesTrainee />
+          </Route>
+          <Route exact path="/trainee/CourseMaterials/:id">
+            <CourseMaterials />
+          </Route>
+
+          <Route exact path="/aa/Lol">
+            <Lol />
+          </Route>
+
+
+
         </Switch>
-        
+
       </div>
     </Router>
   );
