@@ -79,7 +79,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       </div>}
       <div className="courses">
         {courses && courses.map((course) => (
-          <CourseCard course={course} isInstructor={!instrucrtorFilter} userId={userId} key={course._id} />
+          <CourseCard course={course} isInstructor={!instrucrtorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
         ))}</div>
       <Select
         labelId="demo-simple-select-label"

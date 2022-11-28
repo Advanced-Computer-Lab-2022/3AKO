@@ -8,6 +8,7 @@ import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import axios from 'axios';
 const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
   var price = <p>{course.price}</p>
   if ((course.promotion).percentage > 0) {
@@ -88,6 +89,14 @@ const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
           {isInstructor ? "Add promotion" : "Enroll"}
         </Button>
       </div>
+      <Overlay configs={configs} isOpen={isOpen} closeOverlay={closeOverlay} >
+        <form onSubmit={definePromotion}>
+          <input type="number" min={1} max={100} onChange={(e) => setPromotion(e.target.value)} required />
+          <input type="date" onChange={(e) => setEndDate(e.target.value)} required />
+          <button type="submit">apply promotion</button>
+        </form>
+
+      </Overlay>
     </Card>
 
 
