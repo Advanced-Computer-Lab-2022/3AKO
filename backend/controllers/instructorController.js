@@ -45,7 +45,7 @@ const addInstructorInfo = async (req, res) => { // adds info for first time inst
 const setContractState = async (req, res) => { // used to either accept the contract or to later reject it
     try{
         const id = req.params.id;
-        const {state} =req.body //bollean 
+        const {state} =req.body //boolean 
         const updatedInstructor = await instructorModel.findOneAndUpdate({_id:id},{consent:state},{new:true,upsert:true})
         res.status(200).json(updatedInstructor)
     }catch(err){

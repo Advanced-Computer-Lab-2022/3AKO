@@ -2,22 +2,59 @@ import { Link } from 'react-router-dom'
 import "../stylesheets/courseCard.css";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import bootStarp from 'bootstrap';
+import { useState } from 'react';
+import Overlay from 'react-overlay-component';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import "bootstrap-icons/font/bootstrap-icons.css";
-const CourseCard = ({ course, isCorporateTrainee }) => {
-
+const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
   var price = <p>{course.price}</p>
   if ((course.promotion).percentage > 0) {
     price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).percentage / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.percentage}% OFF)</span></span></p>
   }
+  const [promotion, setPromotion] = useState(0);
+  const [endDate, setEndDate] = useState(null);
+
+  const [isOpen, setOverlay] = useState(false);
+
+  const closeOverlay = () => setOverlay(false);
+
+  const configs = {
+    animate: true,
+    // clickDismiss: false,
+    // escapeDismiss: false,
+    // focusOutline: false,
+  };
+
+  const definePromotion = () => {
+
+    //console.log(course._id + " " + promotion + " " + endDate + " " + userId)
+    axios.patch(`http://localhost:5000/instructor/addPromotion/${userId}`,
+      {
+        courseId: course._id,
+        discount: promotion,
+        date: endDate
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert("promotion added successfully")
+        setOverlay(false)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+
+
+  const enroll = () => {
+
+  }
 
 
   return (
-
-    <Card className='coursecard'>
+    <Card className='coursecard' >
       <Link to={`/course/${course._id}`} className="cardLink"  >
         <Card.Img variant="top" src="https://www.educationafter12th.com/wp-content/uploads/2016/11/digital-marketing-seo-course-detail-syllabus.jpg" />
         <Card.Body className='m-1'>
@@ -40,33 +77,19 @@ const CourseCard = ({ course, isCorporateTrainee }) => {
           <div className='mt-2' style={{ display: '-webkit-inline-box' }}>
             <i class="bi bi-clock p-2 "></i> <p>{course.totalHours} hours</p>
           </div>
-          <div className='priceEnroll'>{!isCorporateTrainee && <div>{price}</div>}
-          </div>
+
+
         </Card.Body>
       </Link>
-      <Button className='fw-normal px-4' style={{ backgroundColor: '#A00407', border: 'none' }}>Enroll</Button>
+      <div className='priceEnroll'>
+        {!isCorporateTrainee && <div>{price}</div>}
+        <Button className='fw-normal px-4' onClick={isInstructor ? (() => setOverlay(true)) : enroll}
+          style={{ backgroundColor: '#A00407', border: 'none' }}>
+          {isInstructor ? "Add promotion" : "Enroll"}
+        </Button>
+      </div>
     </Card>
 
-    // <div className='coursecard'>
-    //     <img src="https://www.educationafter12th.com/wp-content/uploads/2016/11/digital-marketing-seo-course-detail-syllabus.jpg"/>
-    //     <h2>{course.title}</h2>
-    //     <p>{course.summary.substring(0,150)+ ((course.summary).length > 150 ? '...' : '')}</p>
-    //     <p>taught by:<span>{course.instructorName}</span> </p>
-    //     <p>{course.numOfViews}</p>
-    //     <p>{course.price}</p>
-
-    // </div>
-
-
-
-
-
-
-    // <Link className='courseCard' to={`/course/${course._id}`}>
-    // <p>{course.title}</p>
-    // <p>{course.outline}</p>
-    // <p>{course.summary}</p>
-    // </Link>
 
   );
 }

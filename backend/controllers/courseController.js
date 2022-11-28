@@ -20,15 +20,8 @@ const createCourse = async (req, res) => {
         // subtitles taken from the json is an array of the titles of the subtitles
         const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
         const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
-        const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
-        const match = previewVideo.match(reg)
-        if (match && match[1].length == 11) {
-            const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instrucrtorId, instrucrtorName })
-            res.status(200).json(course)
-        }
-        else {
-            res.status(400).json({ error: "Invalid Youtube Video Link" })
-        }
+
+        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instrucrtorId, instrucrtorName })
 
     } catch (err) {
         res.status(400).json({ error: err.message })
