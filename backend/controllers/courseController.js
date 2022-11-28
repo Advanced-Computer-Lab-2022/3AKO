@@ -18,6 +18,8 @@ const createCourse = async (req, res) => {
         const instrucrtorName = instrucrtorData[0].name
         const { title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL } = req.body
         // subtitles taken from the json is an array of the titles of the subtitles
+        const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        const match = previewVideo.match(reg)
         const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
         const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
 
