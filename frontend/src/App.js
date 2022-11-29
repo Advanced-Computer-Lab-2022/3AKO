@@ -62,7 +62,7 @@ function App() {
             <CourseMaterials />
           </Route>
 
-          <Route exact path = "/aa/Lol">
+          <Route exact path = "/aa/Lol/:courseId">
             <Lol />
           </Route>
 
