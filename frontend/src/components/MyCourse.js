@@ -7,10 +7,10 @@ const MyCourse = ({course}) => {
 
     var progress = 50;
 
-    return (<Link to={`/trainee/CourseMaterials/${course._id}`}>
+    return (<Link to={`/trainee/CourseMaterials/${course.courseId}`}>
                 <div className="m-4">
                     <p>{course.title}</p>
-                    <p>{progress}</p>
+                    <p>{course.progress}</p>
                 </div>
             </Link> );
 }
