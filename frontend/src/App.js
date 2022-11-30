@@ -15,6 +15,7 @@ import CourseSubtitles from "./CourseSubtitles";
 import CourseMaterials from "./CourseMaterials";
 import { useState } from "react";
 import Rate from "./components/rate";
+import PersonalInfo from "./personalInfo";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);

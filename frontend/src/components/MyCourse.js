@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom'
-
+import { Link, useParams } from 'react-router-dom'
+import Rate from './rate'
 
 
 const MyCourse = ({ course }) => {
 
-    const traineeId = useParams();
+    const traineeId = useParams()
     var progress = 50;
     return (
         <div>
