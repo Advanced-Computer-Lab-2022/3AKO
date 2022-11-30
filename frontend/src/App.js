@@ -27,7 +27,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <CountryModal handleExchangeRate={handleExchangeRate} />
+        {/* <CountryModal handleExchangeRate={handleExchangeRate} /> */}
 
         <h2>welcome Home</h2>
         <Switch>
@@ -65,7 +65,7 @@ function App() {
             <CourseMaterials />
           </Route>
 
-          <Route exact path = "/aa/Lol/:courseId">
+          <Route exact path="/aa/Lol/:courseId">
             <Lol />
           </Route>
 

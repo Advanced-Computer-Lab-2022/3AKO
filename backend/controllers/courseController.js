@@ -96,7 +96,7 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try {
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles.title subtitles._id subtitles.totalHours rating reviews price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({ _id: courseId })
         res.status(200).json(courseData[0])
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -314,9 +314,21 @@ const getSubtitles = async (req, res) => {
         console.log(req.body)
     }
 }
+const addSubtitleToCourse = async (req, res) => {
+    try {
+        const { title, courseId, totalHours } = req.body
+        subtitle = await new subtitlesModel({ title, totalHours })
+        updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle } }, { new: true, upsert: true })
+        res.status(200).json(updatedCourse)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
 
 
 module.exports = {
+    addSubtitleToCourse,
     getAllCourses,
     createCourse,
     filterOnSubject,
