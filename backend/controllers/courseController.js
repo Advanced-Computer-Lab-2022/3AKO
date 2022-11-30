@@ -301,6 +301,18 @@ const rateCourse = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const getCourseReviews = async (req, res) => {
+    try {
+        const courseId = req.params.courseId
+        const courseInfo = await courseModel.findOne({ _id: courseId }, 'reviews -_id')
+        res.status(200).send(courseInfo)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const getSubtitles = async (req, res) => {
     try {
         const { courseId } = req.params
@@ -330,5 +342,6 @@ module.exports = {
     , viewMyCourses, instructorFilterOnSubject, viewMySubjects, addLesson
     , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
     getAllSubjects,
-    getSubtitles
+    getSubtitles,
+    getCourseReviews
 }

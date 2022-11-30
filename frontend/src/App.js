@@ -14,6 +14,7 @@ import MyCoursesTrainee from "./MyCoursesTrainee";
 import CourseMaterials from "./CourseMaterials";
 import PersonalInfo from "./personalInfo";
 import { useState } from "react";
+import Rate from "./components/rate";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -27,11 +28,10 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <CountryModal handleExchangeRate={handleExchangeRate} />
-
-        <h2>welcome Home</h2>
         <Switch>
           <Route exact path="/">
+            <CountryModal handleExchangeRate={handleExchangeRate} />
+            <h2>welcome Home</h2>
             <Home />
           </Route>
 
@@ -47,6 +47,10 @@ function App() {
             <InstructorCourses />
           </Route>
 
+          <Route exact path="/instructor/personalInfo/:id">
+            <PersonalInfo />
+          </Route>
+
           <Route exact path="/admin/addInstructor">
             <AddInstructor />
           </Route>
@@ -58,18 +62,18 @@ function App() {
           <Route exact path="/admin/addCorporateTrainee">
             <AddCorporateTrainee />
           </Route>
+
           <Route exact path="/trainee/myCourses/:id">
             <MyCoursesTrainee />
           </Route>
+
           <Route exact path="/trainee/CourseMaterials/:id">
             <CourseMaterials />
           </Route>
 
-          <Route exact path="/aa/Lol">
-            <Lol />
+          <Route exact path="/trainee/rateCourse/:id/:courseId">
+            <Rate />
           </Route>
-
-
 
         </Switch>
 

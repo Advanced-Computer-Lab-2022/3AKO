@@ -103,7 +103,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       {
         instrucrtorFilter &&
         <div>
-          <input type="string" onChange={(e) => SetInstructorName(e.target.value)} value={instrucrtorName} />
+          <input type="string" placeholder='instructor name' onChange={(e) => SetInstructorName(e.target.value)} value={instrucrtorName} />
         </div>
       }
       <button onClick={handleFilter}>Apply</button>
