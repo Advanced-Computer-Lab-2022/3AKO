@@ -258,11 +258,12 @@ const addPromotion = async (req, res) => {
 }
 const loadSubtitle = async (req, res) => {
     try {
-        const id = req.params.id;
-        const { courseId, subtitleId } = req.body
+
+        const { courseId, subtitleId } = req.params
         const answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, })
 
-        res.status(200).json(answers)
+        res.status(200).json(answers.subtitles[0])
+        console.log(answers.subtitles[0])
 
     }
     catch (err) {

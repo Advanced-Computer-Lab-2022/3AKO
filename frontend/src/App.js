@@ -11,8 +11,8 @@ import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
 import Lol from "./IncompleteInstructorCourse";
 import MyCoursesTrainee from "./MyCoursesTrainee";
+import CourseSubtitles from "./CourseSubtitles";
 import CourseMaterials from "./CourseMaterials";
-import PersonalInfo from "./personalInfo";
 import { useState } from "react";
 
 function App() {
@@ -61,7 +61,10 @@ function App() {
           <Route exact path="/trainee/myCourses/:id">
             <MyCoursesTrainee />
           </Route>
-          <Route exact path="/trainee/CourseMaterials/:id">
+          <Route exact path="/trainee/CourseSubtitles/:courseId">
+            <CourseSubtitles />
+          </Route>
+          <Route exact path="/trainee/courseMaterials/:courseId/:subtitleId">
             <CourseMaterials />
           </Route>
 
@@ -74,7 +77,7 @@ function App() {
         </Switch>
 
       </div>
-    </Router>
+    </Router >
   );
 }
 
