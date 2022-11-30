@@ -11,8 +11,8 @@ import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
 import Lol from "./IncompleteInstructorCourse";
 import MyCoursesTrainee from "./MyCoursesTrainee";
+import CourseSubtitles from "./CourseSubtitles";
 import CourseMaterials from "./CourseMaterials";
-import PersonalInfo from "./personalInfo";
 import { useState } from "react";
 import Rate from "./components/rate";
 
@@ -66,19 +66,24 @@ function App() {
           <Route exact path="/trainee/myCourses/:id">
             <MyCoursesTrainee />
           </Route>
-
-          <Route exact path="/trainee/CourseMaterials/:id">
+          <Route exact path="/trainee/CourseSubtitles/:courseId">
+            <CourseSubtitles />
+          </Route>
+          <Route exact path="/trainee/courseMaterials/:courseId/:subtitleId">
             <CourseMaterials />
           </Route>
 
-          <Route exact path="/trainee/rateCourse/:id/:courseId">
+          <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
             <Rate />
           </Route>
 
+          <Route exact path="/aa/Lol/:courseId">
+            <Lol />
+          </Route>
         </Switch>
 
       </div>
-    </Router>
+    </Router >
   );
 }
 

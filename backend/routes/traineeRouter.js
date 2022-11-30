@@ -24,7 +24,7 @@ router.patch('/rateInstructor/:id', rateInstructor)
 
 router.patch('/rateCourse/:id', rateCourse)
 
-router.get('/loadSubtitle/:id', loadSubtitle)
+router.get('/loadSubtitle/:courseId/:subtitleId', loadSubtitle)
 
 router.get('/loadExamAnswers/:id', loadExamAnswers)
 

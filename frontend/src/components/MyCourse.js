@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom'
-import Rate from './rate';
+import { Link } from 'react-router-dom'
 
 
 
 const MyCourse = ({ course }) => {
 
     const traineeId = useParams();
+    var progress = 50;
     return (
         <div>
-            <Link to={`/trainee/CourseMaterials/${course.courseId}`}>
+            <Link to={`/trainee/CourseSubtitles/${course.courseId}`}>
                 <div className="m-4">
                     <p>{course.title}</p>
                     <p>{course.progress}</p>
