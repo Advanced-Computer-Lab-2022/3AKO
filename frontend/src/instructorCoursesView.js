@@ -6,7 +6,11 @@ const InstructorCourses = () => {
 
     const {id} = useParams()
 
-    return (  <SearchAndFilter coursesFetch={`/instructor/viewMyCourses/${id}`} subjectsFetch={`/instructor/viewMySubjects/${id}`} isCorporateTrainee={false} instrucrtorFilter={false}/> )
+    return ( 
+    
+        <SearchAndFilter coursesFetch={`/instructor/viewMyCourses/${id}`} subjectsFetch={`/instructor/viewMySubjects/${id}`} isCorporateTrainee={false} instrucrtorFilter={false}/>
+    
+    )
 }
  
 export default InstructorCourses;

@@ -8,7 +8,13 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
-import { useEffect, useState } from "react";
+import Lol from "./IncompleteInstructorCourse";
+import MyCoursesTrainee from "./MyCoursesTrainee";
+import CourseSubtitles from "./CourseSubtitles";
+import CourseMaterials from "./CourseMaterials";
+import { useState } from "react";
+import Rate from "./components/rate";
+import PersonalInfo from "./personalInfo";
 
 import RatingAndReview from "./components/RatingAndReview";
 import { Rating } from "@mui/material";
@@ -25,21 +31,27 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <CountryModal handleExchangeRate={handleExchangeRate} />
-
-        <h2>welcome Home</h2>
         <Switch>
           <Route exact path="/">
+            <CountryModal handleExchangeRate={handleExchangeRate} />
+            <h2>welcome Home</h2>
             <Home />
           </Route>
+
           <Route exact path="/course/:courseId">
             <CourseView exchangeRate={exchangeRate} currency={currency} />
           </Route>
+
           <Route exact path="/instructor/addCourse/:instructorId">
             <AddCourse />
           </Route>
+
           <Route exact path="/instructor/:id">
             <InstructorCourses />
+          </Route>
+
+          <Route exact path="/instructor/personalInfo/:id">
+            <PersonalInfo />
           </Route>
 
           <Route exact path="/admin/addInstructor">
@@ -53,7 +65,26 @@ function App() {
           <Route exact path="/admin/addCorporateTrainee">
             <AddCorporateTrainee />
           </Route>
+
+          <Route exact path="/trainee/myCourses/:id">
+            <MyCoursesTrainee />
+          </Route>
+          <Route exact path="/trainee/CourseSubtitles/:courseId">
+            <CourseSubtitles />
+          </Route>
+          <Route exact path="/trainee/courseMaterials/:courseId/:subtitleId">
+            <CourseMaterials />
+          </Route>
+
+          <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
+            <Rate />
+          </Route>
+
+          <Route exact path="/aa/Lol/:courseId">
+            <Lol />
+          </Route>
         </Switch>
+
       </div>
     </Router>
   );
