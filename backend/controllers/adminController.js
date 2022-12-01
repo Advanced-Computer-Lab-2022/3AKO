@@ -4,8 +4,9 @@ const userModel = require("../models/userModel");
 
 const addAdmin = async (req, res) => {
     const {username, password} = req.body
-
     try {
+        const check = await userModel.findOne({username},'_id').lean()
+        if(check){ throw Error('This username already exists')}
         const user = await userModel.create({username,password,type:'admin'})
         const admin = await adminModel.create({_id:user._id})
         res.status(200).json(admin)

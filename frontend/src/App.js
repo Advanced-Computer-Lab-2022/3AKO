@@ -16,6 +16,8 @@ import CourseMaterials from "./CourseMaterials";
 import { useState } from "react";
 import Rate from "./components/rate";
 import PersonalInfo from "./personalInfo";
+import Navbar from "./components/Navbar";
+import LogIn from "./components/LogIn";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -29,9 +31,13 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Switch>
-          <Route exact path="/">
+          <header>
             <CountryModal handleExchangeRate={handleExchangeRate} />
+            <Navbar/>
+          </header>
+        <Switch>
+
+          <Route exact path="/">
             <h2>welcome Home</h2>
             <Home />
           </Route>
@@ -80,6 +86,9 @@ function App() {
 
           <Route exact path="/aa/Lol/:courseId">
             <Lol />
+          </Route>
+          <Route exact path="/login">
+            <LogIn />
           </Route>
         </Switch>
 

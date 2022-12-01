@@ -8,28 +8,36 @@ const { loadSubtitle, loadExamAnswers, rateCourse, getSubtitles } = require('../
 
 const { rateInstructor } = require('../controllers/instructorController')
 
+const {temp} = require('../controllers/userController')
+
+const {requireTrainee,requireOwnership} = require('../middleware/requireAuth')
+
 const router = express.Router()
 
-router.patch('/addCourseToTrainee/:id', addCourseToTrainee)
+//router.use(requireTrainee)
 
-router.patch('/addLessonRecord/:id', addLessonRecord)
+router.patch('/addCourseToTrainee', addCourseToTrainee) //how dose this work with payment ?
 
-router.patch('/addExerciseRecord/:id', addExerciseRecord)
+router.patch('/addLessonRecord',requireOwnership, addLessonRecord)
 
-router.post('/addComplaint/:id', addComplaint)
+router.patch('/addExerciseRecord',requireOwnership, addExerciseRecord)
 
-router.patch('/addTraineeInfo/:id', addTraineeInfo)
+router.post('/addComplaint',requireTrainee, addComplaint)
 
-router.patch('/rateInstructor/:id', rateInstructor)
+router.patch('/addTraineeInfo',requireTrainee, addTraineeInfo)
 
-router.patch('/rateCourse/:id', rateCourse)
+router.patch('/rateInstructor',requireOwnership, rateInstructor)
 
-router.get('/loadSubtitle/:courseId/:subtitleId', loadSubtitle)
+router.patch('/rateCourse',requireOwnership, rateCourse)
 
-router.get('/loadExamAnswers/:id', loadExamAnswers)
+router.get('/loadSubtitle',requireOwnership, loadSubtitle)
 
-router.get('/myCourses/:id', myCourses)
+router.get('/loadExamAnswers',requireOwnership, loadExamAnswers)
 
-router.get("/getSubtitles/:courseId", getSubtitles)
+router.get('/myCourses',requireOwnership, myCourses)
+
+router.get("/getSubtitles",requireOwnership, getSubtitles)
+
+router.get('/temp',temp)
 
 module.exports = router

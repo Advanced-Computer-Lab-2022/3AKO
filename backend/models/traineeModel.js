@@ -60,9 +60,9 @@ const traineeSchema = new Schema({
         type : String
     }
 })
-const trainee = mongoose.model('trainee' , traineeSchema)
+const traineeModel = mongoose.model('trainee' , traineeSchema)
 const courseRecordModel = mongoose.model('courseRecordModel' ,courseList) 
 module.exports = {
-    trainee,
+    traineeModel,
     courseRecordModel
 }

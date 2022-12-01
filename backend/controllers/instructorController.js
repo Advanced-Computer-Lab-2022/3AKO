@@ -10,6 +10,8 @@ const addInstructor = async (req, res) => {
     const { username, password } = req.body
 
     try {
+        const check = await userModel.findOne({username},'_id').lean()
+        if(check){ throw Error('This username already exists')}
         const user = await userModel.create({ username, password, type: 'instructor' })
         const instructor = await instructorModel.create({ _id: user._id })
         res.status(200).json(instructor)
@@ -57,6 +59,9 @@ const rateInstructor = async (req, res) => {
     try {
         const id = req.params.id;
         const { rating, comment, instructorId } = req.body
+        const instrucrtorData = await instructorModel.findOne({_id:instructorId},'reviews.reviewerId -_id').lean()
+        const check = instrucrtorData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
+        if(check) {throw Error("You already reviewed this instructor")}
         const addedReview = await instructorModel.findOneAndUpdate({ _id: instructorId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1

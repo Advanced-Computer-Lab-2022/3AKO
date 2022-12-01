@@ -2,8 +2,11 @@ const express = require('express')
 
 const {requestCourse} = require('../controllers/corporateTraineeController')
 
-const router = express.Router()
+const {requireCorporateTrainee} = require('../middleware/requireAuth')
 
-router.patch('/requestCourse/:id',requestCourse )
+
+const router = express.Router()
+router.use(requireCorporateTrainee)
+router.patch('/requestCourse',requestCourse )
 
 module.exports = router

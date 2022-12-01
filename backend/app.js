@@ -5,6 +5,7 @@ const courseRouter = require("./routes/courseRouter");
 const individualTraineeRouter = require("./routes/individualTraineeRouter");
 const instructorRouter = require("./routes/instructorRouter");
 const traineeRouter = require("./routes/traineeRouter");
+const userRouter = require("./routes/userRouter");
 
 
 const corporateTraineeRouter = require("./routes/corporateTraineeRouter");
@@ -41,3 +42,4 @@ app.use("/course", courseRouter);
 app.use("/individualTrainee", individualTraineeRouter);
 app.use("/utils", utilityRoutes);
 app.use('/trainee',traineeRouter)
+app.use('/user',userRouter)
