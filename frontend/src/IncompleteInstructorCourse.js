@@ -11,6 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Accordion from 'react-bootstrap/Accordion';
 import SortableList from 'react-sortable-list';
 import VideoModal from './components/addVideoModal';
+import SubtitleExercise from './subtitleExercise';
 const { useParams } = require("react-router-dom")
 
 
@@ -114,9 +115,8 @@ const Lol = () => {
               ))}
 
               <Button onClick={() => handleAdd(subtitle)}>Add lesson</Button>
-              <Button onClick={handleAddExercise}>Add Exercise</Button>
+              <Button onClick={() => window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitle._id}`}>Add Exercise</Button>
               {/* <Button onClick={handleAddVideo}>Add Preview Video</Button> */}
-              <VideoModal subtitle={subtitle}></VideoModal>
             </Accordion.Body>
           </Accordion.Item>
         ))}
@@ -208,7 +208,12 @@ const Lol = () => {
         <iframe width="1080" height="607.5" src={"https://www.youtube.com/embed/" + course.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
+      <div>
+        <SubtitleExercise>
 
+        </SubtitleExercise>
+
+      </div>
     </div>
 
   );

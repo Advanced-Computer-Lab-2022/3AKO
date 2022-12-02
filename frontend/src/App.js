@@ -13,6 +13,7 @@ import Lol from "./IncompleteInstructorCourse";
 import MyCoursesTrainee from "./MyCoursesTrainee";
 import CourseMaterials from "./CourseMaterials";
 import PersonalInfo from "./personalInfo";
+import SubtitleExercise from "./subtitleExercise";
 import { useState } from "react";
 
 function App() {
@@ -65,6 +66,9 @@ function App() {
             <CourseMaterials />
           </Route>
 
+          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
+            <SubtitleExercise />
+          </Route>
           <Route exact path="/aa/Lol/:courseId">
             <Lol />
           </Route>
