@@ -224,7 +224,7 @@ const addExcercise = async (req, res) => {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
-        res.status(200).json(updatedCourse)
+        res.status(200).json(exercise)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
