@@ -260,11 +260,12 @@ const addPromotion = async (req, res) => {
 }
 const loadSubtitle = async (req, res) => {
     try {
-        const id = req.params.id;
-        const { courseId, subtitleId } = req.body
+
+        const { courseId, subtitleId } = req.params
         const answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, })
 
-        res.status(200).json(answers)
+        res.status(200).json(answers.subtitles[0])
+        console.log(answers.subtitles[0])
 
     }
     catch (err) {
@@ -301,6 +302,18 @@ const rateCourse = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const getCourseReviews = async (req, res) => {
+    try {
+        const courseId = req.params.courseId
+        const courseInfo = await courseModel.findOne({ _id: courseId }, 'reviews -_id')
+        res.status(200).send(courseInfo)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const getSubtitles = async (req, res) => {
     try {
         const { courseId } = req.params
@@ -342,5 +355,6 @@ module.exports = {
     , viewMyCourses, instructorFilterOnSubject, viewMySubjects, addLesson
     , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
     getAllSubjects,
-    getSubtitles
+    getSubtitles,
+    getCourseReviews
 }
