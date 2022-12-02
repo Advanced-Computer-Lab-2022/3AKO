@@ -5,7 +5,7 @@ const courseRouter = require("./routes/courseRouter");
 const individualTraineeRouter = require("./routes/individualTraineeRouter");
 const instructorRouter = require("./routes/instructorRouter");
 const traineeRouter = require("./routes/traineeRouter");
-
+const userRouter = require("./routes/userRouter");
 
 const corporateTraineeRouter = require("./routes/corporateTraineeRouter");
 const utilityRoutes = require("./routes/utilityRoutes");
@@ -35,6 +35,7 @@ mongoose
   });
 
 app.use("/admin", adminRouter);
+app.use("/user", userRouter);
 app.use("/instructor", instructorRouter);
 app.use("/corporateTrainee", corporateTraineeRouter);
 app.use("/course", courseRouter);

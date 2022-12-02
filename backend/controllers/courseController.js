@@ -96,7 +96,7 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try {
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles.title subtitles._id subtitles.totalHours rating reviews price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({ _id: courseId })
         res.status(200).json(courseData[0])
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -224,7 +224,7 @@ const addExcercise = async (req, res) => {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
-        res.status(200).json(updatedCourse)
+        res.status(200).json(exercise)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
@@ -302,6 +302,18 @@ const rateCourse = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const getCourseReviews = async (req, res) => {
+    try {
+        const courseId = req.params.courseId
+        const courseInfo = await courseModel.findOne({ _id: courseId }, 'reviews -_id')
+        res.status(200).send(courseInfo)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const getSubtitles = async (req, res) => {
     try {
         const { courseId } = req.params
@@ -315,9 +327,21 @@ const getSubtitles = async (req, res) => {
         console.log(req.body)
     }
 }
+const addSubtitleToCourse = async (req, res) => {
+    try {
+        const { title, courseId, totalHours } = req.body
+        subtitle = await new subtitlesModel({ title, totalHours })
+        updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle } }, { new: true, upsert: true })
+        res.status(200).json(updatedCourse)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
 
 
 module.exports = {
+    addSubtitleToCourse,
     getAllCourses,
     createCourse,
     filterOnSubject,
@@ -331,5 +355,6 @@ module.exports = {
     , viewMyCourses, instructorFilterOnSubject, viewMySubjects, addLesson
     , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
     getAllSubjects,
-    getSubtitles
+    getSubtitles,
+    getCourseReviews
 }

@@ -1,4 +1,3 @@
-
 import CourseView from "./CourseView";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Home";
@@ -14,6 +13,12 @@ import MyCoursesTrainee from "./MyCoursesTrainee";
 import CourseSubtitles from "./CourseSubtitles";
 import CourseMaterials from "./CourseMaterials";
 import { useState } from "react";
+import Rate from "./components/rate";
+import PersonalInfo from "./personalInfo";
+
+import SubtitleExercise from "./subtitleExercise";
+import RatingAndReview from "./components/RatingAndReview";
+import { Rating } from "@mui/material";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -32,6 +37,8 @@ function App() {
         {/* <h2>welcome Home</h2> */}
         <Switch>
           <Route exact path="/">
+            <CountryModal handleExchangeRate={handleExchangeRate} />
+            <h2>welcome Home</h2>
             <Home />
           </Route>
 
@@ -47,6 +54,10 @@ function App() {
             <InstructorCourses />
           </Route>
 
+          <Route exact path="/instructor/personalInfo/:id">
+            <PersonalInfo />
+          </Route>
+
           <Route exact path="/admin/addInstructor">
             <AddInstructor />
           </Route>
@@ -58,6 +69,7 @@ function App() {
           <Route exact path="/admin/addCorporateTrainee">
             <AddCorporateTrainee />
           </Route>
+
           <Route exact path="/trainee/myCourses/:id">
             <MyCoursesTrainee />
           </Route>
@@ -68,16 +80,19 @@ function App() {
             <CourseMaterials />
           </Route>
 
+          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
+            <SubtitleExercise />
+          </Route>
+          <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
+            <Rate />
+          </Route>
           <Route exact path="/aa/Lol/:courseId">
             <Lol />
           </Route>
-
-
-
         </Switch>
 
       </div>
-    </Router >
+    </Router>
   );
 }
 
