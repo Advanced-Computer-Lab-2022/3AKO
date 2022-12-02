@@ -32,7 +32,7 @@ function App() {
     <Router>
       <div className="App">
           <header>
-            <CountryModal handleExchangeRate={handleExchangeRate} />
+            {/* <CountryModal handleExchangeRate={handleExchangeRate} /> */}
             <Navbar/>
           </header>
         <Switch>
@@ -70,7 +70,7 @@ function App() {
             <AddCorporateTrainee />
           </Route>
 
-          <Route exact path="/trainee/myCourses/:id">
+          <Route exact path="/trainee/myCourses">
             <MyCoursesTrainee />
           </Route>
           <Route exact path="/trainee/CourseSubtitles/:courseId">

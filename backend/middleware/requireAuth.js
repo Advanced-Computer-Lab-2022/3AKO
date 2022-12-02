@@ -73,7 +73,6 @@ const requireInstructor = async (req,res,next) => {
     }
 }
 const requireUser = async (req,res,next) => {
-
     const {authorization} = req.headers 
     if(!authorization){
         return res.status(401).json({error:"Token required"})
@@ -136,8 +135,6 @@ const requireOwnership = async (req,res,next) => {
         if(user.type ==='trainee') {
             req._id=_id 
             const courseList = await traineeModel.findOne({_id},'courseList.courseId -_id').lean()
-            console.log(courseList);
-
             const check = courseList.courseList.find( course => course.courseId.equals( mongoose.Types.ObjectId(courseId)))
             if(!check) {throw Error("You do not own this course")}
             }

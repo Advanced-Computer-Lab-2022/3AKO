@@ -7,10 +7,10 @@ const userModel = require("../models/userModel");
 
 const addCourseToTrainee = async (req,res) => {//works with corporate but how with indiviual
     try{
-        const {traineeId}=await req.query
+        const {id}=req.params
         const{courseId} = req.body
         const newCourseRecord = await new courseRecordModel({courseId:courseId})
-        const newCourseList = await traineeModel.findOneAndUpdate({_id:traineeId},{$addToSet:{courseList:newCourseRecord}},{new:true,upsert:true})
+        const newCourseList = await traineeModel.findOneAndUpdate({_id:id},{$addToSet:{courseList:newCourseRecord}},{new:true,upsert:true})
         res.status(200).json(newCourseList)
     }catch(err){
         res.status(400).json({error : err.message})

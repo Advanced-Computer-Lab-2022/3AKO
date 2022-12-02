@@ -16,7 +16,7 @@ const router = express.Router()
 
 //router.use(requireTrainee)
 
-router.patch('/addCourseToTrainee', addCourseToTrainee) //how dose this work with payment ?
+router.patch('/addCourseToTrainee/:id', addCourseToTrainee) //how dose this work with payment ?
 
 router.patch('/addLessonRecord',requireOwnership, addLessonRecord)
 
@@ -34,7 +34,7 @@ router.get('/loadSubtitle',requireOwnership, loadSubtitle)
 
 router.get('/loadExamAnswers',requireOwnership, loadExamAnswers)
 
-router.get('/myCourses',requireOwnership, myCourses)
+router.get('/myCourses',requireTrainee, myCourses)
 
 router.get("/getSubtitles",requireOwnership, getSubtitles)
 

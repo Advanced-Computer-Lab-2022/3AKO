@@ -23,7 +23,7 @@ const lessonSchema = mongoose.Schema({
         type : Number,
         required : true 
     }
-},{autoCreate : false, _id : false})
+},{autoCreate : false})
 
 const questionSchema = mongoose.Schema({
     question : {
@@ -51,8 +51,13 @@ const questionSchema = mongoose.Schema({
             required : true,
             min : 1,
             max : 4
+        },
+        position : {
+            type : Number,
+            min :1,
+            required : true
         }
-},{autoCreate : false, _id : false})
+},{autoCreate : false})
 
 const excerciseSchema = mongoose.Schema({
     title : {

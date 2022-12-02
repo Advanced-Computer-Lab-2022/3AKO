@@ -3,8 +3,8 @@ import { useUserContext } from "../hooks/useUserContext";
 const Navbar = () => {
     const user = useUserContext()
     const {logout} = useLogout()
-    const handleLogout = () =>{
-      logout()
+    const handleLogout = async () =>{
+      await logout()
     }
     return (
 <nav>

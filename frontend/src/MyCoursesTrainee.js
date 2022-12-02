@@ -1,17 +1,20 @@
+import axios from 'axios';
 import MyCourse from './components/MyCourse';
 import { useEffect, useState } from "react";
-const { useParams } = require("react-router-dom")
-
+import { useUserContext } from './hooks/useUserContext';
+import {useParams} from "react-router-dom"
 const MyCoursesTrainee = () => {
+  const {user} = useUserContext()
   const [courses, setCourses] = useState([])
   const { id } = useParams()
   useEffect(() => {
     const fetchMyCourses = async () => {
-      const response = await fetch(`/trainee/myCourses/${id}`)
-      const coursesJson = await response.json()
-      if (response.ok) {
-        setCourses(coursesJson)
-      }
+     await axios({method: "get",url:'http://localhost:5000/trainee/myCourses',withCredentials:true}).then((response)=>{
+      setCourses(response.data)
+     }).catch((error) =>{
+      console.log(error);
+     })
+
     }
     fetchMyCourses();
   }, [])

@@ -10,10 +10,10 @@ export const useLogin = () => {
     const login = async (username,password) =>{
         setIsLoading(true)
         setError(null)
-        await axios.get(`http://localhost:5000/user/login?username=${username}&password=${password}`).then(
+        await axios.get(`http://localhost:5000/user/login?username=${username}&password=${password}`,{ withCredentials: true }).then(
             (res) => { 
                 const user = res.data
-                console.log(user)
+                //console.log(user)
                 setUser(user)
             }
         ).catch(error => {

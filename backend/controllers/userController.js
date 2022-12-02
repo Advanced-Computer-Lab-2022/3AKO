@@ -95,5 +95,14 @@ const temp = (req, res) => {
         res.status(400).json({error:err.message})
     }
 }
+const logout = (req,res) =>{
+    try{
+        res.cookie('jwt', '', { httpOnly: true, maxAge: 86400 });
 
-module.exports = {editPassword,editEmail,login,temp};
+        res.status(200).json({message:"loged out successfully"})
+    }
+    catch(err){
+        res.status(400).json({error:err.message})
+    }
+}
+module.exports = {editPassword,editEmail,login,temp,logout};

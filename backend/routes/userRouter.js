@@ -1,6 +1,6 @@
 const express = require('express')
 
-const {editPassword,editEmail,login} = require('../controllers/userController')
+const {editPassword,editEmail,login,logout} = require('../controllers/userController')
 
 const {requireUser} = require('../middleware/requireAuth')
 
@@ -13,5 +13,6 @@ router.patch('/editEmail',requireUser,editEmail)
 
 router.patch('/editPassword',requireUser,editPassword)
 
+router.post('/logout',requireUser,logout)
 
 module.exports = router
