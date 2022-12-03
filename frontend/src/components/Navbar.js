@@ -13,7 +13,7 @@ const Navbar = () => {
               <button onClick={handleLogout}>Log out</button>
             </div>
             }
-            { !user.user && window.location.href !=='http://localhost:3000/login' &&
+            { !user.user && window.location.href !=='http://localhost:3000/login' && window.location.href !=='http://localhost:3000/signup' &&
             <div>
               <button onClick={() => window.location.href=`/login`}>Login</button>
               {/* <Link to="/login">Login</Link> */}

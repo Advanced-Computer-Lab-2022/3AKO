@@ -45,7 +45,7 @@ const editEmail = async (req, res) => {
 
 const login = async (req, res) => {
     try{
-        const {username,password} = req.query
+        const {username,password} = req.body
         if(!username || !password){
             res.status(400).json({error:"Must fill username and password"})
         }
@@ -58,18 +58,18 @@ const login = async (req, res) => {
             const token = createToken(user._id)
             if(user.type === 'trainee'){
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
-                const trainee = await traineeModel.findOne({_id:user._id}).lean()
+                const trainee = await traineeModel.findOne({_id:user._id},'name type -_id').lean()
                 res.status(200).json(trainee)
             }
              else if(user.type === 'instructor'){
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
-                const instrucrtor = await instructorModel.findOne({_id:user._id}).lean()
-                res.status(200).json(instrucrtor)
+                const instrucrtor = await instructorModel.findOne({_id:user._id},'name -_id').lean()
+                res.status(200).json({...instrucrtor,type:"instructor"})
             }
             else if(user.type === 'admin'){
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
                 const admin = await adminModel.findOne({_id:user._id}).lean()
-                res.status(200).json(admin)
+                res.status(200).json({type:"admin"})
             }
             else{
                 res.status(401).json({error:"Bad user"})

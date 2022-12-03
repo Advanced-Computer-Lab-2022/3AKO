@@ -7,7 +7,7 @@ const {requireUser} = require('../middleware/requireAuth')
 
 const router = express.Router()
 
-router.get('/login',login)
+router.post('/login',login)
 
 router.patch('/editEmail',requireUser,editEmail)
 

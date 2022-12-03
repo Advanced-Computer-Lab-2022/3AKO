@@ -3,17 +3,26 @@ const individualTraineeModel = require('../models/individualTraineeModel')
 const userModel = require("../models/userModel");
 const {traineeModel} = require('../models/traineeModel')
 
+const jwt = require('jsonwebtoken')
+
+const createToken= (_id) => {
+    return jwt.sign({_id}, process.env.SECRET, {expiresIn :'1d'})
+}
 
 const addIndividualTrainee = async (req, res) => {
     const {username, password, name, email, gender, country} = req.body
 
     try {
+        console.log(username, password, name, email, gender, country);
+        if(!(username && password && name && email && gender && country)){ throw Error('You must fill in all the nessccery fields')}
         const check = await userModel.findOne({username},'_id').lean()
         if(check){ throw Error('This username already exists')}
         const user = await userModel.create({username,password,email,type:'trainee',country})
-        const individualTrainee = await traineeModel.create({_id:user._id ,name, gender,type:'individual trainee'}) 
-        const individualTraineeInfo = await individualTraineeModel.create({_id:user._id})
-        res.status(200).json(individualTrainee)
+        await traineeModel.create({_id:user._id ,name, gender,type:'individual trainee'}) 
+        await individualTraineeModel.create({_id:user._id})
+        const token = createToken(user._id)
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
+        res.status(200).json({type:'individual trainee',name})
     }catch(err){
         res.status(400).json({error : err.message})
     }

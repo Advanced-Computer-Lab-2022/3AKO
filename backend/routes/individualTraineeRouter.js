@@ -8,6 +8,6 @@ const router = express.Router()
 
 //router.use(requireIndividualTrainee)
 
-router.post('/addIndividualTrainee', addIndividualTrainee)
+router.post('/signup', addIndividualTrainee)
 
 module.exports = router

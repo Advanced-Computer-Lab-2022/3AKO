@@ -18,6 +18,7 @@ import Rate from "./components/rate";
 import PersonalInfo from "./personalInfo";
 import Navbar from "./components/Navbar";
 import LogIn from "./components/LogIn";
+import SignUp from "./components/SignUp";
 
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -50,7 +51,7 @@ function App() {
             <AddCourse />
           </Route>
 
-          <Route exact path="/instructor/:id">
+          <Route exact path="/instructor">
             <InstructorCourses />
           </Route>
 
@@ -89,6 +90,9 @@ function App() {
           </Route>
           <Route exact path="/login">
             <LogIn />
+          </Route>
+          <Route exact path="/signup">
+            <SignUp></SignUp>
           </Route>
         </Switch>
 

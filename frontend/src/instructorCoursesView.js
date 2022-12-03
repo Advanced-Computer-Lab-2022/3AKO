@@ -4,11 +4,9 @@ import { useParams } from "react-router-dom";
 
 const InstructorCourses = () => {
 
-    const {id} = useParams()
-
     return ( 
     
-        <SearchAndFilter coursesFetch={`/instructor/viewMyCourses/${id}`} subjectsFetch={`/instructor/viewMySubjects/${id}`} isCorporateTrainee={false} instrucrtorFilter={false}/>
+        <SearchAndFilter coursesFetch={`http://localhost:5000/instructor/viewMyCourses/`} subjectsFetch={`http://localhost:5000/instructor/viewMySubjects/`} isCorporateTrainee={false} instrucrtorFilter={false}/>
     
     )
 }
