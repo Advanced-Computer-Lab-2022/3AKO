@@ -259,9 +259,10 @@ const addPromotion = async (req, res) => {
 const loadSubtitle = async (req, res) => {
     try {
 
-        const { courseId, subtitleId } = req.params
-        const answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, })
-
+        const { courseId, subtitleId } = req.body
+        let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
+        answers.subtitles[0].excercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
+        console.log(answers);
         res.status(200).json(answers.subtitles[0])
         console.log(answers.subtitles[0])
 

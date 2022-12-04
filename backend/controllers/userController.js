@@ -15,8 +15,8 @@ let transporter = ''
     transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     auth: {
-      user: 'myacl16177@gmail.com',
-      pass: 'dhcelzoonnuopyok', 
+      user: process.env.email,
+      pass: process.env.password, 
     },
     });
 }
@@ -138,7 +138,7 @@ const sendEmail = async (req,res) => {
                     to: data.email, // list of receivers
                     subject: "Hello ✔", // Subject line
                     text: token, // plain text body
-                    html: '<p>Click <a href="http://localhost:3000/user/resetpassword/' + token + '">here</a> to reset your password</p>', // html body
+                    html: '<p>Click <a href="http://localhost:3000/resetpassword/' + token + '">here</a> to reset your password</p>', // html body
                   },(error, )=>{
                     if(error) {
                         console.log("error sending mail");

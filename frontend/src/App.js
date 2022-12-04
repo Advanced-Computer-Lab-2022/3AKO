@@ -83,7 +83,10 @@ function App() {
           <Route exact path="/trainee/courseMaterials/:courseId/:subtitleId">
             <CourseMaterials />
           </Route>
-
+          
+          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
+            <SubtitleExercise />
+          </Route>
           <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
             <Rate />
           </Route>
@@ -106,7 +109,7 @@ function App() {
           <Route exact path="/forgotPassword">
           <ForgotPassword />
           </Route>
-          <Route exact path="/user/resetpassword/:token">
+          <Route exact path="/resetpassword/:token">
           <ResetPassword />
           </Route>
         </Switch>
