@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const corporateTraineeSchema = new Schema({
     _id : {
         type : mongoose.ObjectId,
-        require : true,
+        required : true,
         ref : "trainee"
     },
     courseRequests : {

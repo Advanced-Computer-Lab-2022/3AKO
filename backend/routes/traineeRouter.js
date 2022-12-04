@@ -36,7 +36,7 @@ router.get('/loadExamAnswers',requireOwnership, loadExamAnswers)
 
 router.get('/myCourses',requireTrainee, myCourses)
 
-router.get("/getSubtitles",requireOwnership, getSubtitles)
+router.get("/getSubtitles/:courseId",requireOwnership, getSubtitles)
 
 router.get('/temp',temp)
 

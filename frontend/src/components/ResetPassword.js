@@ -12,29 +12,51 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin'
 const theme = createTheme();
 
-export default function LogIn() {
+export default function ResetPassword() {
+    const [match,setMatch] = useState(false)
+    const [fetching,setFetching] = useState(false)
     const {login, isLoading, error} = useLogin()
+    const {token} = useParams()
     const handleSubmit = (event) => {
         const data = new FormData(event.currentTarget);
         event.preventDefault();
-        if(data.get('username') && data.get('password')){
-            const request = async() => {
-                event.preventDefault()
-                const logedIn = await login(data.get('username'),data.get('password'))
-                console.log(logedIn);
-                if(logedIn){
-                    if(logedIn.type ==='corporate trainee' || logedIn.type ==='individual trainee'){
-                        window.location.href=`/`
+        setFetching(true)
+        if(data.get('username') && data.get('newpassword') && data.get('confirmpassword')){
+            const change = async(username,password,token) => {
+                console.log(username,password)
+                await axios({method:'post',url:'http://localhost:5000/user/verifyPassword',data:{username,password,token}}).then(()=>{
+                    setFetching(false)
+                    const request = async(username,password) => {
+                        const logedIn = await login(username,password)
+                        console.log(logedIn);
+                        if(logedIn){
+                            if(logedIn.type ==='corporate trainee' || logedIn.type ==='individual trainee'){
+                                window.location.href=`/`
+                            }
+                            else if(logedIn.type ==='instructor'){
+                                window.location.href=`/instructor`
+                            }
+                        }
                     }
-                    else if(logedIn.type ==='instructor'){
-                        window.location.href=`/instructor`
-                    }
-                }
+                    request(username,password)
+
+                }).catch(()=>{
+                    setFetching(false)
+                })
             }
-            request()
+            if(data.get('newpassword') === data.get('confirmpassword')){
+                change(data.get('username'), data.get('newpassword'),token)
+            }
+        }
+        else{
+            setMatch(true)
+            setFetching(false)
         }
   };
 
@@ -54,7 +76,7 @@ export default function LogIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Change Password
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -73,46 +95,43 @@ export default function LogIn() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
+                  name="newpassword"
+                  label="New Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
                 />
               </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/forgotPassword" variant="body2">
-                  Forgot password?
-                </Link>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmpassword"
+                  label="Cnfirm Password"
+                  type="confirmpassword"
+                  id="confirmpassword"
+                  autoComplete="new-password"
+                />
               </Grid>
             </Grid>
-            {error && (
+            {match && (
                 
                 <Grid item xs={12} marginTop={2}>
                 <Alert severity="error" fullWidth> 
-            {/* <AlertTitle>Error</AlertTitle> */}
-            {error.message}
+                passwords does not match
             </Alert>
             </Grid>
             )}
 
-            <Button display={isLoading}
+            <Button disabled={fetching}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Change Password
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  Don't have an account? Sign up
-                </Link>
-              </Grid>
-            </Grid>
+
           </Box>
         </Box>
       </Container>

@@ -325,7 +325,6 @@ const getSubtitles = async (req, res) => {
     }
     catch (err) {
         res.status(400).json({ error: err.message })
-        console.log(req.body)
     }
 }
 

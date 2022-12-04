@@ -7,7 +7,7 @@ const CourseSubtitles = () => {
     const { courseId } = useParams()
     const [subtitles, setSubtitles] = useState([])
     useEffect(() => {
-        axios.get(`http://localhost:5000/trainee/getSubtitles/${courseId}`).then((response) => {
+        axios({method:'get',url:`http://localhost:5000/trainee/getSubtitles/${courseId}`,withCredentials:true}).then((response) => {
 
             setSubtitles(response.data)
         }).catch((err) => {

@@ -5,6 +5,8 @@ const { courseModel } = require('../models/courseModel');
 const individualTraineeModel = require('../models/individualTraineeModel');
 const { traineeModel } = require('../models/traineeModel');
 const userModel = require("../models/userModel");
+const mongoose = require('mongoose')
+
 
 const requireAdmin = async (req,res,next) => {
 
@@ -121,7 +123,7 @@ const requireCourseAuthor = async (req,res,next) => {
 
 const requireOwnership = async (req,res,next) => {
     const {authorization} = req.headers 
-    const {courseId} = req.query
+    const {courseId} = req.params
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
@@ -137,6 +139,7 @@ const requireOwnership = async (req,res,next) => {
             const courseList = await traineeModel.findOne({_id},'courseList.courseId -_id').lean()
             const check = courseList.courseList.find( course => course.courseId.equals( mongoose.Types.ObjectId(courseId)))
             if(!check) {throw Error("You do not own this course")}
+            else { next()}
             }
         else {throw Error("You are not an authorized trainee")}
     }

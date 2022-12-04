@@ -12,29 +12,31 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useLogin } from '../hooks/useLogin'
+import axios from 'axios';
+import { useState } from 'react';
 const theme = createTheme();
 
-export default function LogIn() {
-    const {login, isLoading, error} = useLogin()
+export default function ForgotPassword() {
+    const [isLoading,setIsLoading] =useState(false)
+    const [sent,setSent] = useState(false)
     const handleSubmit = (event) => {
         const data = new FormData(event.currentTarget);
         event.preventDefault();
-        if(data.get('username') && data.get('password')){
-            const request = async() => {
-                event.preventDefault()
-                const logedIn = await login(data.get('username'),data.get('password'))
-                console.log(logedIn);
-                if(logedIn){
-                    if(logedIn.type ==='corporate trainee' || logedIn.type ==='individual trainee'){
-                        window.location.href=`/`
-                    }
-                    else if(logedIn.type ==='instructor'){
-                        window.location.href=`/instructor`
-                    }
-                }
+        if(data.get('username')){
+            setIsLoading(true)
+            const request = async(username) => {
+                await axios({method:'post',url:'http://localhost:5000/user/sendEmail',data:{username}}).then(()=>{
+                    setIsLoading(false)
+                    setSent(true)
+                }).catch((error)=>{
+                    setIsLoading(false)
+                    console.log(error);
+                    setSent(true)
+                })
+                
             }
-            request()
+            request(data.get('username'))
+            
         }
   };
 
@@ -54,9 +56,18 @@ export default function LogIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Forgot Password
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 ,minWidth:400}}>
+          {sent && (
+                
+                <Grid item xs={12} marginBottom={2}>
+                <Alert severity="success" fullWidth> 
+            Email Sent Successfully
+            </Alert>
+            </Grid>
+            )}
+            
             <Grid container spacing={2}>
               <Grid item xs={12} >
                 <TextField
@@ -69,42 +80,16 @@ export default function LogIn() {
                   autoComplete="user-name"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
             </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/forgotPassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
-            {error && (
-                
-                <Grid item xs={12} marginTop={2}>
-                <Alert severity="error" fullWidth> 
-            {/* <AlertTitle>Error</AlertTitle> */}
-            {error.message}
-            </Alert>
-            </Grid>
-            )}
 
-            <Button display={isLoading}
+
+            <Button disabled={isLoading}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Send Email
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

@@ -21,7 +21,8 @@ import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import InstructorProfile from "./components/InstructorProfile";
 import TraineeProfile from "./components/TraineeProfile";
-
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
   const [currency, setCurrency] = useState("");
@@ -101,6 +102,12 @@ function App() {
           </Route>
           <Route exact path="/trainee/profile">
           <TraineeProfile />
+          </Route>
+          <Route exact path="/forgotPassword">
+          <ForgotPassword />
+          </Route>
+          <Route exact path="/user/resetpassword/:token">
+          <ResetPassword />
           </Route>
         </Switch>
 

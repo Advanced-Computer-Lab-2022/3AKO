@@ -4,9 +4,23 @@ const userModel = require("../models/userModel");
 const {traineeModel} = require('../models/traineeModel')
 const instructorModel = require("../models/instructorModel");
 const adminModel = require('../models/adminModel')
-
+const passwordTokenModel = require('../models/passwordTokenModel')
+const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken')
 
+let testAccount = ''
+let transporter = ''
+  const initalizeMailer = async() => {
+    testAccount = await nodemailer.createTestAccount();
+    transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    auth: {
+      user: 'myacl16177@gmail.com',
+      pass: 'dhcelzoonnuopyok', 
+    },
+    });
+}
+initalizeMailer()
 const createToken= (_id) => {
     return jwt.sign({_id}, process.env.SECRET, {expiresIn :'1d'})
 }
@@ -103,4 +117,67 @@ const logout = (req,res) =>{
         res.status(400).json({error:err.message})
     }
 }
-module.exports = {editPassword,editEmail,login,temp,logout};
+const sendEmail = async (req,res) => {
+    try{
+        const {username} = req.body
+        const data = await userModel.findOne({username},'email').lean()
+        if(data &&data.email){
+            require('crypto').randomBytes(48, async function(err, buffer) {
+                const token = await buffer.toString('hex');
+                let date = new Date()
+                date.setMinutes(date.getMinutes() + 1); //1 minute time allowed
+                try{
+                    await passwordTokenModel.create({_id:data._id,token,expiration:date})
+                }
+                catch(err){
+                    await passwordTokenModel.updateOne({_id:data._id},{token,expiration:date})
+
+                }
+                await transporter.sendMail({
+                    from: 'myacl16177@gmail.com', // sender address
+                    to: data.email, // list of receivers
+                    subject: "Hello ✔", // Subject line
+                    text: token, // plain text body
+                    html: '<p>Click <a href="http://localhost:3000/user/resetpassword/' + token + '">here</a> to reset your password</p>', // html body
+                  },(error, )=>{
+                    if(error) {
+                        console.log("error sending mail");
+                        console.log(error);
+                    }else{
+                        console.log("successful");
+                    }
+
+                  });
+              })
+        }
+        res.status(200).json({message:"please Check your mail"})
+    }
+    catch(err){
+        res.status(401).json({error:err.message})
+    }
+}
+
+const verifyPassword = async (req,res) => {
+    try{
+        const {username,password,token} = req.body
+        console.log();
+        if(!username||!password || !token){
+            throw Error("invalid request")
+        }
+        const data = await userModel.findOne({username},'_id').lean()
+        const check =  await passwordTokenModel.findOne({_id:data._id}).lean()
+        if(check.token===token){
+            await userModel.updateOne({_id:data._id},{password})
+            res.status(200).json({})
+        }
+        else{
+            throw Error("invalid token")
+        }
+
+    }
+    catch(err){
+        res.status(401).json({error:err.message})
+    }
+}
+
+module.exports = {editPassword,editEmail,login,temp,logout, sendEmail,verifyPassword};
