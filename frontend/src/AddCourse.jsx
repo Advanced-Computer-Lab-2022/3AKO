@@ -91,7 +91,7 @@ const AddCourse = () => {
   const handleSubmit = e => {
     const courseData = { ...allValues, ...extraValues }
     try {
-      axios.post(`http://localhost:5000/instructor/createCourse/${instructorId}`, courseData)
+      axios({method: "post",url:`http://localhost:5000/instructor/createCourse/`,withCredentials: true,data:courseData})
         .then((response) => {
           console.log(response.data);
           alert("course added successfully")

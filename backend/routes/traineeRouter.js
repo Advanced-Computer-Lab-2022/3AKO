@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses } = require('../controllers/traineeController')
+const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses,getMyInfo, editTraineeInfo} = require('../controllers/traineeController')
 
 const { addComplaint } = require('../controllers/complaintController')
 
@@ -8,7 +8,7 @@ const { loadSubtitle, loadExamAnswers, rateCourse, getSubtitles } = require('../
 
 const { rateInstructor } = require('../controllers/instructorController')
 
-const {temp} = require('../controllers/userController')
+const {temp,editPassword} = require('../controllers/userController')
 
 const {requireTrainee,requireOwnership} = require('../middleware/requireAuth')
 
@@ -39,5 +39,11 @@ router.get('/myCourses',requireTrainee, myCourses)
 router.get("/getSubtitles",requireOwnership, getSubtitles)
 
 router.get('/temp',temp)
+
+router.get('/getMyInfo',requireTrainee,getMyInfo)
+
+router.patch('/editMyInfo',requireTrainee,editTraineeInfo)
+
+router.patch('/editPassword',requireTrainee,editPassword)
 
 module.exports = router

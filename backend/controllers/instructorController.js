@@ -1,10 +1,11 @@
 const instructorModel = require("../models/instructorModel");
 const userModel = require("../models/userModel");
 
-const getInstructor = async (req, res) => {
-    const { id } = req.params
-    const instructor = await instructorModel.findOne({ '_id': id })
-    res.json(instructor)
+const getMyInfo = async (req, res) => {//this is for the instructor himself
+    const id = req._id
+    const instructor = await instructorModel.findOne({ '_id': id },'name gender biography -_id').lean()
+    const email = await userModel.findOne({ '_id': id },'email -_id').lean()
+    res.json({...instructor,...email})
 }
 const addInstructor = async (req, res) => {
     const { username, password } = req.body
@@ -32,15 +33,17 @@ const editBiography = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
-const addInstructorInfo = async (req, res) => { // adds info for first time instructors
+const editInstructorInfo = async (req, res) => { // adds info for first time instructors
     try {
-        const id = req.params.id;
-        const { name, gender, biography } = req.body
+        const id = req._id;
+        const { name, gender, biography, email } = req.body
+        if(!name || !gender || !biography || !email){throw Error('incomplete info')}
         const updatedInstructor = await instructorModel.findOneAndUpdate({ _id: id }, { name, gender, biography }, { new: true, upsert: true })
+        await userModel.updateOne({_id:id},{email},{new:true,upsert:true})
         res.status(200).json(updatedInstructor)
     }
     catch (err) {
-        res.status(400).json({ error: err.message })
+        res.status(401).json({ error: err.message })
 
     }
 }
@@ -75,4 +78,4 @@ const rateInstructor = async (req, res) => {
 
 
 
-module.exports = { getInstructor, addInstructor, editBiography, addInstructorInfo, setContractState, rateInstructor }
+module.exports = { getMyInfo, addInstructor, editBiography, editInstructorInfo, setContractState, rateInstructor }

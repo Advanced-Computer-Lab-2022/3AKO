@@ -2,6 +2,7 @@ import CourseCard from './courseCard';
 import { useEffect, useState } from "react";
 import { Select, MenuItem } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instrucrtorFilter }) => {
   const [courses, setCourses] = useState([])
@@ -16,19 +17,24 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const userId = useParams()
 
   useEffect(() => {
-
+    
     const fetchCourses = async () => {
-      const response = await fetch(coursesFetch)
-      const subjects = await fetch(subjectsFetch)
-      const coursesJson = await response.json()
-      const subjectsJson = await subjects.json()
-      // console.log(coursesJson)
-      if (response.ok) {
-        setCourses(coursesJson)
-        setAllCourses(coursesJson)
-        setSearchedCourses(coursesJson)
-        setSubjects(subjectsJson)
-      }
+      await axios({method: "get",url:coursesFetch,withCredentials: true }).then(
+            (res) => { 
+              setCourses(res.data)
+              setAllCourses(res.data)
+              setSearchedCourses(res.data)
+            }
+        ).catch(error => {
+          alert('invalid request')
+        })
+        await axios({method: "get",url:subjectsFetch,withCredentials: true}).then(
+          (res) => { 
+            setSubjects(res.data)
+          }
+      ).catch(error => {
+        alert('request denied')
+      })
     }
     fetchCourses()
   }, [])

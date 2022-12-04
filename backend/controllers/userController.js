@@ -18,7 +18,6 @@ const editPassword = async (req, res) => {
         const {oldPassword,newPassword}= req.body
         const passwordObj = await userModel.findOne({_id:id},'password -_id').lean()
         const password= JSON.parse(JSON.stringify(passwordObj)).password
-        console.log(password===oldPassword);
         if(oldPassword===password){
             const updatedTrainee = await userModel.findOneAndUpdate({_id:id},{password:newPassword},{new:true,upsert:true})
             res.status(200).json(updatedTrainee)
@@ -47,11 +46,11 @@ const login = async (req, res) => {
     try{
         const {username,password} = req.body
         if(!username || !password){
-            res.status(400).json({error:"Must fill username and password"})
+            throw Error("Must fill username and password")
         }
         const user = await userModel.findOne({username}).lean()
         if(!user){
-            res.status(401).json({error:"wrong username"})
+            throw Error("Invalid username")
         }
         
         if(user.password === password){
@@ -72,18 +71,17 @@ const login = async (req, res) => {
                 res.status(200).json({type:"admin"})
             }
             else{
-                res.status(401).json({error:"Bad user"})
+                res.status(401).json({error:"Bad user entery"})
             }
         }
         else{
-            console.log(user)
-            console.log(user.password);
-            res.status(401).json({error:"wrong password"})
+
+            throw Error("wrong password")
         }
 
     }
     catch(err){
-        //res.status(400).json({error:err.message})
+        res.status(401).json({error:err.message})
     }
 }
 const temp = (req, res) => {

@@ -22,21 +22,21 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       fontSize: 14,
     },
   }));
-const TraineeProfile = () => {
+const InstructorProfile = () => {
     const [edit,setEdit] = useState(false);
     const [editPassword,setEditPassword] = useState(false)
     const user = useUserContext()
-    const [traineeInfo,setTraineeInfo] = useState('') 
+    const [instructorInfo,setInstructorInfo] = useState('') 
     useEffect(() => {
         const getInfo = async () => {
-            await axios({method:'get',url:'http://localhost:5000/trainee/getMyInfo',withCredentials:true}).then((res)=>{
-                setTraineeInfo(res.data)
+            await axios({method:'get',url:'http://localhost:5000/instructor/getInstructor',withCredentials:true}).then((res)=>{
+                setInstructorInfo(res.data)
                 console.log(res.data);
             }).catch(()=>{
 
             })
         }
-        if(user.user && (user.user.type==='corporate trainee' || user.user.type==='individual trainee')){
+        if(user.user && user.user.type==='instructor'){
             getInfo()
         }
         else if(user.user){
@@ -48,7 +48,7 @@ const TraineeProfile = () => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log(data.get('name'));
-        if(data.get('name') && data.get('email') && data.get('gender')){
+        if(data.get('name') && data.get('email') && data.get('biography') && data.get('gender')){
             const update = {
                 email: data.get('email'),
                 name: data.get('name'),
@@ -57,9 +57,9 @@ const TraineeProfile = () => {
             }
             console.log(update);
             const request = async (update) =>{
-                await axios({method:'patch',url:'http://localhost:5000/trainee/editMyInfo',withCredentials:true,data:update}).then(()=>{
+                await axios({method:'patch',url:'http://localhost:5000/instructor/editMyInfo',withCredentials:true,data:update}).then(()=>{
                     setEdit(false)
-                    setTraineeInfo(update)
+                    setInstructorInfo(update)
                 }).catch((error)=>{
                     console.log(error);
                 })
@@ -78,7 +78,7 @@ const TraineeProfile = () => {
             }
             console.log(update);
             const request = async (update) =>{
-                await axios({method:'patch',url:'http://localhost:5000/trainee/editPassword',withCredentials:true,data:update}).then(()=>{
+                await axios({method:'patch',url:'http://localhost:5000/instructor/editPassword',withCredentials:true,data:update}).then(()=>{
                     setEditPassword(false)
                 }).catch((error)=>{
                     console.log(error);
@@ -92,7 +92,7 @@ const TraineeProfile = () => {
     return (
         <div className="instructorProfile-container">
         
-            { traineeInfo &&
+            { instructorInfo &&
             <div className="instructorProfile">
                     
                 <TableContainer component={Paper}>
@@ -107,7 +107,7 @@ const TraineeProfile = () => {
                         { !edit &&
                     <TableRow>
                     <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">{traineeInfo.name}</TableCell>
+                    <TableCell align="center">{instructorInfo.name}</TableCell>
                     </TableRow>
                         }
                         { edit &&
@@ -121,8 +121,8 @@ const TraineeProfile = () => {
                     fullWidth
                     id="name"
                     autoFocus
-                    placeholder={traineeInfo.name}
-                    defaultValue={traineeInfo.name}
+                    placeholder={instructorInfo.name}
+                    defaultValue={instructorInfo.name}
                     />
                     </TableRow>
                         }
@@ -130,7 +130,7 @@ const TraineeProfile = () => {
                         {!edit &&
                     <TableRow>
                     <TableCell align="center">Email</TableCell>
-                    <TableCell align="center">{traineeInfo.email||'-'}</TableCell>
+                    <TableCell align="center">{instructorInfo.email||'-'}</TableCell>
                     </TableRow>
                     }
                         {edit &&
@@ -142,15 +142,37 @@ const TraineeProfile = () => {
                   id="email"
                   name="email"
                   autoComplete="email"
-                  placeholder={traineeInfo.email}
-                  defaultValue ={traineeInfo.email}
+                  placeholder={instructorInfo.email}
+                  defaultValue ={instructorInfo.email}
                 />
                     </TableRow>
                     }
                         {!edit &&
                     <TableRow>
+                    <TableCell align="center">Biography</TableCell>
+                    <TableCell align="center">{instructorInfo.biography||'-'}</TableCell>
+                    </TableRow>
+                    }
+                        {edit &&
+                    <TableRow>
+                    <TableCell align="center">Biography</TableCell>
+                    <TextField
+                    autoComplete="biography"
+                    name="biography"
+                    type='text'
+                    required
+                    fullWidth
+                    id="biography"
+                    autoFocus
+                    placeholder={instructorInfo.biography}
+                    defaultValue ={instructorInfo.biography}
+                    />
+                    </TableRow>
+                    }
+                        {!edit &&
+                    <TableRow>
                     <TableCell align="center">Gender</TableCell>
-                    <TableCell align="center">{traineeInfo.gender||'-'}</TableCell>
+                    <TableCell align="center">{instructorInfo.gender||'-'}</TableCell>
                     </TableRow>
                     }
                         {edit &&
@@ -162,7 +184,7 @@ const TraineeProfile = () => {
                   name="gender"
                   select
                   id="gender"
-                  defaultValue={traineeInfo.gender}
+                  defaultValue={instructorInfo.gender}
                 >
                 <MenuItem value="male">Male</MenuItem>
 
@@ -298,4 +320,4 @@ const TraineeProfile = () => {
     );
 }
  
-export default TraineeProfile;
+export default InstructorProfile;

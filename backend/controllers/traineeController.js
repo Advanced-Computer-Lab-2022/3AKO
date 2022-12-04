@@ -75,5 +75,25 @@ const myCourses = async (req, res) => {
         res.status(400).json({error:err.message})
     }
 }
+const getMyInfo = async (req, res) => {//this is for the instructor himself
+    const id = req._id
+    const trainee = await traineeModel.findOne({ '_id': id },'name gender -_id').lean()
+    const email = await userModel.findOne({ '_id': id },'email -_id').lean()
+    res.json({...trainee,...email})
+}
+const editTraineeInfo = async (req, res) => { // adds info for first time instructors
+    try {
+        const id = req._id;
+        const { name, gender, email } = req.body
+        if(!name || !gender || !email){throw Error('incomplete info')}
+        const updatedTrainee = await traineeModel.findOneAndUpdate({ _id: id }, { name, gender }, { new: true, upsert: true })
+        await userModel.updateOne({_id:id},{email},{new:true,upsert:true})
+        res.status(200).json(updatedTrainee)
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
 
-module.exports = {  addCourseToTrainee,  addLessonRecord, addExerciseRecord, addTraineeInfo,myCourses}
+    }
+}
+
+module.exports = {  addCourseToTrainee,  addLessonRecord, addExerciseRecord, addTraineeInfo,myCourses, getMyInfo, editTraineeInfo}
