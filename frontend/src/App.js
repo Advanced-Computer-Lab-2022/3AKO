@@ -23,6 +23,7 @@ import InstructorProfile from "./components/InstructorProfile";
 import TraineeProfile from "./components/TraineeProfile";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import SubtitleExercise from "./subtitleExercise";
 function App() {
   const [exchangeRate, setExchangeRate] = useState(0);
   const [currency, setCurrency] = useState("");
