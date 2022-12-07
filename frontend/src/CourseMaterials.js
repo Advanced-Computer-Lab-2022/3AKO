@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
+import ExamForm from "./components/ExamForm";
 const CourseMaterials = () => {
     const [subtitle, setSubtitle] = useState([])
     const [materials, setMaterials] = useState("")
@@ -23,9 +24,7 @@ const CourseMaterials = () => {
         setMaterialBody(
             <div>
                 {
-                    material.questions && material.questions.map((question) => (
-                        <p >{question.question}</p>
-                    ))
+                    material.questions && <ExamForm exercise={material} />
 
                 }
                 {
