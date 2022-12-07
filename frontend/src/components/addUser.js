@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import { useState } from "react";
 
 const AddUser = ({fields, userType}) => {
@@ -8,29 +9,21 @@ const AddUser = ({fields, userType}) => {
     const [email, setEmail] = useState('')
     const [success, setSuccess] = useState(null)
     const [error, setError] = useState(null)
-
+    
     const handleAdd = async (e) => {
         e.preventDefault()
         const user = {username, password, email}
-        const response = await fetch(`/admin/add${userType}`, {
-            method: 'POST',
-            body: JSON.stringify(user),
-            headers: {
-                'Content-Type' :'application/json'
-            }
-        })
-        const responseJSON = await response.json()
-        if(response.ok){
+        await axios({method: 'post',url:`http://localhost:5000/admin/add${userType}`,withCredentials:true, data: user}).then((res)=>{
             setUsername('')
             setPassword('')
             setEmail('')
             setError(null)
             setSuccess(`${userType} Added Successfully`)
-        } 
-        else {
-            setError(responseJSON.error)
-            setSuccess(null)
-        }
+        }).catch((error)=>{
+            setError(error)
+        })
+
+
     }
 
     return (

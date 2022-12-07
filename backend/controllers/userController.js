@@ -125,7 +125,7 @@ const sendEmail = async (req,res) => {
             require('crypto').randomBytes(48, async function(err, buffer) {
                 const token = await buffer.toString('hex');
                 let date = new Date()
-                date.setMinutes(date.getMinutes() + 1); //1 minute time allowed
+                date.setMinutes(date.getMinutes() + 5); //1 minute time allowed
                 try{
                     await passwordTokenModel.create({_id:data._id,token,expiration:date})
                 }
@@ -134,9 +134,9 @@ const sendEmail = async (req,res) => {
 
                 }
                 await transporter.sendMail({
-                    from: 'myacl16177@gmail.com', // sender address
+                    from: 'The_ACL_Company@gmail.com', // sender address
                     to: data.email, // list of receivers
-                    subject: "Hello ✔", // Subject line
+                    subject: "Password Update Link", // Subject line
                     text: token, // plain text body
                     html: '<p>Click <a href="http://localhost:3000/resetpassword/' + token + '">here</a> to reset your password</p>', // html body
                   },(error, )=>{
@@ -160,14 +160,17 @@ const sendEmail = async (req,res) => {
 const verifyPassword = async (req,res) => {
     try{
         const {username,password,token} = req.body
-        console.log();
         if(!username||!password || !token){
             throw Error("invalid request")
         }
         const data = await userModel.findOne({username},'_id').lean()
         const check =  await passwordTokenModel.findOne({_id:data._id}).lean()
+        if(new Date(check.expiration)< new Date()){
+            throw Error("token Expired")
+        }
         if(check.token===token){
             await userModel.updateOne({_id:data._id},{password})
+            await passwordTokenModel.deleteOne({_id:data._id})
             res.status(200).json({})
         }
         else{
@@ -176,6 +179,7 @@ const verifyPassword = async (req,res) => {
 
     }
     catch(err){
+        console.log(err);
         res.status(401).json({error:err.message})
     }
 }

@@ -13,10 +13,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLogin } from '../hooks/useLogin'
+import { useHistory } from 'react-router-dom';
 const theme = createTheme();
 
 export default function LogIn() {
     const {login, isLoading, error} = useLogin()
+    const history = useHistory()
     const handleSubmit = (event) => {
         const data = new FormData(event.currentTarget);
         event.preventDefault();
@@ -26,12 +28,7 @@ export default function LogIn() {
                 const logedIn = await login(data.get('username'),data.get('password'))
                 console.log(logedIn);
                 if(logedIn){
-                    if(logedIn.type ==='corporate trainee' || logedIn.type ==='individual trainee'){
-                        window.location.href=`/`
-                    }
-                    else if(logedIn.type ==='instructor'){
-                        window.location.href=`/instructor`
-                    }
+                  history.push('/')
                 }
             }
             request()

@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Overlay from "react-overlay-component";
 import { Checkbox, FormControlLabel } from '@mui/material';
-
+import { useUserContext } from './hooks/useUserContext';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 const AddCourse = () => {
   const [outline, setOutline] = useState('')
   const [subtitle, setSubtitle] = useState('')
   const [hours, setHours] = useState(0)
-
+  const {user,loading} = useUserContext()
+  const history = useHistory()
   const { instructorId } = useParams()
   const [allValues, setAllValues] = useState({
     title: '',
@@ -104,6 +107,22 @@ const AddCourse = () => {
       console.log(err);
     }
   }
+  useEffect(()=>{
+    if(loading) return
+    else{
+      if(user){
+        if(user.type!=='instructor'){
+          history.push('/')
+      }
+      }
+      else {
+        if(!loading){
+          history.push('/login')
+        }
+      }
+    }
+  },[loading])
+
   return (
     <div className="addcourse">
 

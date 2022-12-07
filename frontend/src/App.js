@@ -1,6 +1,6 @@
 
 import CourseView from "./CourseView";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import Home from "./Home";
 import { CountryModal } from "./components/CountryModal";
 import InstructorCourses from "./instructorCoursesView";
@@ -24,7 +24,12 @@ import TraineeProfile from "./components/TraineeProfile";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import SubtitleExercise from "./subtitleExercise";
+import AdminHome from "./components/AdminHome";
+import { useUserContext } from "./hooks/useUserContext";
+import { useEffect } from "react";
 function App() {
+  const {user,loading} = useUserContext()
+  const {dispatch} = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
   const [currency, setCurrency] = useState("");
 
@@ -32,7 +37,6 @@ function App() {
     setExchangeRate(value);
     setCurrency(curr);
   };
-
   return (
     <Router>
       <div className="App">
@@ -44,7 +48,7 @@ function App() {
 
           <Route exact path="/">
             <h2>welcome Home</h2>
-            <Home />
+            {!user? <Home />: (user.type=='corporate trainee' || user.type==='individual trainee')? <Home />: user.type==='instructor'? <InstructorCourses />:<AdminHome />}
           </Route>
 
           <Route exact path="/course/:courseId">
@@ -52,12 +56,12 @@ function App() {
           </Route>
 
           <Route exact path="/instructor/addCourse">
-            <AddCourse />
+            {(user && user.type==='instructor')? <AddCourse />: user? <Redirect to="/"/>:loading? <AddCourse />:<Redirect to="/login"/>}
           </Route>
 
-          <Route exact path="/instructor">
+          {/* <Route exact path="/instructor">
             <InstructorCourses />
-          </Route>
+          </Route> */}
 
           <Route exact path="/instructor/personalInfo/:id">
             <PersonalInfo />
@@ -75,8 +79,11 @@ function App() {
             <AddCorporateTrainee />
           </Route>
 
-          <Route exact path="/trainee/myCourses">
+          {/* <Route exact path="/trainee/myCourses">
             <MyCoursesTrainee />
+          </Route> */}
+          <Route exact path={"/trainee/myCourses"}>
+          {(user && (user.type=='corporate trainee' || user.type==='individual trainee'))? <MyCoursesTrainee /> : (!loading && !user)? <Redirect to="/login"/>:user?<Redirect to="/"/> :<MyCoursesTrainee />}
           </Route>
           <Route exact path="/trainee/CourseSubtitles/:courseId">
             <CourseSubtitles />
@@ -112,6 +119,9 @@ function App() {
           </Route>
           <Route exact path="/resetpassword/:token">
           <ResetPassword />
+          </Route>
+          <Route exact path="/admin/home">
+          <AdminHome />
           </Route>
         </Switch>
 

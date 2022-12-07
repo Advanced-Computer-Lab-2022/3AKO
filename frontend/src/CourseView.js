@@ -33,7 +33,7 @@ const CourseView = (props) => {
             {courseData && <div className="courseView">
                 <h1>{courseData.title}</h1>
                 <p>{courseData.summary}</p>
-                {<RatingInfo rating={courseData.rating} price={courseData.price * exchangeRate} promotion={(new Date(courseData.promotion.saleEndDate) > new Date() ? courseData.promotion.saleByInstructor : 0)} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo>}
+                {/* {<RatingInfo rating={courseData.rating} price={courseData.price * exchangeRate} promotion={(new Date(courseData.promotion.saleEndDate) > new Date() ? courseData.promotion.saleByInstructor : 0)} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo>} */}
                 <h2>{courseData.subject}</h2>
                 <p>Subtitles :</p>
                 <ol>{courseData.subtitles.map(sub => <li>{sub.title}</li>)}</ol>

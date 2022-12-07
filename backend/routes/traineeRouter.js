@@ -30,7 +30,7 @@ router.patch('/rateInstructor',requireOwnership, rateInstructor)
 
 router.patch('/rateCourse',requireOwnership, rateCourse)
 
-router.get('/loadSubtitle',requireOwnership, loadSubtitle)
+router.get('/loadSubtitle/:courseId/:subtitleId',requireOwnership, loadSubtitle)
 
 router.get('/loadExamAnswers',requireOwnership, loadExamAnswers)
 

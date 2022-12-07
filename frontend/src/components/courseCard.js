@@ -10,9 +10,10 @@ import StarIcon from '@mui/icons-material/Star';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from 'axios';
 const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
-  var price = <p>{course.price}</p>
-  if ((course.promotion).percentage > 0) {
-    price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).percentage / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.percentage}% OFF)</span></span></p>
+  let price = <p>{course.price}</p>
+  console.log();
+  if ((course.promotion).discount > 0) {
+    price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).discount / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.percentage}% OFF)</span></span></p>
   }
   const [promotion, setPromotion] = useState(0);
   const [endDate, setEndDate] = useState(null);

@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
+import ExamForm from "./components/ExamForm";
+import Lesson from "./components/Lesson";
 const CourseMaterials = () => {
     const [subtitle, setSubtitle] = useState([])
     const [materials, setMaterials] = useState("")
     const [materialBody, setMaterialBody] = useState(<div>Hi</div>)
     const { id, courseId, subtitleId } = useParams()
     useEffect(() => {
-        axios.get(`http://localhost:5000/trainee/loadSubtitle/${courseId}/${subtitleId}`).then((response) => {
+        axios({method:'get',url:`http://localhost:5000/trainee/loadSubtitle/${courseId}/${subtitleId}`,withCredentials:true}).then((response) => {
             setSubtitle(response.data)
             const temp = response.data.lessons.concat(response.data.excercises)
             temp.sort((a, b) => a.position - b.position)
@@ -23,13 +25,12 @@ const CourseMaterials = () => {
         setMaterialBody(
             <div>
                 {
-                    material.questions && material.questions.map((question) => (
-                        <p >{question.question}</p>
-                    ))
+                    material.questions && <ExamForm exercise={material} subtitleId={subtitleId} courseId={courseId} key={material._id} />
 
                 }
                 {
-                    material.videoURL && <p >{material.videoURL}</p>
+                    material.videoURL && <Lesson lesson={material} />
+
                 }
             </div>
         );

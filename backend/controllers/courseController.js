@@ -163,7 +163,6 @@ const addSubVid = async (req, res) => { // adds a video link to a lesson and dis
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         const match = vidUrl.match(reg)
         if (match && match[1].length == 11) {
-            console.log(subtitleId);
             ///no///const updatedCourse = await courseModel.findOneAndUpdate({_id:courseId},{$set:{'subtitles.$[a].lessons.$[b].$.videoURL': match[1]}},{arrayFilters:[{"a.title":title},{"b.position":position}]})
             //const updatedCourse = await courseModel.findOneAndUpdate({_id:courseId,'subtitles.title':title,'subtitles.0.lessons.position':position},//working properly
             //    {$set:{'subtitles.$[a].lessons.$[b].videoURL': match[1]}},{arrayFilters:[{"a.title":title},{"b.position":position}],new:true,upsert:true})
@@ -259,12 +258,10 @@ const addPromotion = async (req, res) => {
 const loadSubtitle = async (req, res) => {
     try {
 
-        const { courseId, subtitleId } = req.body
+        const { courseId, subtitleId } = req.params
         let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
         answers.subtitles[0].excercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
-        console.log(answers);
         res.status(200).json(answers.subtitles[0])
-        console.log(answers.subtitles[0])
 
     }
     catch (err) {
@@ -276,9 +273,7 @@ const loadExamAnswers = async (req, res) => {
         const { courseId, subtitleId, exerciseId } = req.body
         const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
         const courseInfo = JSON.parse(JSON.stringify(courseData))
-        console.log(courseInfo);
         const answers = await courseInfo.subtitles[0].excercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
-        console.log(answers);
 
         res.status(200).json({ answers })
 

@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import { TextField } from "@mui/material";
 import {MenuItem} from "@mui/material";
 import { margin } from "@mui/system";
+import { useHistory } from "react-router-dom";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -25,8 +26,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const TraineeProfile = () => {
     const [edit,setEdit] = useState(false);
     const [editPassword,setEditPassword] = useState(false)
-    const user = useUserContext()
+    const {user,loading} = useUserContext()
     const [traineeInfo,setTraineeInfo] = useState('') 
+    const history = useHistory()
     useEffect(() => {
         const getInfo = async () => {
             await axios({method:'get',url:'http://localhost:5000/trainee/getMyInfo',withCredentials:true}).then((res)=>{
@@ -36,13 +38,18 @@ const TraineeProfile = () => {
 
             })
         }
-        if(user.user && (user.user.type==='corporate trainee' || user.user.type==='individual trainee')){
-            getInfo()
+        if(user){
+            if(user.type==='corporate trainee' || user.type==='individual trainee'){
+                getInfo()
+            }
+            else{
+                history.push('/')
+            }
         }
-        else if(user.user){
-            window.location.href=`/login`
+        else if(!loading){
+            history.push('/login')
         }
-    },[user.user])
+    },[loading])
 
     const handleEdit = (event) => {
         event.preventDefault();

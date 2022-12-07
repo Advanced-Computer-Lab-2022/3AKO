@@ -1,14 +1,20 @@
 import { useLogout } from "../hooks/useLogout";
 import { useUserContext } from "../hooks/useUserContext";
+import { Link, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 const Navbar = () => {
-    const user = useUserContext()
+    const {user} = useUserContext()
     const {logout} = useLogout()
+    const history = useHistory()
+    const location = useLocation()
+    console.log(location.pathname)
     const handleLogout = async () =>{
       try{
       const success = await logout()
       console.log({success});
       if(success){
-        window.location.href ='http://localhost:3000/login'
+        history.push('/login')
       }
       }
       catch(error){
@@ -16,35 +22,45 @@ const Navbar = () => {
       }
     }
     const handleEdit = async () =>{
-      if(user.user.type==='instructor'){
-        window.location.href ='http://localhost:3000/instructor/profile'
+      if(user.type==='instructor'){
+        history.push('/instructor/profile')
       }
-      else if(user.user.type==='corporate trainee'||user.user.type==='individual trainee'){
-        window.location.href ='http://localhost:3000/trainee/profile'
+      else if(user.type==='corporate trainee'||user.type==='individual trainee'){
+        history.push('/trainee/profile')
       }
     }
     return (
 <nav>
             <div>
-              <button onClick={()=>{window.location.href ='http://localhost:3000/'}}>Home</button>
+            <Link to="/">Home</Link>
             </div>
 
-            { user.user&&
+            { user&&
             <div>
               <button onClick={handleLogout}>Log out</button>
             </div>
             }
-            
-            { user.user&&
+
+            { user&&
             <div>
               <button onClick={handleEdit}>Edit info</button>
             </div>
             }
-            { !user.user && window.location.href !=='http://localhost:3000/login' && window.location.href !=='http://localhost:3000/signup' &&
+
+            { !user && location.pathname !=='/login' && location.pathname !=='/signup' &&
             <div>
-              <button onClick={() => window.location.href=`/login`}>Login</button>
+              {/* <button onClick={() => window.location.href=`/login`}>Login</button> */}
+              <Link to="/login">Login</Link>
               {/* <Link to="/login">Login</Link> */}
             </div>
+            }
+            {user && (user.type=='corporate trainee' || user.type==='individual trainee') && <div>
+              <Link to="/trainee/myCourses">my courses</Link>
+            </div>}
+            {user && user.type==='instructor' &&
+              <div>
+                <Link to="/instructor/addCourse">Create course</Link>
+              </div>
             }
           </nav>
     )
