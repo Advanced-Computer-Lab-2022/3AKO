@@ -265,7 +265,6 @@ const loadSubtitle = async (req, res) => {
         const answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, })
 
         res.status(200).json(answers.subtitles[0])
-        console.log(answers.subtitles[0])
 
     }
     catch (err) {
@@ -277,7 +276,6 @@ const loadExamAnswers = async (req, res) => {
         const { courseId, subtitleId, exerciseId } = req.body
         const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
         const courseInfo = JSON.parse(JSON.stringify(courseData))
-        console.log(courseInfo);
         const answers = await courseInfo.subtitles[0].excercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
         console.log(answers);
 

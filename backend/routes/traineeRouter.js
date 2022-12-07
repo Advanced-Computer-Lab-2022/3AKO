@@ -26,7 +26,7 @@ router.patch('/rateCourse/:id', rateCourse)
 
 router.get('/loadSubtitle/:courseId/:subtitleId', loadSubtitle)
 
-router.get('/loadExamAnswers/:id', loadExamAnswers)
+router.post('/loadExamAnswers/:id', loadExamAnswers)
 
 router.get('/myCourses/:id', myCourses)
 

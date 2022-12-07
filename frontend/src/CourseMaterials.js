@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import ExamForm from "./components/ExamForm";
+import Lesson from "./components/Lesson";
 const CourseMaterials = () => {
     const [subtitle, setSubtitle] = useState([])
     const [materials, setMaterials] = useState("")
@@ -24,11 +25,12 @@ const CourseMaterials = () => {
         setMaterialBody(
             <div>
                 {
-                    material.questions && <ExamForm exercise={material} />
+                    material.questions && <ExamForm exercise={material} subtitleId={subtitleId} courseId={courseId} key={material._id} />
 
                 }
                 {
-                    material.videoURL && <p >{material.videoURL}</p>
+                    material.videoURL && <Lesson lesson={material} />
+
                 }
             </div>
         );
