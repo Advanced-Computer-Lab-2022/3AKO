@@ -97,11 +97,11 @@ const editTraineeInfo = async (req, res) => { // adds info for first time instru
 }
 const getMyAnswers = async (req,res) => {
     try{
-        const {courseId,exercisesId,traineeId} = req.body
-        const courseData = await traineeModel.findOne({_id:traineeId} ,{ _id: 0, courseList: { $elemMatch: { courseId:  courseId} }}).lean()
+        const {courseId,exercisesId} = req.body
+        const courseData = await traineeModel.findOne({_id:req._id} ,{ _id: 0, courseList: { $elemMatch: { courseId:  courseId} }}).lean()
         const parsedData = await JSON.parse(JSON.stringify(courseData))
         const answers = await (parsedData.courseList[0].exercisesList).find((ex)=> {console.log(ex.exercisesId,exercisesId,ex.exercisesId===exercisesId);
-            return ex.exercisesId===exercisesId}).answers
+            return ex.exercisesId===exercisesId})
         res.status(200).json(answers)
     }
     catch (err) {

@@ -32,7 +32,7 @@ router.patch('/rateCourse',requireOwnership, rateCourse)
 
 router.get('/loadSubtitle/:courseId/:subtitleId',requireOwnership, loadSubtitle)
 
-router.get('/loadExamAnswers',requireOwnership, loadExamAnswers)
+router.post('/loadExamAnswers',requireOwnership, loadExamAnswers)
 
 router.get('/myCourses',requireTrainee, myCourses)
 
@@ -46,6 +46,6 @@ router.patch('/editMyInfo',requireTrainee,editTraineeInfo)
 
 router.patch('/editPassword',requireTrainee,editPassword)
 
-router.post("/getMyAnswers/", getMyAnswers)
+router.post("/getMyAnswers/",requireTrainee, getMyAnswers)
 
 module.exports = router

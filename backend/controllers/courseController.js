@@ -323,6 +323,17 @@ const getSubtitles = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+const addSubtitleToCourse = async (req, res) => {
+    try {
+        const { title, courseId, totalHours } = req.body
+        const subtitle = await new subtitlesModel({ title, totalHours })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle } }, { new: true, upsert: true })
+        res.status(200).json(updatedCourse)
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
 
 
 module.exports = {
@@ -340,5 +351,6 @@ module.exports = {
     , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
     getAllSubjects,
     getSubtitles,
-    getCourseReviews
+    getCourseReviews,
+    addSubtitleToCourse
 }

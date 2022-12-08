@@ -13,7 +13,6 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
             method: "post", url: `http://localhost:5000/trainee/getMyAnswers`,withCredentials:true,
             data: {
                 courseId: courseId,
-                traineeId: "638058b17199c95dfc5dc6d4",
                 exercisesId: exercise._id
             }
         }).then((response) => {
@@ -58,7 +57,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
 
                 await axios({
                     // hardcoded
-                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord/${"638058b17199c95dfc5dc6d4"}`,
+                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord`,withCredentials:true,
                     data: {
                         courseId: courseId
                         , exerciseId: exercise._id

@@ -38,9 +38,9 @@ const CourseMaterials = () => {
     return (
         <div>
             <div className="courses">
-                {materials && materials.map((excercise) => (
+                {materials && materials.map((excercise,index) => (
 
-                    <div className="courses">
+                    <div className="courses" key={index}>
 
 
                         <button onClick={() => { handleClick(excercise) }}>{excercise.title}</button>

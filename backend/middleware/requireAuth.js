@@ -123,7 +123,7 @@ const requireCourseAuthor = async (req,res,next) => {
 
 const requireOwnership = async (req,res,next) => {
     const {authorization} = req.headers 
-    const {courseId} = req.params
+    const courseId = req.params.courseId || req.body.courseId
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
