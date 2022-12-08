@@ -95,5 +95,20 @@ const editTraineeInfo = async (req, res) => { // adds info for first time instru
 
     }
 }
+const getMyAnswers = async (req,res) => {
+    try{
+        const {courseId,exercisesId,traineeId} = req.body
+        const courseData = await traineeModel.findOne({_id:traineeId} ,{ _id: 0, courseList: { $elemMatch: { courseId:  courseId} }}).lean()
+        const parsedData = await JSON.parse(JSON.stringify(courseData))
+        const answers = await (parsedData.courseList[0].exercisesList).find((ex)=> {console.log(ex.exercisesId,exercisesId,ex.exercisesId===exercisesId);
+            return ex.exercisesId===exercisesId}).answers
+        res.status(200).json(answers)
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
 
-module.exports = {  addCourseToTrainee,  addLessonRecord, addExerciseRecord, addTraineeInfo,myCourses, getMyInfo, editTraineeInfo}
+    }
+
+}
+
+module.exports = {  addCourseToTrainee,  addLessonRecord, addExerciseRecord, addTraineeInfo,myCourses, getMyInfo, editTraineeInfo, getMyAnswers}

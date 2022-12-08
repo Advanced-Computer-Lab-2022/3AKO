@@ -28,6 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 8,
   borderRadius: 5,
+  maxWidth:400,
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor:
       theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
@@ -38,7 +39,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const CourseCard = ({ course }) => {
+const RatingCard = ({ course }) => {
   const [listSize, setListSize] = useState(3);
   const [buttonName, setButtonName] = useState("see more");
   const [reviewer, setReviewer] = useState("");
@@ -138,4 +139,4 @@ const CourseCard = ({ course }) => {
   );
 };
 
-export default CourseCard;
+export default RatingCard;

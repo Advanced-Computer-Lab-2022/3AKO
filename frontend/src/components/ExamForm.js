@@ -1,14 +1,39 @@
 import { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
 const ExamForm = ({ exercise, subtitleId, courseId }) => {
     const [flag, setFlag] = useState(false);
-    const mySolutions = []
     const [sol, setSol] = useState([]);
+    const [grade, setGrade] = useState(0);
+    const [mySol, setMySol] = useState(null);
+    const [trueAnswers, setTrueAnswers] = useState([])
     const maxGrade = exercise.questions.length;
-    const el = document.getElementById('submit');
-    // 
+    useEffect(() => {
+        axios({
+            method: "post", url: `http://localhost:5000/trainee/getMyAnswers`,withCredentials:true,
+            data: {
+                courseId: courseId,
+                traineeId: "638058b17199c95dfc5dc6d4",
+                exercisesId: exercise._id
+            }
+        }).then((response) => {
 
-    let x = 0;
+            if (response.data) {
+                axios({
+                    method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`,
+                    data: {
+                        courseId: courseId
+                        , subtitleId: subtitleId
+                        , exerciseId: exercise._id
+                    }
+                }).then((response) => {
+                    setTrueAnswers(response.data.answers)
+                })
+                setMySol(response.data.answers)
+                setGrade(response.data.grade)
+            }
+        })
+    }, [])
     const submitExam = (event) => {
         console.log(sol);
         var myGrade = 0;
@@ -24,7 +49,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
             }).then(async (response) => {
                 // setAnswers(response.data.answers)
                 for (let i = 0; i < exercise.questions.length; i++) {
-                    if (mySolutions[i] == response.data.answers[i]) {
+                    if (sol[i] == response.data.answers[i]) {
                         myGrade++
 
 
@@ -33,29 +58,25 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
 
                 await axios({
                     // hardcoded
-                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord/`, withCredentials:true,
+                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord/${"638058b17199c95dfc5dc6d4"}`,
                     data: {
                         courseId: courseId
                         , exerciseId: exercise._id
                         , grade: myGrade
-                        , answers: mySolutions
+                        , answers: sol
                     }
                 })
                 console.log(myGrade + "/", maxGrade)
-
-
             })
         }
         loadExamAnswers();
 
     }
-
     const change = (value, position) => {
-        mySolutions[position] = value;
+
         let arr = [...sol]
         arr[position] = value;
         setSol(arr);
-        console.log([...mySolutions])
         var flag1 = true;
         if (arr.length !== maxGrade) {
             flag1 = false;
@@ -73,30 +94,50 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
     }
 
     return (
-        <form action="" onSubmit={submitExam}>
-            <p>{exercise.title}</p>
-            {
-                exercise.questions && exercise.questions.map((question, index) => (<div>
+        <div>
+            {mySol && <div>
 
-                    <p >{question.question}</p>
-                    <input type="radio" name={question._id} value="1" onChange={(e) => change(e.target.value, index)} />
-                    <label >{question.choice1}</label>
-                    <br />
-                    <input type="radio" name={question._id} value="2" onChange={(e) => change(e.target.value, index)} />
-                    <label >{question.choice2}</label>
-                    <br />
-                    <input type="radio" name={question._id} value="3" onChange={(e) => change(e.target.value, index)} />
-                    <label>{question.choice3}</label>
-                    <br />
-                    <input type="radio" name={question._id} value="4" onChange={(e) => change(e.target.value, index)} />
-                    <label>{question.choice4}</label>
-                </div>
+                {exercise.questions && exercise.questions.map((question, index) => (
+                    <div>
+                        <h3>{question.question}</h3>
+                        <ul>
+                            <li>{question.choice1}</li>
+                            <li>{question.choice2}</li>
+                            <li>{question.choice3}</li>
+                            <li>{question.choice4}</li>
+                        </ul>
+                        <h4>True Answer is {trueAnswers[index]} and you chose {mySol[index]}</h4>
+                    </div>
+                ))}
 
-                ))
-            }
-            <input id="submit" type="submit" disabled={!flag} />
+                <h2>You got {grade} out of {maxGrade}</h2>
+            </div>}
+            {!mySol &&
+                <form action="" onSubmit={submitExam}>
+                    <p>{exercise.title}</p>
+                    {
+                        exercise.questions && exercise.questions.map((question, index) => (<div>
 
-        </form>);
+                            <p >{question.question}</p>
+                            <input type="radio" name={question._id} value="1" onChange={(e) => change(e.target.value, index)} />
+                            <label >{question.choice1}</label>
+                            <br />
+                            <input type="radio" name={question._id} value="2" onChange={(e) => change(e.target.value, index)} />
+                            <label >{question.choice2}</label>
+                            <br />
+                            <input type="radio" name={question._id} value="3" onChange={(e) => change(e.target.value, index)} />
+                            <label>{question.choice3}</label>
+                            <br />
+                            <input type="radio" name={question._id} value="4" onChange={(e) => change(e.target.value, index)} />
+                            <label>{question.choice4}</label>
+                        </div>
+
+                        ))
+                    }
+                    <input id="submit" type="submit" disabled={!flag} />
+
+                </form>}
+        </div>);
 }
 
 export default ExamForm;
