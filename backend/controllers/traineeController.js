@@ -76,5 +76,25 @@ const myCourses = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+const getMyAnswers = async (req, res) => {
+    try {
+        const { courseId, exercisesId, traineeId } = req.body
+        console.log(req.body);
+        const courseData = await trainee.findOne({ _id: traineeId }, { _id: 0, courseList: { $elemMatch: { courseId: courseId } } }).lean()
+        const parsedData = await JSON.parse(JSON.stringify(courseData))
+        console.log(parsedData);
+        const answers = await (parsedData.courseList[0].exercisesList).find((ex) => {
+            console.log(ex.exercisesId, exercisesId, ex.exercisesId === exercisesId);
+            return ex.exercisesId === exercisesId
+        })
+        res.status(200).json(answers)
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
 
-module.exports = { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses }
+    }
+
+
+}
+
+module.exports = { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyAnswers }
