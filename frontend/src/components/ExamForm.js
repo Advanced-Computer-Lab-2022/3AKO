@@ -20,7 +20,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
 
             if (response.data) {
                 axios({
-                    method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`,
+                    method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`,withCredentials:truem,
                     data: {
                         courseId: courseId
                         , subtitleId: subtitleId
