@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import RatingInfo from './RatingInfo';
+import RatingCard from './components/RatingCard';
 import { useParams } from 'react-router-dom'
 
 const CourseView = (props) => {
@@ -42,6 +42,7 @@ const CourseView = (props) => {
                 <div className="video">
                     <iframe width="1080" height="607.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
+                <RatingCard course={courseData} key={courseData._id} />
             </div>}
         </div>
     );
