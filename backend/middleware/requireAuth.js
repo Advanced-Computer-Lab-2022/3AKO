@@ -23,7 +23,7 @@ const requireAdmin = async (req,res,next) => {
             req._id=_id 
             next()
         }
-        else {throw Error("You do not have access to this resource")}
+        else {throw new Error("You do not have access to this resource")}
     }
     catch(err){
         console.log(err)
@@ -45,7 +45,7 @@ const requireTrainee = async (req,res,next) => {
             req._id=_id 
              next()
             }
-        else {throw Error( "You are not an authorized trainee")}
+        else {throw new Error( "You are not an authorized trainee")}
     }
     catch(err){
         console.log(err)
@@ -67,7 +67,7 @@ const requireInstructor = async (req,res,next) => {
             req._id=_id 
             next()
         }
-        else {throw Error( "You are not an authorized admin")}
+        else {throw new Error( "You are not an authorized admin")}
     }
     catch(err){
         console.log(err)
@@ -95,25 +95,24 @@ const requireUser = async (req,res,next) => {
 
 const requireCourseAuthor = async (req,res,next) => { 
     const {authorization} = req.headers
-    const {courseId} = req.query
-    if(!authorization){
-        return res.status(401).json({error:"Token required"})
-    }
-    const token = authorization.split(' ')[1]
-    if(!courseId){
-        return res.status(401).json({error:"CourseId required"})
-    }
-
+    const courseId = req.query.courseId || req.body.courseId || req.params.courseId
     try{
+        if(!authorization){
+            throw new Error( "Token required")
+        }
+        const token = authorization.split(' ')[1]
+        if(!courseId){
+            throw new Error( "CourseId required")
+        }
         const {_id} = jwt.verify(token, process.env.SECRET)
         const user = await userModel.findOne({_id},'type').lean()
         if(user.type ==='instructor') {
             req._id=_id 
             const course = await courseModel.findOne({_id:courseId},'instrucrtorId -_id').lean()
-            if(course.instrucrtorId===_id) {next()}
-            else {res.status(401).json({error : "You do not have access to this Course"})}
+            if((course.instrucrtorId.toString())===_id) {next()}
+            else {throw new Error( "You do not have access to this Course")}
         }
-        else {throw Error( "You are not an authorized instructor")}
+        else {throw new Error( "You are not an authorized instructor")}
     }
     catch(err){
         console.log(err)
@@ -123,7 +122,7 @@ const requireCourseAuthor = async (req,res,next) => {
 
 const requireOwnership = async (req,res,next) => {
     const {authorization} = req.headers 
-    const courseId = req.params.courseId || req.body.courseId
+    const courseId = req.params.courseId || req.body.courseId || req.query.courseId
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
@@ -138,10 +137,10 @@ const requireOwnership = async (req,res,next) => {
             req._id=_id 
             const courseList = await traineeModel.findOne({_id},'courseList.courseId -_id').lean()
             const check = courseList.courseList.find( course => course.courseId.equals( mongoose.Types.ObjectId(courseId)))
-            if(!check) {throw Error("You do not own this course")}
+            if(!check) {throw new Error("You do not own this course")}
             else { next()}
             }
-        else {throw Error("You are not an authorized trainee")}
+        else {throw new Error("You are not an authorized trainee")}
     }
     catch(err){
         console.log(err)
@@ -163,7 +162,7 @@ const requireIndividualTrainee = async (req,res,next) => {
             req._id=_id 
              next()
             }
-        else {throw Error( "You are not an authorized individual trainee")}
+        else {throw new Error( "You are not an authorized individual trainee")}
     }
     catch(err){
         console.log(err)
@@ -184,7 +183,7 @@ const requireCorporateTrainee = async (req,res,next) => {
             req._id=_id 
              next()
             }
-        else {throw Error( "You are not an authorized individual trainee")}
+        else {throw new Error( "You are not an authorized individual trainee")}
     }
     catch(err){
         console.log(err)

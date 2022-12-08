@@ -1,5 +1,6 @@
 const instructorModel = require("../models/instructorModel");
 const userModel = require("../models/userModel");
+const { Error } = require('mongoose');
 
 const getMyInfo = async (req, res) => {//this is for the instructor himself
     const id = req._id
@@ -12,7 +13,7 @@ const addInstructor = async (req, res) => {
 
     try {
         const check = await userModel.findOne({username},'_id').lean()
-        if(check){ throw Error('This username already exists')}
+        if(check){ throw new Error('This username already exists')}
         const user = await userModel.create({ username, password, type: 'instructor' })
         const instructor = await instructorModel.create({ _id: user._id })
         res.status(200).json(instructor)
@@ -37,7 +38,7 @@ const editInstructorInfo = async (req, res) => { // adds info for first time ins
     try {
         const id = req._id;
         const { name, gender, biography, email } = req.body
-        if(!name || !gender || !biography || !email){throw Error('incomplete info')}
+        if(!name || !gender || !biography || !email){throw new Error('incomplete info')}
         const updatedInstructor = await instructorModel.findOneAndUpdate({ _id: id }, { name, gender, biography }, { new: true, upsert: true })
         await userModel.updateOne({_id:id},{email},{new:true,upsert:true})
         res.status(200).json(updatedInstructor)
@@ -64,7 +65,7 @@ const rateInstructor = async (req, res) => {
         const { rating, comment, instructorId } = req.body
         const instrucrtorData = await instructorModel.findOne({_id:instructorId},'reviews.reviewerId -_id').lean()
         const check = instrucrtorData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
-        if(check) {throw Error("You already reviewed this instructor")}
+        if(check) {throw new Error("You already reviewed this instructor")}
         const addedReview = await instructorModel.findOneAndUpdate({ _id: instructorId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1

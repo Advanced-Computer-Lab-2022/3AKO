@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { Error } = require('mongoose');
 
 const { courseModel, subtitlesModel, lessonsModel, exerciseModel, questionModel } = require('../models/courseModel')
 const instructorModel = require('../models/instructorModel')
@@ -246,12 +247,14 @@ const addQuestion = async (req, res) => {
 
 const addPromotion = async (req, res) => {
     try {
+        console.log('hello');
         const { courseId, discount, date } = req.body
         const Endate = new Date(date)
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: { discount: discount, saleEndDate: Endate } }, { new: true, upsert: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
+        console.log(err);
         res.status(400).json({ error: err.message })
     }
 }
@@ -288,7 +291,7 @@ const rateCourse = async (req, res) => {//needs to be checked again
         const { rating, comment, courseId } = req.body
         const courseData = await courseModel.findOne({_id:courseId},'reviews.reviewerId -_id').lean()
         const check = courseData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
-        if(check) {throw Error("You already reviewed this course")}       
+        if(check) {throw new Error("You already reviewed this course")}       
         const addedReview = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1

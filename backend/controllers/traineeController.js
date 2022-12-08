@@ -1,5 +1,5 @@
 const { default: mongoose } = require('mongoose')
-
+const { Error } = require('mongoose');
 const {traineeModel,courseRecordModel} = require('../models/traineeModel')
 const {courseModel} = require('../models/courseModel')
 
@@ -85,7 +85,7 @@ const editTraineeInfo = async (req, res) => { // adds info for first time instru
     try {
         const id = req._id;
         const { name, gender, email } = req.body
-        if(!name || !gender || !email){throw Error('incomplete info')}
+        if(!name || !gender || !email){throw new Error('incomplete info')}
         const updatedTrainee = await traineeModel.findOneAndUpdate({ _id: id }, { name, gender }, { new: true, upsert: true })
         await userModel.updateOne({_id:id},{email},{new:true,upsert:true})
         res.status(200).json(updatedTrainee)

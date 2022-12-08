@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const { Error } = require('mongoose');
 const userModel = require("../models/userModel");
 const {traineeModel} = require('../models/traineeModel')
 const instructorModel = require("../models/instructorModel");
@@ -60,11 +60,11 @@ const login = async (req, res) => {
     try{
         const {username,password} = req.body
         if(!username || !password){
-            throw Error("Must fill username and password")
+            throw new Error("Must fill username and password")
         }
         const user = await userModel.findOne({username}).lean()
         if(!user){
-            throw Error("Invalid username")
+            throw new Error("Invalid username")
         }
         
         if(user.password === password){
@@ -90,7 +90,7 @@ const login = async (req, res) => {
         }
         else{
 
-            throw Error("wrong password")
+            throw new Error("wrong password")
         }
 
     }
@@ -161,12 +161,12 @@ const verifyPassword = async (req,res) => {
     try{
         const {username,password,token} = req.body
         if(!username||!password || !token){
-            throw Error("invalid request")
+            throw new Error("invalid request")
         }
         const data = await userModel.findOne({username},'_id').lean()
         const check =  await passwordTokenModel.findOne({_id:data._id}).lean()
         if(new Date(check.expiration)< new Date()){
-            throw Error("token Expired")
+            throw new Error("token Expired")
         }
         if(check.token===token){
             await userModel.updateOne({_id:data._id},{password})
@@ -174,7 +174,7 @@ const verifyPassword = async (req,res) => {
             res.status(200).json({})
         }
         else{
-            throw Error("invalid token")
+            throw new Error("invalid token")
         }
 
     }

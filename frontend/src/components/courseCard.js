@@ -13,7 +13,7 @@ const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
   let price = <p>{course.price}</p>
   console.log();
   if ((course.promotion).discount > 0) {
-    price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).discount / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.percentage}% OFF)</span></span></p>
+    price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).discount / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.discount}% OFF)</span></span></p>
   }
   const [promotion, setPromotion] = useState(0);
   const [endDate, setEndDate] = useState(null);
@@ -32,12 +32,12 @@ const CourseCard = ({ course, isInstructor, userId, isCorporateTrainee }) => {
   const definePromotion = () => {
 
     //console.log(course._id + " " + promotion + " " + endDate + " " + userId)
-    axios.patch(`http://localhost:5000/instructor/addPromotion/${userId}`,
-      {
+    axios({method:'patch',url:`http://localhost:5000/instructor/addPromotion`,withCredentials:true,
+      data:{
         courseId: course._id,
         discount: promotion,
         date: endDate
-      })
+      }})
       .then((response) => {
         console.log(response.data);
         alert("promotion added successfully")

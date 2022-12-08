@@ -2,6 +2,7 @@
 const individualTraineeModel = require('../models/individualTraineeModel')
 const userModel = require("../models/userModel");
 const {traineeModel} = require('../models/traineeModel')
+const { Error } = require('mongoose');
 
 const jwt = require('jsonwebtoken')
 
@@ -14,9 +15,9 @@ const addIndividualTrainee = async (req, res) => {
 
     try {
         console.log(username, password, name, email, gender, country);
-        if(!(username && password && name && email && gender && country)){ throw Error('You must fill in all the nessccery fields')}
+        if(!(username && password && name && email && gender && country)){ throw new Error('You must fill in all the nessccery fields')}
         const check = await userModel.findOne({username},'_id').lean()
-        if(check){ throw Error('This username already exists')}
+        if(check){ throw new Error('This username already exists')}
         const user = await userModel.create({username,password,email,type:'trainee',country})
         await traineeModel.create({_id:user._id ,name, gender,type:'individual trainee'}) 
         await individualTraineeModel.create({_id:user._id})

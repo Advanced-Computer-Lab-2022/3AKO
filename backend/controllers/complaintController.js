@@ -1,6 +1,6 @@
 
 const complaintModel = require("../models/complaintModel");
-
+const { Error } = require('mongoose');
 
 
 const addComplaint = async (req, res) => {
