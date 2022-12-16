@@ -5,7 +5,9 @@ const { courseModel } = require('../models/courseModel');
 const individualTraineeModel = require('../models/individualTraineeModel');
 const { traineeModel } = require('../models/traineeModel');
 const userModel = require("../models/userModel");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const adminModel = require('../models/adminModel');
+const instructorModel = require('../models/instructorModel');
 
 
 const requireAdmin = async (req,res,next) => {
@@ -14,12 +16,12 @@ const requireAdmin = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
 
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const user = await userModel.findOne({_id},'type').lean()
-        if(user.type ==='admin') {
+        const admin = await adminModel.findOne({_id}).lean()
+        if(admin) {
             req._id=_id 
             next()
         }
@@ -36,12 +38,12 @@ const requireTrainee = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
 
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const user = await userModel.findOne({_id},'type').lean()
-        if(user.type ==='trainee') {
+        const trainee = await traineeModel.findOne({_id}).lean()
+        if(trainee) {
             req._id=_id 
              next()
             }
@@ -58,12 +60,12 @@ const requireInstructor = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
 
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const user = await userModel.findOne({_id},'type').lean()
-        if(user.type ==='instructor') {
+        const instructor = await instructorModel.findOne({_id}).lean()
+        if(instructor) {
             req._id=_id 
             next()
         }
@@ -79,13 +81,19 @@ const requireUser = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
 
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
         req._id = _id
-        req.user = await userModel.findOne({_id},'type').lean()
-        next()
+        const user = await userModel.findOne({_id},'type').lean()
+        if(user){
+            req.user = user
+            next()
+        }
+        else{
+            throw new Error( "Invalid user id")
+        }
     }
     catch(err){
         console.log(err)
@@ -100,19 +108,18 @@ const requireCourseAuthor = async (req,res,next) => {
         if(!authorization){
             throw new Error( "Token required")
         }
-        const token = authorization.split(' ')[1]
+        const token = authorization
         if(!courseId){
             throw new Error( "CourseId required")
         }
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const user = await userModel.findOne({_id},'type').lean()
-        if(user.type ==='instructor') {
+        const course = await courseModel.findOne({_id:courseId},'instrucrtorId -_id').lean()
+        if(course && (course.instrucrtorId.toString())===_id) {
             req._id=_id 
-            const course = await courseModel.findOne({_id:courseId},'instrucrtorId -_id').lean()
-            if((course.instrucrtorId.toString())===_id) {next()}
-            else {throw new Error( "You do not have access to this Course")}
+            next()
         }
-        else {throw new Error( "You are not an authorized instructor")}
+        else {throw new Error( "You do not have access to this Course")}
+        
     }
     catch(err){
         console.log(err)
@@ -126,21 +133,23 @@ const requireOwnership = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
     if(!courseId){
         return res.status(401).json({error:"CourseId required"})
     }
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const user = await userModel.findOne({_id},'type').lean()
-        if(user.type ==='trainee') {
+        const courseList = await traineeModel.findOne({_id},'courseList.courseId -_id').lean()
+        if(!courseList) throw new Error("You are not a trainee")
+        const check = courseList.courseList.find( course => course.courseId.equals( mongoose.Types.ObjectId(courseId)))
+        if(check) {
             req._id=_id 
-            const courseList = await traineeModel.findOne({_id},'courseList.courseId -_id').lean()
-            const check = courseList.courseList.find( course => course.courseId.equals( mongoose.Types.ObjectId(courseId)))
-            if(!check) {throw new Error("You do not own this course")}
-            else { next()}
-            }
-        else {throw new Error("You are not an authorized trainee")}
+            next()
+        }
+        else { 
+            throw new Error("You do not own this course")
+        }
+
     }
     catch(err){
         console.log(err)
@@ -154,7 +163,7 @@ const requireIndividualTrainee = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
         const user = await individualTraineeModel.findOne({_id}).lean()
@@ -175,7 +184,7 @@ const requireCorporateTrainee = async (req,res,next) => {
     if(!authorization){
         return res.status(401).json({error:"Token required"})
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization
     try{
         const {_id} = jwt.verify(token, process.env.SECRET)
         const user = await corporateTrainee.findOne({_id}).lean()

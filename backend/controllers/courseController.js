@@ -218,11 +218,11 @@ const addPreviewLink = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
-const addExcercise = async (req, res) => {
+const addExercise = async (req, res) => {
     try {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -233,7 +233,7 @@ const addQuestion = async (req, res) => {
     try {
         const { courseId, exerciseId, subtitleId, questionContent, choice1, choice2, choice3, choice4, answer } = req.body
         const question = await new questionModel({ question: questionContent, choice1, choice2, choice3, choice4, answer })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -263,7 +263,7 @@ const loadSubtitle = async (req, res) => {
 
         const { courseId, subtitleId } = req.params
         let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
-        answers.subtitles[0].excercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
+        answers.subtitles[0].exercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
         res.status(200).json(answers.subtitles[0])
 
     }
@@ -276,7 +276,7 @@ const loadExamAnswers = async (req, res) => {
         const { courseId, subtitleId, exerciseId } = req.body
         const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
         const courseInfo = JSON.parse(JSON.stringify(courseData))
-        const answers = await courseInfo.subtitles[0].excercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
+        const answers = await courseInfo.subtitles[0].exercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
 
         res.status(200).json({ answers })
 
@@ -295,6 +295,8 @@ const rateCourse = async (req, res) => {//needs to be checked again
         const addedReview = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1
+        const numOfReviews = Rating["1"] + Rating["2"] + Rating["3"] + Rating["4"] + Rating["5"]
+        Rating["total"] = (Rating["1"] + Rating["2"]*2 + Rating["3"]*3 + Rating["4"]*4 + Rating["5"]*5)/numOfReviews
         const ret = await courseModel.findOneAndUpdate({ _id: courseId }, { rating: Rating }, { new: true, upsert: true })
         res.status(200).json(ret)
     }
@@ -351,7 +353,7 @@ module.exports = {
     loadExamAnswers,
     rateCourse
     , viewMyCourses, instructorFilterOnSubject, viewMySubjects, addLesson
-    , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
+    , addSubVid, addPreviewLink, addExercise, addQuestion, addPromotion,
     getAllSubjects,
     getSubtitles,
     getCourseReviews,

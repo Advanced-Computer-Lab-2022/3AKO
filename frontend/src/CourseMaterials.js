@@ -11,7 +11,7 @@ const CourseMaterials = () => {
     useEffect(() => {
         axios({method:'get',url:`http://localhost:5000/trainee/loadSubtitle/${courseId}/${subtitleId}`,withCredentials:true}).then((response) => {
             setSubtitle(response.data)
-            const temp = response.data.lessons.concat(response.data.excercises)
+            const temp = response.data.lessons.concat(response.data.exercises)
             temp.sort((a, b) => a.position - b.position)
             setMaterials(temp);
         }).catch((err) => {
@@ -38,13 +38,13 @@ const CourseMaterials = () => {
     return (
         <div>
             <div className="courses">
-                {materials && materials.map((excercise,index) => (
+                {materials && materials.map((exercise,index) => (
 
                     <div className="courses" key={index}>
 
 
-                        <button onClick={() => { handleClick(excercise) }}>{excercise.title}</button>
-                        {/* {excercise.questions && excercise.questions.map((question) => (
+                        <button onClick={() => { handleClick(exercise) }}>{exercise.title}</button>
+                        {/* {exercise.questions && exercise.questions.map((question) => (
                             <p >{question.question}</p>
                         ))} */}
 
