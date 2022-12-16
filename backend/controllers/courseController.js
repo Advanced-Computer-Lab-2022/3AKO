@@ -224,6 +224,7 @@ const addExcercise = async (req, res) => {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        console.log(updatedCourse);
         res.status(200).json(exercise)
     }
     catch (err) {
@@ -261,7 +262,7 @@ const addPromotion = async (req, res) => {
 const loadSubtitle = async (req, res) => {
     try {
 
-        const { courseId, subtitleId } = req.params
+        const { courseId, subtitleId } = req.body
         const answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, })
 
         res.status(200).json(answers.subtitles[0])

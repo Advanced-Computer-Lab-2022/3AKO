@@ -80,7 +80,7 @@ function App() {
             <CourseMaterials />
           </Route>
 
-          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
+          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId/:exerciseId">
             <SubtitleExercise />
           </Route>
           <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">

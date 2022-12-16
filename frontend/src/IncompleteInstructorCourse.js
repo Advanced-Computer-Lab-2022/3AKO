@@ -20,25 +20,28 @@ const Lol = () => {
 
   const { courseId } = useParams();
   const [course, setCourse] = useState("");
-  const [subtitlesCount, setSubtitlesCount] = useState(0);
+  const [subtitles, setSubtitles] = useState(0);
   const [url, setUrl] = useState('');
   const [rerender, setRerender] = useState(true);
+  const [id, setId] = useState("");
+  var posCount = 1;
   useEffect(() => {
     const getInfo = async () => {
       const response = await fetch(`http://localhost:5000/course/getCourseInfo/${courseId}`)
       const json = await response.json()
       setCourse(json)
       // console.log("loaded0");
-      setSubtitlesCount(course.subtitles.length);
+      setSubtitles(json.subtitles);
     }
     getInfo()
 
-  }, [subtitlesCount, rerender]);
+  }, [rerender]);
 
 
   const [open, setOpen] = React.useState(false);
   const [openVideo, setOpenVideo] = React.useState(false);
-
+  const [openExerciseTitle, setOpenExerciseTitle] = React.useState(false);
+  const [exerciseTitle, setExerciseTitle] = React.useState("");
   const [titleValue, setTitleValue] = React.useState("");
   const [totalHours, setTotalHours] = React.useState(0);
 
@@ -47,6 +50,13 @@ const Lol = () => {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleClickOpenVideo = () => setOpenVideo(true);
+  const handleClickOpenExerciseTitle = (e) => {
+    setId(e.target.id);
+    setOpenExerciseTitle(true);
+  }
+  const handleCloseExerciseTitle = () => {
+    setOpenExerciseTitle(false);
+  };
   const handleCloseVideo = () => {
     setRerender(!rerender);
     console.log(rerender);
@@ -65,7 +75,7 @@ const Lol = () => {
         console.log(response.data);
         console.log('it works');
       });
-    setSubtitlesCount(subtitlesCount + 1);
+    setSubtitles(subtitles);
     setTitleValue("");
     setTotalHours(0);
     handleClose();
@@ -76,8 +86,28 @@ const Lol = () => {
   function handleAdd(subtitle) {
     console.log(subtitle.title);
   }
-  const handleAddExercise = () => {
+  const handleAddExercise = (e) => {
+    const index = id;
+    let pos = 0;
+    axios({
+      method: 'patch', url: `http://localhost:5000/instructor/addExcercise/00`, data: {
+        courseId: courseId,
+        title: exerciseTitle,
+        position: pos,
+        subtitleId: subtitles[index]._id
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+        console.log('exrcise Added');
+        const exerciseId = response.data._id;
+        // if (response)
+        //   window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitles[index]._id}/${exerciseId}`;
+      }).catch((error) => {
+        console.log(error); //Logs a string: Error: Request failed with status code 404
+      });
 
+    handleCloseExerciseTitle();
   }
   const handleAddVideo = () => {
     console.log(url, description);
@@ -105,17 +135,44 @@ const Lol = () => {
 
 
       <Accordion defaultActiveKey={['0']} alwaysOpen>
-        {course.subtitles && course.subtitles.map((subtitle) => (
+        {subtitles && subtitles.map((subtitle, index) => (
 
           <Accordion.Item eventKey={subtitle._id}>
             <Accordion.Header>{subtitle.title}</Accordion.Header>
             <Accordion.Body>
               {subtitle && (subtitle.lessons.concat(subtitle.excercises).sort((a, b) => a.position - b.position)).map((lesson) => (
                 <div> {lesson.title}</div>
-              ))}
 
+              ))}
               <Button onClick={() => handleAdd(subtitle)}>Add lesson</Button>
-              <Button onClick={() => window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitle._id}`}>Add Exercise</Button>
+              <div>
+                <Button key={index} id={index} variant="outlined" onClick={handleClickOpenExerciseTitle}>
+                  Add Exercise
+
+                </Button>
+                <Dialog open={openExerciseTitle} onClose={handleCloseExerciseTitle}>
+                  <DialogTitle>Add Exercise Title</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="exerciseTitle"
+                      label="exercise title"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                      value={exerciseTitle}
+                      onChange={(e) => setExerciseTitle(e.target.value)}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseExerciseTitle}>Cancel</Button>
+                    <Button key={index} id={index} onClick={(e) => handleAddExercise(e)}>add exercise</Button>
+
+                  </DialogActions>
+                </Dialog>
+              </div>
+              {/* <Button onClick={() => window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitle._id}`}>Add Exercise</Button> */}
               {/* <Button onClick={handleAddVideo}>Add Preview Video</Button> */}
             </Accordion.Body>
           </Accordion.Item>

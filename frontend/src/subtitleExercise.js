@@ -54,8 +54,8 @@ const SubtitleExercise = () => {
                 ))} */}
             <div>
                 <h1>Create New Exercise</h1>
-                <label for="title">Exercise Title:</label>
-                <input type="text" id="title" name="title"></input> <br />
+                {/* <label for="title">Exercise Title:</label>
+                <input type="text" id="title" name="title"></input> <br /> */}
                 <form>
 
                     <label for="question">Question:</label>
