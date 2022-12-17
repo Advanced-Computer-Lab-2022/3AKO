@@ -74,7 +74,7 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
           <Card.Text>
             {course.summary.substring(0, 95) + ((course.summary).length > 95 ? '...' : '')}
           </Card.Text>
-          <p className='fw-bold'>Taught by: <span className='fw-normal'>{course.title}</span></p>
+          <p className='fw-bold'>Taught by: <span className='fw-normal'>{course.instructorName}</span></p>
           <div style={{ display: 'inline-flex' }}>
             <Rating className='rating'
 

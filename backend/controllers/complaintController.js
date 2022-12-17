@@ -5,7 +5,7 @@ const { Error } = require('mongoose');
 
 const addComplaint = async (req, res) => {
     try{
-        const id = req.params.id;
+        const id = req._id;
         const {title, body,reportedCourse} = req.body
         const complaint = await complaintModel.create({title,body,userId:id,reportedCourse})
         res.status(200).json(complaint)

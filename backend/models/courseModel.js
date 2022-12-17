@@ -45,21 +45,16 @@ const questionSchema = mongoose.Schema({
     choice4 : {
             type : String,
             required : true
-        },
-        answer : {
-            type : Number,
-            required : true,
-            min : 1,
-            max : 4
-        },
-        position : {
-            type : Number,
-            min :1,
-            required : true
-        }
+    },
+    answer : {
+        type : Number,
+        required : true,
+        min : 1,
+        max : 4
+    }
 },{autoCreate : false})
 
-const excerciseSchema = mongoose.Schema({
+const exerciseSchema = mongoose.Schema({
     title : {
         type : String,
         required : true
@@ -85,8 +80,8 @@ const subtitleSchema =mongoose.Schema({
         required : true,
         default:[]
     },
-    excercises : {
-        type : [excerciseSchema],
+    exercises : {
+        type : [exerciseSchema],
         required : true,
         default : []
     },
@@ -144,6 +139,10 @@ const courseSchema = new Schema({
         5:{
             type : Number,
             default : 0
+        },
+        total : {
+            type : Number,
+            default : 0
         }
     },
     reviews :{
@@ -171,13 +170,13 @@ const courseSchema = new Schema({
     },
     totalHours : {
         type : Number,
-        required : true
+        default : 0
     },
-    instrucrtorId : {
+    instructorId : {
         type : mongoose.ObjectId,
         required : true
     },
-    instrucrtorName : {
+    instructorName : {
         type : String,
         required : true
     },
@@ -204,6 +203,14 @@ const courseSchema = new Schema({
     imageURL :{
         type : String,
         default : "https://www.google.com/url?sa=i&url=https%3A%2F%2Ftheconversation.com%2Fthe-50-great-books-on-education-24934&psig=AOvVaw2y1QPujW8vq-OTh5Nspo2J&ust=1667236771520000&source=images&cd=vfe&ved=0CA0QjRxqFwoTCJjM8I27iPsCFQAAAAAdAAAAABAE"
+    },
+    status : {
+        type : String,
+        default : "unpublished"
+    },
+    numOfPurchases : {
+        type:String,
+        default: 0
     }
     
     
@@ -212,6 +219,6 @@ const courseSchema = new Schema({
 const courseModel = mongoose.model('course', courseSchema)
 const subtitlesModel = mongoose.model('subtitlesModel', subtitleSchema)
 const lessonsModel = mongoose.model('lessonsModel', lessonSchema)
-const exerciseModel = mongoose.model('exerciseModel',excerciseSchema)
+const exerciseModel = mongoose.model('exerciseModel',exerciseSchema)
 const questionModel = mongoose.model('questionModel',questionSchema)
 module.exports = {courseModel, subtitlesModel, lessonsModel, exerciseModel,questionModel}

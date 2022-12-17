@@ -30,10 +30,30 @@ const addLessonRecord = async(req, res) => {
 const addExerciseRecord = async(req, res) => {
     try{
         const traineeId=await req._id
-        const{courseId,exerciseId,grade,answers} = req.body
-        const newCourseList = await traineeModel.updateOne({_id:traineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.exercisesList':{exercisesId:exerciseId,grade:grade,answers}}})
-        res.status(200).json({newCourseList})
+        const{courseId,subtitleId,exerciseId,answers} = req.body
+        // check if a record already exists for theis exercise
+        const exerciseData = await traineeModel.findOne({_id:req._id} ,{ _id: 0, courseList: { $elemMatch: { courseId:  courseId} }}).lean()
+        const parsedData = await JSON.parse(JSON.stringify(exerciseData))
+        const exerciseRecord = await (parsedData.courseList[0].exerciseList).find((ex)=> {return ex.exerciseId===exerciseId})
+        if(exerciseRecord) return res.status(401).json({message: "You already passed this exam"})
+        // getting the correct answers for the exercise
+        const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
+        const courseInfo = JSON.parse(JSON.stringify(courseData))
+        const correctAnswers = await courseInfo.subtitles[0].exercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
+        if(!correctAnswers) throw new Error("this exercise does not exist")
+        let grade = 0
+        // comparing the answers
+        for (let i = 0; i < correctAnswers.length; i++) {
+            if (answers[i].toString() == correctAnswers[i].toString()) {
+                grade++
+            }
+        }
+        //adding a record only if the trainee gets more than half the answers correct
+        if(grade<correctAnswers.length/2) return res.status(200).json({message: "Exam Failed"})
+        await traineeModel.updateOne({_id:traineeId, 'courseList.courseId':courseId},{$push:{'courseList.$.exerciseList':{exerciseId:exerciseId,grade:grade,answers}}})
+        res.status(200).json({message: "Added Succefully"})
     }catch(err){
+        console.log(err);
         res.status(400).json({error : err.message})
     }
 }
@@ -97,11 +117,11 @@ const editTraineeInfo = async (req, res) => { // adds info for first time instru
 }
 const getMyAnswers = async (req,res) => {
     try{
-        const {courseId,exercisesId} = req.body
+        const {courseId,exerciseId} = req.body
         const courseData = await traineeModel.findOne({_id:req._id} ,{ _id: 0, courseList: { $elemMatch: { courseId:  courseId} }}).lean()
         const parsedData = await JSON.parse(JSON.stringify(courseData))
-        const answers = await (parsedData.courseList[0].exercisesList).find((ex)=> {console.log(ex.exercisesId,exercisesId,ex.exercisesId===exercisesId);
-            return ex.exercisesId===exercisesId})
+        const answers = await (parsedData.courseList[0].exerciseList).find((ex)=> {console.log(ex.exerciseId,exerciseId,ex.exerciseId===exerciseId);
+            return ex.exerciseId===exerciseId})
         res.status(200).json(answers)
     }
     catch (err) {
