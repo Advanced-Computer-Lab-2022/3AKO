@@ -13,9 +13,9 @@ const courseList = new Schema({
         max : 100,
         default : 0
     },
-    exercisesList : {
+    exerciseList : {
         type: [{
-            exercisesId:{ type : mongoose.ObjectId, ref: 'exercise'}, 
+            exerciseId:{ type : mongoose.ObjectId, ref: 'exercise'}, 
             grade:{ type : Number, required : true},
             answers : {type : [Number],required : true}}]
     },
@@ -23,11 +23,11 @@ const courseList = new Schema({
         type: [{
             lessonId:{ type : mongoose.ObjectId, ref: 'lesson'},
             note:{type : String,default : ""}}]
+    },
+    status : {
+        type: String,
+        default : "active"
     }
-
-
-    
-
 },{autoCreate : false, _id : false})
 
 const traineeSchema = new Schema({

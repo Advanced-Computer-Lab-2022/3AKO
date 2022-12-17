@@ -39,7 +39,7 @@ app.use(cookieParser())
 app.use((req, res, next) => {
   const authHeader = req.headers.cookie;
   if (authHeader) {
-    req.headers.authorization = `Bearer ${authHeader.substring(4)}`;
+    req.headers.authorization = authHeader.substring(4);
   }
   next();
 });

@@ -14,9 +14,10 @@ const getAllCourses = async (req, res) => {
 }
 const createCourse = async (req, res) => {
     try {
-        const instrucrtorId = req._id
-        const instrucrtorData = await instructorModel.find({ _id: instrucrtorId }, 'name -_id')
-        const instrucrtorName = instrucrtorData[0].name
+        console.log('well well well' + req._id);
+        const instructorId = req._id
+        const instrucrtorData = await instructorModel.find({ _id: instructorId }, 'name -_id')
+        const instructorName = instrucrtorData[0].name
         const { title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL } = req.body
         // subtitles taken from the json is an array of the titles of the subtitles
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
@@ -24,9 +25,13 @@ const createCourse = async (req, res) => {
         const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
         const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
 
-        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instrucrtorId, instrucrtorName })
-
+        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instructorId, instructorName })
+        console.log('we got here' + course._id);
+        await instructorModel.updateOne({ _id: instructorId }, { $push: { 'courses': course._id } }, { new: true, upsert: true })
+        console.log('we did it ' + course._id);
+        res.status(200).json({ message: "Created Successfully" })
     } catch (err) {
+        console.log(err);
         res.status(400).json({ error: err.message })
     }
 
@@ -76,7 +81,7 @@ const searchForCourses = async (req, res) => {
     try {
         const { searchKey } = req.params
         const instructorId = await instructorModel.find({ 'name': searchKey.toLowerCase() }, { _id: 1 })
-        const courses = await courseModel.find({ $or: [{ instrucrtorId: instructorId }, { title: searchKey.toLowerCase() }, { subject: searchKey }] })
+        const courses = await courseModel.find({ $or: [{ instructorId: instructorId }, { title: searchKey.toLowerCase() }, { subject: searchKey }] })
         res.status(200).json(courses)
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -97,7 +102,7 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try {
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles.title subtitles._id subtitles.totalHours rating reviews price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL')
         res.status(200).json(courseData[0])
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -110,9 +115,9 @@ const searchByText = async (req, res) => {
         const courses = await courseModel.find({
             $or: [{ title: { "$regex": text, "$options": "i" } },
             { subject: { "$regex": text, "$options": "i" } },
-            { instrucrtorName: { "$regex": text, "$options": "i" } }]
+            { instructorName: { "$regex": text, "$options": "i" } }]
         },
-            'title outlines summary previewVideo subject subtitles.title rating price totalHours instrucrtorId instrucrtorName promotion numOfViews imageURL')
+            'title outlines summary previewVideo subject subtitles.title rating price totalHours instructorId instructorName promotion numOfViews imageURL')
         res.status(200).json(courses)
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -122,8 +127,9 @@ const searchByText = async (req, res) => {
 
 const viewMyCourses = async (req, res) => {
     const id = req._id
+    const id = req._id
     try {
-        const instructorCourses = await courseModel.find({ 'instrucrtorId': id })
+        const instructorCourses = await courseModel.find({ 'instructorId': id })
         res.json(instructorCourses)
     } catch (err) {
         res.send({ error: err.message })
@@ -132,8 +138,9 @@ const viewMyCourses = async (req, res) => {
 
 const viewMySubjects = async (req, res) => {
     const id = req._id
+    const id = req._id
     try {
-        const subjects = await courseModel.distinct('subject', { 'instrucrtorId': id })
+        const subjects = await courseModel.distinct('subject', { 'instructorId': id })
         res.json(subjects)
     } catch (err) {
         res.send({ error: err.message })
@@ -218,11 +225,11 @@ const addPreviewLink = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
-const addExcercise = async (req, res) => {
+const addExercise = async (req, res) => {
     try {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -233,7 +240,7 @@ const addQuestion = async (req, res) => {
     try {
         const { courseId, exerciseId, subtitleId, questionContent, choice1, choice2, choice3, choice4, answer } = req.body
         const question = await new questionModel({ question: questionContent, choice1, choice2, choice3, choice4, answer })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].excercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -247,7 +254,6 @@ const addQuestion = async (req, res) => {
 
 const addPromotion = async (req, res) => {
     try {
-        console.log('hello');
         const { courseId, discount, date } = req.body
         const Endate = new Date(date)
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: { discount: discount, saleEndDate: Endate } }, { new: true, upsert: true })
@@ -258,6 +264,19 @@ const addPromotion = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const removePromotion = async (req, res) => {
+    try {
+        const { courseId } = req.body
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: null }, { new: true, upsert: true })
+        res.status(200).json(updatedCourse)
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const loadSubtitle = async (req, res) => {
     try {
 
@@ -271,12 +290,27 @@ const loadSubtitle = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+const instructorLoadSubtitle = async (req, res) => {
+    try {
+
+        const { courseId, subtitleId } = req.body
+        console.log(courseId, subtitleId);
+        const data = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } })
+
+        res.status(200).json(data.subtitles[0])
+
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const loadExamAnswers = async (req, res) => {
     try {
         const { courseId, subtitleId, exerciseId } = req.body
         const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
         const courseInfo = JSON.parse(JSON.stringify(courseData))
-        const answers = await courseInfo.subtitles[0].excercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
+        const answers = await courseInfo.subtitles[0].exercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
 
         res.status(200).json({ answers })
 
@@ -295,6 +329,8 @@ const rateCourse = async (req, res) => {//needs to be checked again
         const addedReview = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1
+        const numOfReviews = Rating["1"] + Rating["2"] + Rating["3"] + Rating["4"] + Rating["5"]
+        Rating["total"] = (Rating["1"] + Rating["2"] * 2 + Rating["3"] * 3 + Rating["4"] * 4 + Rating["5"] * 5) / numOfReviews
         const ret = await courseModel.findOneAndUpdate({ _id: courseId }, { rating: Rating }, { new: true, upsert: true })
         res.status(200).json(ret)
     }
@@ -351,9 +387,11 @@ module.exports = {
     loadExamAnswers,
     rateCourse
     , viewMyCourses, instructorFilterOnSubject, viewMySubjects, addLesson
-    , addSubVid, addPreviewLink, addExcercise, addQuestion, addPromotion,
+    , addSubVid, addPreviewLink, addExercise, addQuestion, addPromotion,
     getAllSubjects,
     getSubtitles,
     getCourseReviews,
-    addSubtitleToCourse
+    addSubtitleToCourse,
+    removePromotion
+    , instructorLoadSubtitle
 }

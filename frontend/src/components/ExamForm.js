@@ -13,7 +13,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
             method: "post", url: `http://localhost:5000/trainee/getMyAnswers`,withCredentials:true,
             data: {
                 courseId: courseId,
-                exercisesId: exercise._id
+                exerciseId: exercise._id
             }
         }).then((response) => {
 
@@ -59,7 +59,8 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                     // hardcoded
                     method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord`,withCredentials:true,
                     data: {
-                        courseId: courseId
+                        courseId: courseId,
+                        subtitleId : subtitleId
                         , exerciseId: exercise._id
                         , grade: myGrade
                         , answers: sol

@@ -14,11 +14,12 @@ const SubtitleExercise = () => {
 
 
     useEffect(() => {
-        axios
-            .post(`http://localhost:5000/instructor/loadSubtitle/00`, {
+        axios({
+            method: 'post', url: `http://localhost:5000/instructor/loadSubtitle`, data: {
                 courseId: courseId,
                 subtitleId: subtitleId
-            })
+            }, withCredentials: true
+        })
             .then((response) => {
                 console.log(response.data);
                 setSubtitle(response.data);
