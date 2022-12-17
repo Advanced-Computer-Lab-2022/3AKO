@@ -227,19 +227,32 @@ const addExercise = async (req, res) => {
     try {
         const { courseId, title, position, subtitleId } = req.body
         const exercise = await new exerciseModel({ title: title, position: position })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
-        res.status(200).json(updatedCourse)
+        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        res.status(200).json(exercise)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
+    }
+}
+const loadExercise = async (req, res) => {
+    try {
+        const { courseId, subtitleId, exerciseId } = req.body
+        const data = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
+        const exercise = data.subtitles[0].exercises.find((ex) => { return ex._id.toString() === exerciseId.toString() })
+        if (exercise) res.status(200).json(exercise)
+        else throw new Error("this exercise is not in this subtitle")
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+
     }
 }
 const addQuestion = async (req, res) => {
     try {
         const { courseId, exerciseId, subtitleId, questionContent, choice1, choice2, choice3, choice4, answer } = req.body
         const question = await new questionModel({ question: questionContent, choice1, choice2, choice3, choice4, answer })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
-        res.status(200).json(updatedCourse)
+        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
+        res.status(200).json(question)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
@@ -392,4 +405,5 @@ module.exports = {
     addSubtitleToCourse,
     removePromotion
     , instructorLoadSubtitle
+    , loadExercise
 }

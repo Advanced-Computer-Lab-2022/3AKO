@@ -12,11 +12,12 @@ import Accordion from 'react-bootstrap/Accordion';
 import SortableList from 'react-sortable-list';
 import VideoModal from './components/addVideoModal';
 import SubtitleExercise from './subtitleExercise';
+import { useHistory } from "react-router-dom";
 const { useParams } = require("react-router-dom")
 
 
 
-const Lol = () => {
+const IncompleteCourse = () => {
 
   const { courseId } = useParams();
   const [course, setCourse] = useState("");
@@ -24,18 +25,22 @@ const Lol = () => {
   const [url, setUrl] = useState('');
   const [rerender, setRerender] = useState(true);
   const [id, setId] = useState("");
+  const [preVid, setPreVid] = useState('')
+  const history = useHistory()
   var posCount = 1;
   useEffect(() => {
+    console.log("here we go again");
     const getInfo = async () => {
       await axios({ method: 'get', url: `http://localhost:5000/course/getCourseInfo/${courseId}`, withCredentials: true }).then((response) => {
         setCourse(response.data)
         setSubtitles(response.data.subtitles);
+        setPreVid(response.data.previewVideo)
       })
       // console.log("loaded0");
     }
     getInfo()
 
-  }, [rerender]);
+  }, []);
 
 
   const [open, setOpen] = React.useState(false);
@@ -82,16 +87,15 @@ const Lol = () => {
     handleClose();
   }
   const handleAddLesson = (subtitleId) => {
+    const index = id;
     console.log('hi');
-  }
-  function handleAdd(subtitle) {
-    console.log(subtitle.title);
+    history.push(`/instructor/incompleteCourse/lesson/${courseId}/${subtitles[index]._id}`);
   }
   const handleAddExercise = (e) => {
     const index = id;
     let pos = 0;
     axios({
-      method: 'patch', url: `http://localhost:5000/instructor/addExcercise`, data: {
+      method: 'patch', url: `http://localhost:5000/instructor/addExercise`, data: {
         courseId: courseId,
         title: exerciseTitle,
         position: pos,
@@ -102,8 +106,8 @@ const Lol = () => {
         console.log(response.data);
         console.log('exrcise Added');
         const exerciseId = response.data._id;
-        // if (response)
-        //   window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitles[index]._id}/${exerciseId}`;
+        if (response)
+          history.push(`/instructor/incompleteCourse/exercise/${courseId}/${subtitles[index]._id}/${exerciseId}`);
       }).catch((error) => {
         console.log(error); //Logs a string: Error: Request failed with status code 404
       });
@@ -121,6 +125,13 @@ const Lol = () => {
       .then((response) => {
         console.log(response.data);
         console.log('it works');
+        let temp = course
+        const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        const match = (url).match(reg)
+        temp.previewVideo = match[1]
+        setCourse(temp)
+        setPreVid(match[1])
+
       });
     console.log('check the course');
     console.log(course);
@@ -146,34 +157,10 @@ const Lol = () => {
                 return <div> {lesson.title}</div>
 
               })}
-              <Button onClick={() => handleAdd(subtitle)}>Add lesson</Button>
-              <div>
-                <Button key={index} id={index} variant="outlined" onClick={handleClickOpenExerciseTitle}>
-                  Add Exercise
+              <Button onClick={() => handleAddLesson(subtitle)}>Add lesson</Button>
+              <Button key={index} id={index} variant="outlined" onClick={handleClickOpenExerciseTitle}>Add Exercise</Button>
 
-                </Button>
-                <Dialog open={openExerciseTitle} onClose={handleCloseExerciseTitle}>
-                  <DialogTitle>Add Exercise Title</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="exerciseTitle"
-                      label="exercise title"
-                      type="text"
-                      fullWidth
-                      variant="standard"
-                      value={exerciseTitle}
-                      onChange={(e) => setExerciseTitle(e.target.value)}
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseExerciseTitle}>Cancel</Button>
-                    <Button key={index} id={index} onClick={(e) => handleAddExercise(e)}>add exercise</Button>
 
-                  </DialogActions>
-                </Dialog>
-              </div>
               {/* <Button onClick={() => window.location.href = `/aaa/lolxd/exercise/${courseId}/${subtitle._id}`}>Add Exercise</Button> */}
               {/* <Button onClick={handleAddVideo}>Add Preview Video</Button> */}
             </Accordion.Body>
@@ -182,6 +169,27 @@ const Lol = () => {
       </Accordion>
 
 
+      <Dialog open={openExerciseTitle} onClose={handleCloseExerciseTitle}>
+        <DialogTitle>Add Exercise Title</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="exerciseTitle"
+            label="exercise title"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={exerciseTitle}
+            onChange={(e) => setExerciseTitle(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseExerciseTitle}>Cancel</Button>
+          <Button onClick={(e) => handleAddExercise(e)}>add exercise</Button>
+
+        </DialogActions>
+      </Dialog>
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
           Add new Subtitle
@@ -263,9 +271,9 @@ const Lol = () => {
         </Dialog>
       </div>
       {/* {console.log(course)} */}
-      <div className="video">
-        <iframe width="1080" height="607.5" src={"https://www.youtube.com/embed/" + course.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
+      {preVid && <div className="video">
+        <iframe width="1080" height="607.5" src={"https://www.youtube.com/embed/" + preVid} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      </div>}
 
       <div>
 
@@ -275,4 +283,4 @@ const Lol = () => {
   );
 }
 
-export default Lol;
+export default IncompleteCourse;

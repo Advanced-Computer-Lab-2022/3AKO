@@ -9,7 +9,7 @@ import AddCourse from "./AddCourse";
 import AddInstructor from "./addInstructor";
 import AddAdmin from "./addAdmin";
 import AddCorporateTrainee from "./addCorporateTrainee";
-import Lol from "./IncompleteInstructorCourse";
+import IncompleteCourse from "./IncompleteInstructorCourse";
 import MyCoursesTrainee from "./MyCoursesTrainee";
 import CourseSubtitles from "./CourseSubtitles";
 import { useState } from "react";
@@ -23,6 +23,7 @@ import TraineeProfile from "./components/TraineeProfile";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import SubtitleExercise from "./subtitleExercise";
+import LessonView from "./components/lessonView";
 import AdminHome from "./components/AdminHome";
 import { useUserContext } from "./hooks/useUserContext";
 import { useEffect } from "react";
@@ -40,7 +41,7 @@ function App() {
     <Router>
       <div className="App">
         <header style={{ display: "flex", justifyContent: "space-between" }}>
-          <CountryModal handleExchangeRate={handleExchangeRate} />
+          {/* <CountryModal handleExchangeRate={handleExchangeRate} /> */}
           <Navbar />
         </header>
         <Switch>
@@ -86,15 +87,18 @@ function App() {
           <Route exact path="/trainee/CourseSubtitles/:courseId">
             <CourseSubtitles />
           </Route>
-          <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
+          <Route exact path="/instructor/incompleteCourse/exercise/:courseId/:subtitleId/:exerciseId">
             <SubtitleExercise />
+          </Route>
+          <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
+            <LessonView />
           </Route>
           <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
             <Rate />
           </Route>
 
-          <Route exact path="/aa/Lol/:courseId">
-            <Lol />
+          <Route exact path="/instructor/incompleteCourse/:courseId">
+            <IncompleteCourse />
           </Route>
           <Route exact path="/login">
             <LogIn />
