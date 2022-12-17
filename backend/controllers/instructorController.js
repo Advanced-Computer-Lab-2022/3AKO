@@ -1,6 +1,7 @@
 const instructorModel = require("../models/instructorModel");
 const userModel = require("../models/userModel");
 const { Error } = require('mongoose');
+const { courseModel } = require("../models/courseModel");
 
 const getMyInfo = async (req, res) => {//this is for the instructor himself
     const id = req._id
@@ -41,9 +42,12 @@ const editInstructorInfo = async (req, res) => { // adds info for first time ins
         if(!name || !gender || !biography || !email){throw new Error('incomplete info')}
         const updatedInstructor = await instructorModel.findOneAndUpdate({ _id: id }, { name, gender, biography }, { new: true, upsert: true })
         await userModel.updateOne({_id:id},{email},{new:true,upsert:true})
-        res.status(200).json(updatedInstructor)
+        await courseModel.updateMany({instructorId:id},{instructorName:name},{upsert:true})
+
+        res.status(200).json({message: "Successful"})
     }
     catch (err) {
+        console.log(err);
         res.status(401).json({ error: err.message })
 
     }
@@ -63,8 +67,8 @@ const rateInstructor = async (req, res) => {
     try {
         const id = req.params.id;
         const { rating, comment, instructorId } = req.body
-        const instrucrtorData = await instructorModel.findOne({_id:instructorId},'reviews.reviewerId -_id').lean()
-        const check = instrucrtorData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
+        const instructorData = await instructorModel.findOne({_id:instructorId},'reviews.reviewerId -_id').lean()
+        const check = instructorData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
         if(check) {throw new Error("You already reviewed this instructor")}
         const addedReview = await instructorModel.findOneAndUpdate({ _id: instructorId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
