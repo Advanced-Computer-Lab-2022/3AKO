@@ -121,7 +121,7 @@ const searchByText = async (req, res) => {
 }
 
 const viewMyCourses = async (req, res) => {
-    const id  = req._id
+    const id = req._id
     try {
         const instructorCourses = await courseModel.find({ 'instrucrtorId': id })
         res.json(instructorCourses)
@@ -131,7 +131,7 @@ const viewMyCourses = async (req, res) => {
 }
 
 const viewMySubjects = async (req, res) => {
-    const  id = req._id
+    const id = req._id
     try {
         const subjects = await courseModel.distinct('subject', { 'instrucrtorId': id })
         res.json(subjects)
@@ -141,7 +141,7 @@ const viewMySubjects = async (req, res) => {
 }
 
 const instructorFilterOnSubject = async (req, res) => {
-    const id= req._id
+    const id = req._id
     const { subject } = req.body
     try {
         const { courses } = await instructorModel.findOne({ '_id': id }).select('courses -_id')
@@ -263,7 +263,7 @@ const loadSubtitle = async (req, res) => {
 
         const { courseId, subtitleId } = req.params
         let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
-        answers.subtitles[0].excercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
+        answers.subtitles[0].excercises.map((ex) => { ex.questions.map((q) => { delete q.answer }) })
         res.status(200).json(answers.subtitles[0])
 
     }
@@ -289,9 +289,9 @@ const rateCourse = async (req, res) => {//needs to be checked again
     try {
         const id = req._id;
         const { rating, comment, courseId } = req.body
-        const courseData = await courseModel.findOne({_id:courseId},'reviews.reviewerId -_id').lean()
-        const check = courseData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
-        if(check) {throw new Error("You already reviewed this course")}       
+        const courseData = await courseModel.findOne({ _id: courseId }, 'reviews.reviewerId -_id').lean()
+        const check = courseData.reviews.find(rev => rev.reviewerId.equals(mongoose.Types.ObjectId(id)))
+        if (check) { throw new Error("You already reviewed this course") }
         const addedReview = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1
@@ -317,7 +317,7 @@ const getCourseReviews = async (req, res) => {
 const getSubtitles = async (req, res) => {
     try {
         const { courseId } = req.params
-        const subtitleData = await courseModel.findOne({ _id: courseId }, "subtitles.title subtitles._id -_id").lean()
+        const subtitleData = await courseModel.findOne({ _id: courseId }, "subtitles -_id").lean()
 
         res.status(200).json(subtitleData.subtitles);
 

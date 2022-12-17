@@ -1,6 +1,6 @@
 
 import CourseView from "./CourseView";
-import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Home from "./Home";
 import { CountryModal } from "./components/CountryModal";
 import InstructorCourses from "./instructorCoursesView";
@@ -12,7 +12,6 @@ import AddCorporateTrainee from "./addCorporateTrainee";
 import Lol from "./IncompleteInstructorCourse";
 import MyCoursesTrainee from "./MyCoursesTrainee";
 import CourseSubtitles from "./CourseSubtitles";
-import CourseMaterials from "./CourseMaterials";
 import { useState } from "react";
 import Rate from "./components/rate";
 import PersonalInfo from "./personalInfo";
@@ -28,8 +27,8 @@ import AdminHome from "./components/AdminHome";
 import { useUserContext } from "./hooks/useUserContext";
 import { useEffect } from "react";
 function App() {
-  const {user,loading} = useUserContext()
-  const {dispatch} = useUserContext()
+  const { user, loading } = useUserContext()
+  const { dispatch } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
   const [currency, setCurrency] = useState("");
 
@@ -40,15 +39,14 @@ function App() {
   return (
     <Router>
       <div className="App">
-          <header>
-            {/* <CountryModal handleExchangeRate={handleExchangeRate} /> */}
-            <Navbar/>
-          </header>
+        <header style={{ display: "flex", justifyContent: "space-between" }}>
+          <CountryModal handleExchangeRate={handleExchangeRate} />
+          <Navbar />
+        </header>
         <Switch>
 
           <Route exact path="/">
-            <h2>welcome Home</h2>
-            {!user? <Home />: (user.type=='corporate trainee' || user.type==='individual trainee')? <Home />: user.type==='instructor'? <InstructorCourses />:<AdminHome />}
+            {!user ? <Home /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <Home /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />}
           </Route>
 
           <Route exact path="/course/:courseId">
@@ -56,7 +54,7 @@ function App() {
           </Route>
 
           <Route exact path="/instructor/addCourse">
-            {(user && user.type==='instructor')? <AddCourse />: user? <Redirect to="/"/>:loading? <AddCourse />:<Redirect to="/login"/>}
+            {(user && user.type === 'instructor') ? <AddCourse /> : user ? <Redirect to="/" /> : loading ? <AddCourse /> : <Redirect to="/login" />}
           </Route>
 
           {/* <Route exact path="/instructor">
@@ -83,15 +81,11 @@ function App() {
             <MyCoursesTrainee />
           </Route> */}
           <Route exact path={"/trainee/myCourses"}>
-          {(user && (user.type=='corporate trainee' || user.type==='individual trainee'))? <MyCoursesTrainee /> : (!loading && !user)? <Redirect to="/login"/>:user?<Redirect to="/"/> :<MyCoursesTrainee />}
+            {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
           </Route>
           <Route exact path="/trainee/CourseSubtitles/:courseId">
             <CourseSubtitles />
           </Route>
-          <Route exact path="/trainee/courseMaterials/:courseId/:subtitleId">
-            <CourseMaterials />
-          </Route>
-          
           <Route exact path="/aaa/Lolxd/exercise/:courseId/:subtitleId">
             <SubtitleExercise />
           </Route>
@@ -109,19 +103,19 @@ function App() {
             <SignUp />
           </Route>
           <Route exact path="/instructor/profile">
-          <InstructorProfile />
+            <InstructorProfile />
           </Route>
           <Route exact path="/trainee/profile">
-          <TraineeProfile />
+            <TraineeProfile />
           </Route>
           <Route exact path="/forgotPassword">
-          <ForgotPassword />
+            <ForgotPassword />
           </Route>
           <Route exact path="/resetpassword/:token">
-          <ResetPassword />
+            <ResetPassword />
           </Route>
           <Route exact path="/admin/home">
-          <AdminHome />
+            <AdminHome />
           </Route>
         </Switch>
 
