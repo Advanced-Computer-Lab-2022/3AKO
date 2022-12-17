@@ -1,8 +1,7 @@
 const instructorModel = require("../models/instructorModel");
 const userModel = require("../models/userModel");
-const courseModel = require("../models/courseModel");
+const {courseModel} = require("../models/courseModel");
 const { Error } = require('mongoose');
-const { courseModel } = require("../models/courseModel");
 
 const getMyInfo = async (req, res) => {//this is for the instructor himself
     const id = req._id
