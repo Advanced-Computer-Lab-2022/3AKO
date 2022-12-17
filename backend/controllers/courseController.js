@@ -127,7 +127,6 @@ const searchByText = async (req, res) => {
 
 const viewMyCourses = async (req, res) => {
     const id = req._id
-    const id = req._id
     try {
         const instructorCourses = await courseModel.find({ 'instructorId': id })
         res.json(instructorCourses)
@@ -137,7 +136,6 @@ const viewMyCourses = async (req, res) => {
 }
 
 const viewMySubjects = async (req, res) => {
-    const id = req._id
     const id = req._id
     try {
         const subjects = await courseModel.distinct('subject', { 'instructorId': id })
