@@ -102,7 +102,7 @@ const searchForCourses = async (req, res) => {
 const getCourseInfo = async (req, res) => {
     try {
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles.title subtitles._id subtitles.totalHours rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL')
         res.status(200).json(courseData[0])
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -126,7 +126,7 @@ const searchByText = async (req, res) => {
 }
 
 const viewMyCourses = async (req, res) => {
-    const id  = req._id
+    const id = req._id
     try {
         const instructorCourses = await courseModel.find({ 'instructorId': id })
         res.json(instructorCourses)
@@ -136,7 +136,7 @@ const viewMyCourses = async (req, res) => {
 }
 
 const viewMySubjects = async (req, res) => {
-    const  id = req._id
+    const id = req._id
     try {
         const subjects = await courseModel.distinct('subject', { 'instructorId': id })
         res.json(subjects)
@@ -146,7 +146,7 @@ const viewMySubjects = async (req, res) => {
 }
 
 const instructorFilterOnSubject = async (req, res) => {
-    const id= req._id
+    const id = req._id
     const { subject } = req.body
     try {
         const { courses } = await instructorModel.findOne({ '_id': id }).select('courses -_id')
@@ -252,7 +252,6 @@ const addQuestion = async (req, res) => {
 
 const addPromotion = async (req, res) => {
     try {
-        console.log('hello');
         const { courseId, discount, date } = req.body
         const Endate = new Date(date)
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: { discount: discount, saleEndDate: Endate } }, { new: true, upsert: true })
@@ -263,12 +262,25 @@ const addPromotion = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const removePromotion = async (req, res) => {
+    try {
+        const { courseId } = req.body
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: null }, { new: true, upsert: true })
+        res.status(200).json(updatedCourse)
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const loadSubtitle = async (req, res) => {
     try {
 
         const { courseId, subtitleId } = req.params
         let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
-        answers.subtitles[0].exercises.map((ex)=>{ ex.questions.map((q)=>{delete q.answer})})
+        answers.subtitles[0].exercises.map((ex) => { ex.questions.map((q) => { delete q.answer }) })
         res.status(200).json(answers.subtitles[0])
 
     }
@@ -276,6 +288,21 @@ const loadSubtitle = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+const instructorLoadSubtitle = async (req, res) => {
+    try {
+
+        const { courseId, subtitleId } = req.body
+        console.log(courseId, subtitleId);
+        const data = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } })
+
+        res.status(200).json(data.subtitles[0])
+
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
 const loadExamAnswers = async (req, res) => {
     try {
         const { courseId, subtitleId, exerciseId } = req.body
@@ -294,14 +321,14 @@ const rateCourse = async (req, res) => {//needs to be checked again
     try {
         const id = req._id;
         const { rating, comment, courseId } = req.body
-        const courseData = await courseModel.findOne({_id:courseId},'reviews.reviewerId -_id').lean()
-        const check = courseData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
-        if(check) {throw new Error("You already reviewed this course")}       
+        const courseData = await courseModel.findOne({ _id: courseId }, 'reviews.reviewerId -_id').lean()
+        const check = courseData.reviews.find(rev => rev.reviewerId.equals(mongoose.Types.ObjectId(id)))
+        if (check) { throw new Error("You already reviewed this course") }
         const addedReview = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1
         const numOfReviews = Rating["1"] + Rating["2"] + Rating["3"] + Rating["4"] + Rating["5"]
-        Rating["total"] = (Rating["1"] + Rating["2"]*2 + Rating["3"]*3 + Rating["4"]*4 + Rating["5"]*5)/numOfReviews
+        Rating["total"] = (Rating["1"] + Rating["2"] * 2 + Rating["3"] * 3 + Rating["4"] * 4 + Rating["5"] * 5) / numOfReviews
         const ret = await courseModel.findOneAndUpdate({ _id: courseId }, { rating: Rating }, { new: true, upsert: true })
         res.status(200).json(ret)
     }
@@ -362,5 +389,7 @@ module.exports = {
     getAllSubjects,
     getSubtitles,
     getCourseReviews,
-    addSubtitleToCourse
+    addSubtitleToCourse,
+    removePromotion
+    , instructorLoadSubtitle
 }

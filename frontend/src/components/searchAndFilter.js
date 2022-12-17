@@ -11,27 +11,28 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const [searchedCourses, setSearchedCourses] = useState(null)
   const [subject, setSubject] = useState("All")
   const [subjects, setSubjects] = useState(null)
-  const [minPrice, setMinPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(10000)
-  const [instrucrtorName, SetInstructorName] = useState('');
+  const [minRating, setMinRating] = useState(0)
+  const [maxRating, setMaxRating] = useState(5)
   const userId = useParams()
 
   useEffect(() => {
-    
+
     const fetchCourses = async () => {
-      await axios({method: "get",url:coursesFetch,withCredentials: true }).then(
-            (res) => { 
-              setCourses(res.data)
-              setAllCourses(res.data)
-              setSearchedCourses(res.data)
-            }
-        ).catch(error => {
-          alert('invalid request')
-        })
-        await axios({method: "get",url:subjectsFetch,withCredentials: true}).then(
-          (res) => { 
-            setSubjects(res.data)
-          }
+      await axios({ method: "get", url: coursesFetch, withCredentials: true }).then(
+        (res) => {
+          setCourses(res.data)
+          setAllCourses(res.data)
+          setSearchedCourses(res.data)
+        }
+      ).catch(error => {
+        alert('invalid request')
+      })
+      await axios({ method: "get", url: subjectsFetch, withCredentials: true }).then(
+        (res) => {
+          setSubjects(res.data)
+        }
       ).catch(error => {
         alert('request denied')
       })
@@ -47,13 +48,11 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     //console.log(courses)
 
     if (subject !== "All") {
-      const newCourses = searchedCourses.filter(course => (course.subject === subject && course.price <= maxPrice && course.price >= minPrice &&
-        ((course.instrucrtorName) !== undefined && (course.instrucrtorName.toLowerCase()).startsWith(instrucrtorName.toLowerCase()))))
+      const newCourses = searchedCourses.filter(course => (course.subject === subject && course.price <= maxPrice && course.price >= minPrice))
       setCourses(newCourses)
     }
     else {
-      const newCourses = searchedCourses.filter(course => (course.price <= maxPrice && course.price >= minPrice &&
-        ((course.instrucrtorName) !== undefined && (course.instrucrtorName.toLowerCase()).startsWith(instrucrtorName.toLowerCase()))))
+      const newCourses = searchedCourses.filter(course => (course.price <= maxPrice && course.price >= minPrice))
       setCourses(newCourses)
     }
     //console.log(courses)
@@ -104,12 +103,6 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
         <div>
           <input type="number" onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
           <input type="number" onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} />
-        </div>
-      }
-      {
-        instrucrtorFilter &&
-        <div>
-          <input type="string" placeholder='instructor name' onChange={(e) => SetInstructorName(e.target.value)} value={instrucrtorName} />
         </div>
       }
       <button onClick={handleFilter}>Apply</button>
