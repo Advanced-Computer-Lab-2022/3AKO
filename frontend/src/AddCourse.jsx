@@ -1,18 +1,21 @@
 import axios from 'axios';
+import React from 'react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Overlay from "react-overlay-component";
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { useUserContext } from './hooks/useUserContext';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import Modal from "react-bootstrap/Modal";
+import Button from 'react-bootstrap/Button';
+import { LoremIpsum } from "react-lorem-ipsum";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AddCourse = () => {
   const [outline, setOutline] = useState('')
   const [subtitle, setSubtitle] = useState('')
   const [hours, setHours] = useState(0)
-  const {user,loading} = useUserContext()
+  const { user, loading } = useUserContext()
   const history = useHistory()
-  const { instructorId } = useParams()
   const [allValues, setAllValues] = useState({
     title: '',
     subject: '',
@@ -27,19 +30,10 @@ const AddCourse = () => {
     subtitles: []
   })
   // for the contract
-
-  const [isOpen, setOverlay] = useState(false);
-
-  const closeOverlay = () => setOverlay(false);
-
-  const configs = {
-    animate: true,
-    // clickDismiss: false,
-    // escapeDismiss: false,
-    // focusOutline: false,
-  };
-
+  const [show, setShow] = useState(false);
   const [consent, setConsent] = useState(false);
+  const [checked, setChecked] = useState(false);
+  //
 
   const handelExtraValues = e => {
     if (e.target.value === '') {
@@ -70,34 +64,70 @@ const AddCourse = () => {
     });
   };
 
-  const openOverlay = () => {
+  const validate = () => {
     var valid = true;
     (Object.values(allValues)).every(item => {
       if (!item) {
-        alert("You need to fill all the neccessery data marked with *")
+        toast.error('You need to fill all the neccessery data marked with *', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         valid = false;
       }
     })
-    if (!valid) return
+    if (!valid) return false
     const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
     const match = allValues.previewVideo.match(reg)
     if (!(match && match[1].length === 11)) {
-      alert("The entered link is invalid")
+      toast.error('Invalid youtube link', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       valid = false
     }
-    if (!valid) return
-    setOverlay(true);
+    if (!valid) return false
+    return true
+  }
 
+  const handleOpen = () => {
+    if (!validate())
+      return
+    setShow(true)
 
   };
 
-  const handleSubmit = e => {
+  const handleAdd = e => {
+    if (!validate())
+      return
+    handleConsent()
     const courseData = { ...allValues, ...extraValues }
     try {
-      axios({method: "post",url:`http://localhost:5000/instructor/createCourse/`,withCredentials: true,data:courseData})
+      axios({ method: "post", url: `http://localhost:5000/instructor/createCourse/`, withCredentials: true, data: courseData })
         .then((response) => {
           console.log(response.data);
-          alert("course added successfully")
+          setShow(false)
+          toast.success('Course Created Successfully', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -107,21 +137,48 @@ const AddCourse = () => {
       console.log(err);
     }
   }
-  useEffect(()=>{
-    if(loading) return
-    else{
-      if(user){
-        if(user.type!=='instructor'){
+
+  const handleConsent = () => {
+    try {
+      axios({ method: "patch", url: `http://localhost:5000/instructor/setContractState/`, withCredentials: true, data: { state: true } })
+        .then((response) => {
+          console.log(response.data.consent);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        })
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    axios({ method: "get", url: `http://localhost:5000/instructor/getContractState/`, withCredentials: true })
+      .then((response) => {
+        setConsent(response.data.consent)
+        console.log(response.data.consent)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [consent])
+
+  useEffect(() => {
+    if (loading) return
+    else {
+      if (user) {
+        if (user.type !== 'instructor') {
           history.push('/')
-      }
+        }
       }
       else {
-        if(!loading){
+        if (!loading) {
           history.push('/login')
         }
       }
     }
-  },[loading])
+  }, [loading])
 
   return (
     <div className="addcourse">
@@ -150,21 +207,24 @@ const AddCourse = () => {
       <input type="number" placeholder='Add subtitle total hours' id="subtitle-hours" name="subtitle-hours" onChange={e => setHours(e.target.value)} value={hours} />
       <button onClick={handelExtraValues} name="subtitles" value={subtitle}>Add subtitle</button>
 
-      <button onClick={openOverlay}>Add course</button>
+      <Button variant="primary" onClick={consent ? handleAdd : handleOpen}>
+        Create Course
+      </Button>
 
-      <form onSubmit={handleSubmit}>
-        <Overlay configs={configs} isOpen={isOpen} closeOverlay={closeOverlay}>
-          <h3>Contract</h3>
-          <p>contract content</p>
-          <FormControlLabel control={<Checkbox onChange={() => setConsent(!consent)} />} label="I agree" />
+      <Modal show={show} onHide={() => setShow(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Contract</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <LoremIpsum p={3} random={false} />
+        </Modal.Body>
+        <Modal.Footer>
+          <FormControlLabel control={<Checkbox onChange={() => setChecked(!checked)} value={checked} defaultChecked={checked} />} label="I agree to the contract" />
+          <Button variant="primary" onClick={handleAdd} disabled={!checked}>Save</Button>
+        </Modal.Footer>
+      </Modal>
 
-          <button type="submit" disabled={!consent}>Save</button>
-        </Overlay>
-      </form>
-      <div>
-
-
-      </div>
+      <ToastContainer />
     </div>
   );
 }
