@@ -20,6 +20,7 @@
     "react-bootstrap": "^2.5.0",
     "react-country-flag": "^3.0.2",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
     "react-lorem-ipsum": "^1.4.10",
     "react-navigate": "^0.6.0",
     "react-overlay-component": "^1.0.3",

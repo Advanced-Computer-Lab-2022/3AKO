@@ -25,11 +25,11 @@ const CountryModal = (props) => {
   useEffect(() => {
     const getCountry = async () => {
       setLoading(true);
-      
+
       const res = await axios.get("/utils/country");
-      if(res.data)
+      if (res.data)
         setCountry(res.data);
-      
+
       setLoading(false);
     };
     getCountry();
@@ -41,9 +41,9 @@ const CountryModal = (props) => {
         params: { country: country },
       });
       if (res.data && country)
-          await handleExchangeRate(res.data, iso2ToCurrency[country]);
+        await handleExchangeRate(res.data, iso2ToCurrency[country]);
 
-    };  
+    };
     getExchangeRate();
   }, [country]);
 
@@ -52,27 +52,19 @@ const CountryModal = (props) => {
   entries.sort((a, b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
   return (
     <div>
-      <button
-        onClick={handleShow}
+
+      <ReactCountryFlag
+        countryCode={country}
+        svg
         style={{
-          background: "#ccc",
-          color: "black",
-          border: "1px solid #888",
-          borderRadius: "10px",
+          width: "2em",
+          height: "2em"
         }}
-      >
-        <ReactCountryFlag
-          countryCode={country}
-          svg
-          style={{
-            width: "2em",
-            height: "2em",
-            marginRight: "0.5rem",
-          }}
-          title={country}
-        />
-        {country}
-      </button>
+        title={country}
+        onClick={handleShow}
+      />
+
+
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
