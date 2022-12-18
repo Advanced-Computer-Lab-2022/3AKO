@@ -14,7 +14,8 @@ const CourseSubtitles = () => {
     const CourseMaterials = ({ subtitle }) => {
         // const [subtitle, setSubtitle] = useState([])
         const [materials, setMaterials] = useState("")
-        const { id, courseId, subtitleId } = useParams()
+        const {courseId} = useParams()
+        const subtitleId = subtitle._id
         useEffect(() => {
             const temp = subtitle.lessons.concat(subtitle.exercises)
             temp.sort((a, b) => a.position - b.position)

@@ -172,6 +172,10 @@ const courseSchema = new Schema({
         type : Number,
         default : 0
     },
+    materialCount : {
+        type : Number,
+        default : 0
+    },
     instructorId : {
         type : mongoose.ObjectId,
         required : true

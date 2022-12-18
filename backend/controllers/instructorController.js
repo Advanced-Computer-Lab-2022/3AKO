@@ -83,6 +83,8 @@ const rateInstructor = async (req, res) => {
         const addedReview = await instructorModel.findOneAndUpdate({ _id: instructorId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
         Rating["" + rating] = Rating["" + rating] + 1
+        const numOfReviews = Rating["1"] + Rating["2"] + Rating["3"] + Rating["4"] + Rating["5"]
+        Rating["total"] = (Rating["1"] + Rating["2"] * 2 + Rating["3"] * 3 + Rating["4"] * 4 + Rating["5"] * 5) / numOfReviews
         const ret = await instructorModel.findOneAndUpdate({ _id: instructorId }, { rating: Rating }, { new: true, upsert: true })
         res.status(200).json(ret)
     }

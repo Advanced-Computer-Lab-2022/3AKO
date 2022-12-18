@@ -5,7 +5,6 @@ const { useParams } = require("react-router-dom")
 
 const LessonView = () => {
     const { courseId, subtitleId } = useParams();
-    const pos = 0;
     const [ytLink, setYtLink] = useState('');
     const [ytId, setYtId] = useState('')
     // show everything related to the lesson, even if it's not clickable yet.
@@ -13,7 +12,7 @@ const LessonView = () => {
     const handleAddLesson = (e) => {
         e.preventDefault()
         const data = new FormData(e.currentTarget)
-        const lesson = { vidUrl: data.get("url"), courseId, posistion: pos, subtitleId, title: data.get('title'), readings: data.get('readings'), description: data.get('describtion') }
+        const lesson = { vidUrl: data.get("url"), courseId, subtitleId, title: data.get('title'), readings: data.get('readings'), description: data.get('describtion') }
         axios({ method: "patch", url: "http://localhost:5000/instructor/addLesson", data: lesson, withCredentials: true }).then((response) => {
             console.log("we are here we finally made it boys");
         })

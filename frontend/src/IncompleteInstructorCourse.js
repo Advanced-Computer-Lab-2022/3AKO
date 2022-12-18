@@ -93,12 +93,10 @@ const IncompleteCourse = () => {
   }
   const handleAddExercise = (e) => {
     const index = id;
-    let pos = 0;
     axios({
       method: 'patch', url: `http://localhost:5000/instructor/addExercise`, data: {
         courseId: courseId,
         title: exerciseTitle,
-        position: pos,
         subtitleId: subtitles[index]._id
       }, withCredentials: true
     })
