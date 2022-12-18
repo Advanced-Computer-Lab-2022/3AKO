@@ -26,7 +26,7 @@ router.patch('/addQuestion', requireCourseAuthor, addQuestion)
 router.patch('/editEmail', requireInstructor, editEmail)
 router.patch('/editBiography', requireInstructor, editBiography)
 router.patch('/addPromotion', requireCourseAuthor, addPromotion)
-router.patch('/removePromotion', requireCourseAuthor, removePromotion)
+router.patch('/removePromotion', removePromotion)
 router.patch('/editPassword', requireInstructor, editPassword)
 router.post('/addComplaint', requireInstructor, addComplaint)
 
