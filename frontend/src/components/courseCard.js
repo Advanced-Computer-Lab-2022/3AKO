@@ -25,7 +25,7 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   var currentDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
   const removePromotion = () => {
-    axios({ method: 'patch', url: `http://localhost:5000/instructor/removePromotion`, withCredentials: true, data: { courseId: course._id } })
+    axios({ method: 'patch', url: `http://localhost:5000/instructor/removePromotion`, data: { courseId: course._id } })
       .then((response) => {
         console.log(response.data)
       }).catch(error => console.log(error))

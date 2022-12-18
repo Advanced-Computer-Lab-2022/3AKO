@@ -63,12 +63,12 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     if (e.key === 'Enter') {
       var newCourses;
       if (instrucrtorFilter) {
-        newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()) || ((course.instrucrtorName) !== undefined && (course.instrucrtorName.toLowerCase()).startsWith(searchValue.toLowerCase())));
+        newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.instructorName.toLowerCase()).startsWith(searchValue.toLowerCase()));
       } else {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()));
       }
       newCourses.map((course) => {
-        console.log(course.instrucrtorName)
+        console.log(course.instructorName)
       })
       setCourses(newCourses);
       setSearchedCourses(newCourses);
