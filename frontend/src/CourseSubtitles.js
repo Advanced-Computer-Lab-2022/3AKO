@@ -63,6 +63,7 @@ const CourseSubtitles = () => {
     }, [])
     return (
         <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion >
+
             {subtitles && subtitles.map((subtitle, index) => (
                 <Accordion.Item eventKey={index} style={{ borderRadius: "0" }}>
                     <Accordion.Header style={{ borderRadius: "0" }}>{subtitle.title}</Accordion.Header>
@@ -72,25 +73,7 @@ const CourseSubtitles = () => {
                 </Accordion.Item>
             ))}
         </Accordion>} />
-        //     <div>
-        //         <div style={{ width: "15%", overflowY: "auto", height: "47vw", backgroundColor: 'white', position: "fixed" }}>
-        // <Accordion >
-        //     {subtitles && subtitles.map((subtitle, index) => (
-        //         <Accordion.Item eventKey={index} style={{ borderRadius: "0" }}>
-        //             <Accordion.Header style={{ borderRadius: "0" }}>{subtitle.title}</Accordion.Header>
-        //             <Accordion.Body style={{ padding: "0" }}>
-        //                 <CourseMaterials subtitle={subtitle} key={subtitle._id} />
-        //             </Accordion.Body>
-        //         </Accordion.Item>
-        //     ))}
-        // </Accordion>
-        //         </div>
-        //         <div style={{ display: "flex", justifyContent: "flex-end" }} >
-        //             <div className="materialsBody" style={{ width: "85%" }}>
-        //                 <div className="title p-3 h5 " style={{ width: "100%", backgroundColor: 'red', position: "fixed" }}>{currentLesson}</div>
-        //                 {materialBody}</div>
-        //         </div>
-        //     </div>
+
     )
 }
 export default CourseSubtitles;
