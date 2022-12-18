@@ -14,7 +14,7 @@ const getAllCourses = async (req, res) => {
 }
 const createCourse = async (req, res) => {
     try {
-        console.log('well well well'+ req._id);
+        console.log('well well well' + req._id);
         const instructorId = req._id
         const instrucrtorData = await instructorModel.find({ _id: instructorId }, 'name -_id')
         const instructorName = instrucrtorData[0].name
@@ -26,10 +26,10 @@ const createCourse = async (req, res) => {
         const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
 
         const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instructorId, instructorName })
-        console.log('we got here'+ course._id);
-        await instructorModel.updateOne({_id:instructorId}, { $push: { 'courses': course._id } }, { new: true, upsert: true })
-        console.log('we did it '+course._id);
-        res.status(200).json({message : "Created Successfully"})
+        console.log('we got here' + course._id);
+        await instructorModel.updateOne({ _id: instructorId }, { $push: { 'courses': course._id } }, { new: true, upsert: true })
+        console.log('we did it ' + course._id);
+        res.status(200).json({ message: "Created Successfully" })
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err.message })
@@ -188,12 +188,14 @@ const addSubVid = async (req, res) => { // adds a video link to a lesson and dis
 }
 const addLesson = async (req, res) => {
     try {
-        const { vidUrl, courseId, position, subtitleId, title, readings, description } = req.body
+        const { vidUrl, courseId, subtitleId, title, readings, description } = req.body
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         const match = vidUrl.match(reg)
         if (match && match[1].length == 11) {
+            const courseData = await courseModel.findOne({_id:courseId},'materialCount -_id').lean()
+            const position = courseData.materialCount + 1
             const lesson = await new lessonsModel({ title: title, description: description, videoURL: match[1], readings: readings, position: position })
-            const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].lessons': lesson } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+            const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].lessons': lesson }, $inc : {'materialCount':1}}, { arrayFilters: [{ "a._id": subtitleId }], new: true })
             res.status(200).json(updatedCourse)
         }
         else {
@@ -225,21 +227,36 @@ const addPreviewLink = async (req, res) => {
 }
 const addExercise = async (req, res) => {
     try {
-        const { courseId, title, position, subtitleId } = req.body
+        const { courseId, title, subtitleId } = req.body
+        const courseData = await courseModel.findOne({_id:courseId},'materialCount -_id').lean()
+        const position = courseData.materialCount + 1
         const exercise = await new exerciseModel({ title: title, position: position })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
-        res.status(200).json(updatedCourse)
+        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise }, $inc : {'materialCount':1}}, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        res.status(200).json(exercise)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
+    }
+}
+const loadExercise = async (req, res) => {
+    try {
+        const { courseId, subtitleId, exerciseId } = req.body
+        const data = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
+        const exercise = data.subtitles[0].exercises.find((ex) => { return ex._id.toString() === exerciseId.toString() })
+        if (exercise) res.status(200).json(exercise)
+        else throw new Error("this exercise is not in this subtitle")
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+
     }
 }
 const addQuestion = async (req, res) => {
     try {
         const { courseId, exerciseId, subtitleId, questionContent, choice1, choice2, choice3, choice4, answer } = req.body
         const question = await new questionModel({ question: questionContent, choice1, choice2, choice3, choice4, answer })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
-        res.status(200).json(updatedCourse)
+        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises.$[b].questions': question } }, { arrayFilters: [{ "a._id": subtitleId }, { "b._id": exerciseId }], new: true, upsert: true })
+        res.status(200).json(question)
     }
     catch (err) {
         res.status(400).json({ error: err.message })
@@ -280,7 +297,7 @@ const loadSubtitle = async (req, res) => {
 
         const { courseId, subtitleId } = req.params
         let answers = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } } }).lean()
-        answers.subtitles[0].exercises.map((ex) => { ex.questions.map((q) => { delete q.answer }) })
+        answers.subtitles[0].excercises.map((ex) => { ex.questions.map((q) => { delete q.answer }) })
         res.status(200).json(answers.subtitles[0])
 
     }
@@ -309,11 +326,10 @@ const loadExamAnswers = async (req, res) => {
         const courseData = await courseModel.findOne({ _id: courseId }, { _id: 0, subtitles: { $elemMatch: { _id: subtitleId } }, }).lean()
         const courseInfo = JSON.parse(JSON.stringify(courseData))
         const answers = await courseInfo.subtitles[0].exercises.find(ex => { return ex._id === exerciseId }).questions.map(q => q.answer)
-
         res.status(200).json({ answers })
-
     }
     catch (err) {
+        console.log(err);
         res.status(400).json({ error: err.message })
     }
 }
@@ -351,7 +367,7 @@ const getCourseReviews = async (req, res) => {
 const getSubtitles = async (req, res) => {
     try {
         const { courseId } = req.params
-        const subtitleData = await courseModel.findOne({ _id: courseId }, "subtitles.title subtitles._id -_id").lean()
+        const subtitleData = await courseModel.findOne({ _id: courseId }, "subtitles -_id").lean()
 
         res.status(200).json(subtitleData.subtitles);
 
@@ -364,7 +380,7 @@ const addSubtitleToCourse = async (req, res) => {
     try {
         const { title, courseId, totalHours } = req.body
         const subtitle = await new subtitlesModel({ title, totalHours })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle } }, { new: true, upsert: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle }, $inc : {'totalHours':totalHours} }, { new: true, upsert: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -392,4 +408,5 @@ module.exports = {
     addSubtitleToCourse,
     removePromotion
     , instructorLoadSubtitle
+    , loadExercise
 }

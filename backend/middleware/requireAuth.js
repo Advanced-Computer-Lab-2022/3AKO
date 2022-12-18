@@ -113,8 +113,8 @@ const requireCourseAuthor = async (req,res,next) => {
             throw new Error( "CourseId required")
         }
         const {_id} = jwt.verify(token, process.env.SECRET)
-        const course = await courseModel.findOne({_id:courseId},'instrucrtorId -_id').lean()
-        if(course && (course.instrucrtorId.toString())===_id) {
+        const course = await courseModel.findOne({_id:courseId},'instructorId -_id').lean()
+        if(course && (course.instructorId.toString())===_id) {
             req._id=_id 
             next()
         }

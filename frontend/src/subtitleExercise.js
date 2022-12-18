@@ -5,28 +5,29 @@ const { useParams } = require("react-router-dom")
 
 
 const SubtitleExercise = () => {
-    const { courseId, subtitleId } = useParams();
+    const { courseId, subtitleId, exerciseId } = useParams();
     //load all previous questions (editable, deletable)
     // button to add new question to the exercise
 
-    const [subtitle, setSubtitle] = useState(null);
+    const [exercise, setExercise] = useState(null);
     const [questions, setQuestions] = useState(null);
 
 
     useEffect(() => {
         axios({
-            method: 'post', url: `http://localhost:5000/instructor/loadSubtitle`, data: {
+            method: 'post', url: `http://localhost:5000/instructor/loadExercise`, data: {
                 courseId: courseId,
-                subtitleId: subtitleId
+                subtitleId: subtitleId,
+                exerciseId: exerciseId
             }, withCredentials: true
         })
             .then((response) => {
                 console.log(response.data);
-                setSubtitle(response.data);
-                console.log(subtitle);
-                console.log("hi", response.data.subtitles[0].excercises);
+                setExercise(response.data);
+                console.log(exercise);
+                // console.log("hi", response.data.subtitles[0].excercises);
                 console.log('it works');
-                // setQuestions(response.data.excercises[0].questions);
+                setQuestions(response.data.questions);
 
             }).catch((error) => {
                 console.log(error); //Logs a string: Error: Request failed with status code 404
@@ -35,13 +36,24 @@ const SubtitleExercise = () => {
 
     }, []);
 
-    const handleAddQuestion = () => {
+    const handleAddQuestion = (e) => {
+        e.preventDefault()
+        const data = new FormData(e.currentTarget)
+        const question = { courseId, exerciseId, subtitleId, questionContent: data.get('question'), choice1: data.get('choice1'), choice2: data.get('choice2'), choice3: data.get('choice3'), choice4: data.get('choice4'), answer: data.get('answer') }
+        const addQuestion = async () => {
+            await axios({ method: 'patch', url: 'http://localhost:5000/instructor/addQuestion', withCredentials: true, data: question }).then((response) => {
+                setQuestions([...questions, response.data])
+            }).catch((err) => {
+                console.log(err);
+            })
 
+        }
+        addQuestion()
     }
     return (
         <div>
-            {/* this block is supposed to be showing the previous questions for the same exercise.
-             {questions &&
+            this block is supposed to be showing the previous questions for the same exercise.
+            {questions &&
                 questions.map((question) => (
                     <div>
                         <h1>{question.question}</h1>
@@ -52,34 +64,30 @@ const SubtitleExercise = () => {
                         <h3>{question.answer}</h3>
 
                     </div>
-                ))} */}
+                ))}
             <div>
-                <h1>Create New Exercise</h1>
-                <label for="title">Exercise Title:</label>
-                <input type="text" id="title" name="title"></input> <br />
-                <form>
+                <h1>{exercise && exercise.title}</h1>
+                <form onSubmit={handleAddQuestion}>
 
                     <label for="question">Question:</label>
-                    <input type="text" id="question" name="question"></input> <br />
+                    <input type="text" id="question" name="question" required></input> <br />
                     <label for="choice1">first choice:</label>
-                    <input type="text" id="choice1" name="choice1"></input><br />
+                    <input type="text" id="choice1" name="choice1" required></input><br />
                     <label for="choice2">second choice:</label>
-                    <input type="text" id="choice2" name="choice2"></input><br />
+                    <input type="text" id="choice2" name="choice2" required></input><br />
                     <label for="choice3">third choice:</label>
-                    <input type="text" id="choice3" name="choice3"></input><br />
+                    <input type="text" id="choice3" name="choice3" required></input><br />
                     <label for="choice4">fourth choice:</label>
-                    <input type="text" id="choice4" name="choice4"></input><br />
+                    <input type="text" id="choice4" name="choice4" required></input><br />
                     <label for="answer">Choose the correct answer:</label>
-                    <select name="answers" id="answers">
+                    <select name="answer" id="answer" required>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select> <br />
-                    <input type="submit" value="Submit"></input>
+                    <input type="submit" value="Add Question"></input>
                 </form>
-                <button onClick={handleAddQuestion}> add question</button>
-
             </div>
         </div>
     );
