@@ -27,6 +27,7 @@ import LessonView from "./components/lessonView";
 import AdminHome from "./components/AdminHome";
 import { useUserContext } from "./hooks/useUserContext";
 import { useEffect } from "react";
+import CheckoutSuccess from "./components/CheckoutSuccess";
 function App() {
   const { user, loading } = useUserContext()
   const { dispatch } = useUserContext()
@@ -83,21 +84,21 @@ function App() {
             {/* <Route exact path="/trainee/myCourses">
             <MyCoursesTrainee />
           </Route> */}
-            <Route exact path={"/trainee/myCourses"}>
-              {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
-            </Route>
-            <Route exact path="/trainee/CourseSubtitles/:courseId">
-              <CourseSubtitles />
-            </Route>
-            <Route exact path="/instructor/incompleteCourse/exercise/:courseId/:subtitleId/:exerciseId">
-              <SubtitleExercise />
-            </Route>
-            <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
-              <LessonView />
-            </Route>
-            <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
-              <Rate />
-            </Route>
+          <Route exact path={"/trainee/myCourses"}>
+            {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
+          </Route>
+          <Route exact path="/trainee/CourseSubtitles/:courseId">
+            <CourseSubtitles />
+          </Route>
+          <Route exact path="/instructor/incompleteCourse/exercise/:courseId/:subtitleId/:exerciseId">
+            <SubtitleExercise />
+          </Route>
+          <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
+            <LessonView />
+          </Route>
+          <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
+            <Rate />
+          </Route>
 
             <Route exact path="/instructor/incompleteCourse/:courseId">
               <IncompleteCourse />
@@ -123,6 +124,9 @@ function App() {
             <Route exact path="/admin/home">
               <AdminHome />
             </Route>
+            <Route exact path="/checkout-success/:courseId">
+            <CheckoutSuccess />
+          </Route>
           </Switch>
         </div>
       </div>

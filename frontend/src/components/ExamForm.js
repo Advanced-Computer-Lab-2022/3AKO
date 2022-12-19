@@ -2,13 +2,54 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import "../stylesheets/test.css"
+import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const ExamForm = ({ exercise, subtitleId, courseId }) => {
     const [flag, setFlag] = useState(false);
     const [sol, setSol] = useState([]);
     const [grade, setGrade] = useState(0);
     const [mySol, setMySol] = useState(null);
     const [trueAnswers, setTrueAnswers] = useState([])
+    const [solved, setSolved] = useState(true)
     const maxGrade = exercise.questions.length;
+    const submitExam = (event) => {
+        console.log(sol);
+        var myGrade = 0;
+        event.preventDefault();
+        const loadExamAnswers = async () => {
+            await axios({
+                method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`, withCredentials: true,
+                data: {
+                    courseId: courseId
+                    , subtitleId: subtitleId
+                    , exerciseId: exercise._id
+                }
+            }).then(async (response) => {
+                // setAnswers(response.data.answers)
+                for (let i = 0; i < exercise.questions.length; i++) {
+                    if (sol[i] == response.data.answers[i]) {
+                        myGrade++
+
+
+                    }
+                }
+
+                await axios({
+                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord`, withCredentials: true,
+                    data: {
+                        courseId: courseId
+                        , exerciseId: exercise._id
+                        , grade: myGrade
+                        , answers: sol
+                    }
+                })
+                console.log(myGrade + "/", maxGrade)
+            })
+        }
+        loadExamAnswers();
+        setMySol(sol)
+
+    }
     useEffect(() => {
         axios({
             method: "post", url: `http://localhost:5000/trainee/getMyAnswers`, withCredentials: true,
@@ -33,45 +74,8 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                 setGrade(response.data.grade)
             }
         })
-    }, [])
-    const submitExam = (event) => {
-        console.log(sol);
-        var myGrade = 0;
-        event.preventDefault();
-        const loadExamAnswers = async () => {
-            await axios({
-                method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`, withCredentials: true,
-                data: {
-                    courseId: courseId
-                    , subtitleId: subtitleId
-                    , exerciseId: exercise._id
-                }
-            }).then(async (response) => {
-                // setAnswers(response.data.answers)
-                for (let i = 0; i < exercise.questions.length; i++) {
-                    if (sol[i] == response.data.answers[i]) {
-                        myGrade++
+    }, [solved])
 
-
-                    }
-                }
-
-                await axios({
-                    // hardcoded
-                    method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord`, withCredentials: true,
-                    data: {
-                        courseId: courseId
-                        , exerciseId: exercise._id
-                        , grade: myGrade
-                        , answers: sol
-                    }
-                })
-                console.log(myGrade + "/", maxGrade)
-            })
-        }
-        loadExamAnswers();
-
-    }
     const change = (value, position, label) => {
         const x = document.getElementsByClassName("circle " + position)
 
@@ -108,36 +112,47 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div className="py-3" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div>
                 {mySol && <div>
 
                     {exercise.questions && exercise.questions.map((question, index) => (
                         <div className="pb-5">
                             <p className="fw-bold">{index + 1}. {question.question}</p>
-                            <label className="box answer">
+
+
+                            <label className={mySol[index] == 1 ? trueAnswers[index] == 1 ? "box answer true" : "box answer false" : "box answer "}>
                                 <div className="course">
-                                    <span className={"circle " + index}></span>
+                                    <span className={trueAnswers[index] == 1 ? "true " + index : mySol[index] == 1 ? "false " + index : "circle " + index}>
+                                        {trueAnswers[index] == 1 ? <CheckOutlinedIcon style={{ fontSize: "13px", color: "#3bce6c" }} /> : mySol[index] == 1 ? <ClearOutlinedIcon style={{ fontSize: "13px", color: "#cb2b2b" }} /> : <div></div>}
+                                    </span>
                                     <span className="subject"> {question.choice1}</span>
                                 </div>
                             </label>
 
-                            <label className="box answer">
+                            <label className={mySol[index] == 2 ? trueAnswers[index] == 2 ? "box answer true" : "box answer false" : "box answer "}>
                                 <div className="course">
-                                    <span className={"circle " + index}></span>
-                                    <span className="subject"> {question.choice3}</span>
+                                    <span className={trueAnswers[index] == 2 ? "true " + index : mySol[index] == 2 ? "false " + index : "circle " + index}>
+                                        {trueAnswers[index] == 2 ? <CheckOutlinedIcon style={{ fontSize: "13px", color: "#3bce6c" }} /> : mySol[index] == 2 ? <ClearOutlinedIcon style={{ fontSize: "13px", color: "#cb2b2b" }} /> : <div></div>}
+                                    </span>
+                                    <span className="subject"> {question.choice2}</span>
                                 </div>
                             </label>
-                            <label className="box answer">
+
+                            <label className={mySol[index] == 3 ? trueAnswers[index] == 3 ? "box answer true" : "box answer false" : "box answer "}>
                                 <div className="course">
-                                    <span className={"circle " + index}></span>
+                                    <span className={trueAnswers[index] == 3 ? "true " + index : mySol[index] == 3 ? "false " + index : "circle " + index}>
+                                        {trueAnswers[index] == 3 ? <CheckOutlinedIcon style={{ fontSize: "13px", color: "#3bce6c" }} /> : mySol[index] == 3 ? <ClearOutlinedIcon style={{ fontSize: "13px", color: "#cb2b2b" }} /> : <div></div>}
+                                    </span>
                                     <span className="subject"> {question.choice3}</span>
                                 </div>
                             </label>
 
-                            <label className="box answer">
+                            <label className={mySol[index] == 4 ? trueAnswers[index] == 4 ? "box answer true" : "box answer false" : "box answer "}>
                                 <div className="course">
-                                    <span className={"circle " + index}></span>
+                                    <span className={trueAnswers[index] == 4 ? "true " + index : mySol[index] == 4 ? "false " + index : "circle " + index}>
+                                        {trueAnswers[index] == 4 ? <CheckOutlinedIcon style={{ fontSize: "13px", color: "#3bce6c" }} /> : mySol[index] == 4 ? <ClearOutlinedIcon style={{ fontSize: "13px", color: "#cb2b2b" }} /> : <div></div>}
+                                    </span>
                                     <span className="subject"> {question.choice4}</span>
                                 </div>
                             </label>
@@ -147,13 +162,13 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                     <h2>You got {grade} out of {maxGrade}</h2>
                 </div>}
                 {!mySol &&
-                    <form action="" className="py-3" onSubmit={submitExam}>
+                    <form action="" id="form1" onSubmit={submitExam}>
                         {
                             exercise.questions && exercise.questions.map((question, index) => (
                                 <div className="pb-5">
                                     <p className="fw-bold">{index + 1}. {question.question}</p>
                                     <input type="radio" name={index} id={index + "1"} value="1" onChange={(e) => change(e.target.value, index, e.target.nextElementSibling)} ></input>
-                                    <label for={index + "1"} className="box ">
+                                    <label for={index + "1"} className="box question">
                                         <div className="course">
                                             <span className={"circle " + index}></span>
                                             <span className="subject"> {question.choice1}</span>
@@ -161,14 +176,14 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                                     </label>
 
                                     <input type="radio" name={index} id={index + "2"} value="2" onChange={(e) => change(e.target.value, index, e.target.nextElementSibling)} />
-                                    <label for={index + "2"} className="box ">
+                                    <label for={index + "2"} className="box question">
                                         <div className="course">
                                             <span className={"circle " + index}></span>
                                             <span className="subject"> {question.choice3}</span>
                                         </div>
                                     </label>
                                     <input type="radio" name={index} id={index + "3"} value="3" onChange={(e) => change(e.target.value, index, e.target.nextElementSibling)} />
-                                    <label for={index + "3"} className="box ">
+                                    <label for={index + "3"} className="box question">
                                         <div className="course">
                                             <span className={"circle " + index}></span>
                                             <span className="subject"> {question.choice3}</span>
@@ -176,103 +191,17 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                                     </label>
 
                                     <input type="radio" name={index} id={index + "4"} value="4" onChange={(e) => change(e.target.value, index, e.target.nextElementSibling)} />
-                                    <label for={index + "4"} className="box ">
+                                    <label for={index + "4"} className="box question">
                                         <div className="course">
                                             <span className={"circle " + index}></span>
                                             <span className="subject"> {question.choice4}</span>
                                         </div>
                                     </label>
                                 </div>
-
-
-
-
-
-
-                                // <div className="container mb-5">
-                                //     <div className="row">
-                                //         <div className="col-12">
-                                //             <p className="fw-bold">{index + 1}. {question.question}</p>
-                                //             <div>
-                                //                 <input type="radio" name={question._id} id="one" />
-                                //                 <input type="radio" name={question._id} id="two" />
-                                //                 <input type="radio" name={question._id} id="three" />
-                                //                 <input type="radio" name={question._id} id="four" />
-                                //                 <label for="one" className="box first">
-                                //                     <div className="course">
-                                //                         <span className="circle"></span>
-                                //                         <span className="subject"> {question.choice1}</span>
-                                //                     </div>
-                                //                 </label>
-                                //                 <label for="two" className="box second">
-                                //                     <div className="course"> <span className="circle">
-                                //                     </span>
-                                //                         <span className="subject">{question.choice2} </span>
-                                //                     </div>
-                                //                 </label>
-                                //                 <label for="three" className="box third">
-                                //                     <div className="course">
-                                //                         <span className="circle"></span>
-                                //                         <span className="subject"> {question.choice3}</span>
-                                //                     </div>
-                                //                 </label>
-                                //                 <label for="four" className="box forth">
-                                //                     <div className="course">
-                                //                         <span className="circle"></span>
-                                //                         <span className="subject"> {question.choice4} </span>
-                                //                     </div>
-                                //                 </label>
-                                //             </div>
-                                //         </div>
-                                //     </div>
-                                // </div>
-
-
-
-
-
-
-
-
                             ))
                         }
 
-                        {/* <div class="container mb-5">
-                            <div class="row">
-                                <div class="col-12">
-                                    <p class="fw-bold">1. Which of the following sentences is correct</p>
-                                    <div>
-                                        <input type="radio" name="box" id="one" />
-                                        <input type="radio" name="box" id="two" />
-                                        <input type="radio" name="box" id="three" />
-                                        <input type="radio" name="box" id="four" />
-                                        <label for="one" class="box first"> <div class="course">
-                                            <span class="circle"></span>
-                                            <span class="subject"> When its raining ,people's umbrella are all you're going to see from above </span>
-                                        </div>
-                                        </label>
-                                        <label for="two" class="box second">
-                                            <div class="course"> <span class="circle">
-                                            </span>
-                                                <span class="subject"> When its raining,people's umbrella are all your going to see from above </span>
-                                            </div>
-                                        </label>
-                                        <label for="three" class="box third">
-                                            <div class="course">
-                                                <span class="circle"></span>
-                                                <span class="subject"> When its raining,peoples umbrella's are all you're going to see from above </span>
-                                            </div>
-                                        </label>
-                                        <label for="four" class="box forth">
-                                            <div class="course">
-                                                <span class="circle"></span>
-                                                <span class="subject"> None of the above </span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
+
                         <input id="submit" type="submit" disabled={!flag} />
 
                     </form>}

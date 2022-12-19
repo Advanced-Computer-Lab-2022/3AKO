@@ -30,14 +30,15 @@ const addIndividualTrainee = async (req, res) => {
         res.status(400).json({error : err.message})
     }
 }
-const payment = async (req, res) => {
+const checkout = async (req, res) => {
+  const {courseId} = req.body
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'T-shirt',
+            courseId: courseId,
           },
           unit_amount: 2000,
         },
@@ -45,8 +46,8 @@ const payment = async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.FRONT_END_URL}/payment-success`,
-    cancel_url: `${process.env.FRONT_END_URL}`,
+    success_url: `${process.env.FRONT_END_URL}/checkout-success/${courseId}`,
+    cancel_url: `${process.env.FRONT_END_URL}/checkout-failed/${courseId}`,
   });
 
   res.status(200).send({url:session.url});
