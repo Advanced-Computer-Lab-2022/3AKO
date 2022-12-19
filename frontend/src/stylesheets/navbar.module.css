@@ -17,7 +17,7 @@ nav ul {
 nav ul li {
     display: inline-block;
     margin: auto 10px;
-    cursor: pointer
+    cursor: pointer;
 }
 
 nav ul li img {
@@ -36,7 +36,7 @@ nav ul li input {
     border-radius: 0;
     outline: none;
     padding: 2px 15px 2px 15px;
-    text-transform: capitalize;
+    width: 400px;
 }
 
 .searchIcon {
@@ -52,4 +52,13 @@ nav ul li input {
 
 .search {
     position: relative;
+}
+
+.dropdownItem {
+    --bs-dropdown-link-active-bg: #E00018;
+}
+
+.countryDropdownMenu {
+    height: 600px;
+    overflow-y: scroll;
 }
