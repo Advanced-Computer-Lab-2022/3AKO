@@ -56,7 +56,7 @@ const StyledNavbar = ({ handleExchangeRate }) => {
 
 
   return (
-    <nav>
+    <nav className={style.myNav}>
       <ul className={style.left}>
         <li><Nav.Link href="/"><img src={require('../logo.png')} /></Nav.Link></li>
         <li className={style.search}>

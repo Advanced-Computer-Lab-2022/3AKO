@@ -31,17 +31,9 @@ function ResponsiveDrawer(props) {
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                     ml: { sm: `${drawerWidth}px` },
                 }}
+                style={{ top: "70px" }}
             >
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                <Toolbar >
                     <Typography variant="h6" noWrap component="div">
                         {currentLesson}
                     </Typography>
@@ -54,22 +46,9 @@ function ResponsiveDrawer(props) {
                 aria-label="mailbox folders"
             >
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+
                 <Drawer
-                    container={container}
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                    sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-                <Drawer
+                    style={{ position: "fixed" }}
                     variant="permanent"
                     sx={{
                         display: { xs: 'none', sm: 'block' },
@@ -77,18 +56,19 @@ function ResponsiveDrawer(props) {
                     }}
                     open
                 >
+                    <div style={{ height: "70px" }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt possimus soluta non assumenda inventore dolore a hic aliquam, quis aliquid porro voluptatum excepturi provident explicabo consequatur qui officia reprehenderit adipisci.</div>
                     {drawer}
                 </Drawer>
             </Box >
             <Box
                 component="main"
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", marginTop: "50px" }}
             >
 
                 {materialBody}
             </Box>
-        </Box>
+        </Box >
     );
 }
 
