@@ -12,14 +12,14 @@ export const useSignup = () => {
         setError(null)
         await axios({method: "post",url:`http://localhost:5000/individualTrainee/signup`,withCredentials: true,data:fullTraineeData }).then(
             (res) => { 
-                localStorage.setItem('user',JSON.stringify(res.data)) 
+                // localStorage.setItem('user',JSON.stringify(res.data)) 
                 dispatch({type:'LOGIN',payload:res.data})
                 setIsLoading(false)
                 success = res.data
             }
         ).catch(error => {
             setIsLoading(false)
-            setError(error)
+            setError(error.response.data.error)
         })
         
         return success

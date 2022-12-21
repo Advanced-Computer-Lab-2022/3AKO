@@ -1,6 +1,6 @@
 const express = require('express')
 
-const {addAdmin} = require('../controllers/adminController')
+const {addAdmin,addAgreementRecord,changeAgreements,getCourseRequests} = require('../controllers/adminController')
 const {addInstructor} = require('../controllers/instructorController')
 const {addCorporateTrainee} = require('../controllers/corporateTraineeController')
 const { addCourseToTrainee } = require('../controllers/traineeController')
@@ -18,6 +18,7 @@ router.patch('addCourseToCorporate',addCourseToTrainee)
 router.get('/getPendingComplaints',getPendingComplaints)
 router.patch('/loadComplaint',loadComplaint)
 router.post('/resolveCompalint',resolveComplaint)
-
-
+router.post('/addAgreementRecord',addAgreementRecord)
+router.patch('/changeAgreements',changeAgreements)
+router.get('/getCourseRequests',getCourseRequests)
 module.exports = router

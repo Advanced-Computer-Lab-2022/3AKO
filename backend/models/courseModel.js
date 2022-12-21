@@ -213,7 +213,7 @@ const courseSchema = new Schema({
         default : "unpublished"
     },
     numOfPurchases : {
-        type:String,
+        type:Number,
         default: 0
     }
     
