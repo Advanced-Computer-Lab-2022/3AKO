@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import LoremIpsum from 'react-lorem-ipsum';
+import "../stylesheets/courseSubtitles.css"
 // import CourseMaterials from '../CourseSubtitles'
 
 const drawerWidth = 240;
@@ -33,14 +35,13 @@ function ResponsiveDrawer(props) {
                 }}
                 style={{ top: "70px" }}
             >
-                <Toolbar >
+                <Toolbar className='topbar' >
                     <Typography variant="h6" noWrap component="div">
                         {currentLesson}
                     </Typography>
                 </Toolbar>
             </AppBar>
             <Box
-                style={{ backgroundColor: "white" }}
                 component="nav"
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                 aria-label="mailbox folders"
@@ -56,7 +57,7 @@ function ResponsiveDrawer(props) {
                     }}
                     open
                 >
-                    <div style={{ height: "70px" }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt possimus soluta non assumenda inventore dolore a hic aliquam, quis aliquid porro voluptatum excepturi provident explicabo consequatur qui officia reprehenderit adipisci.</div>
+                    <div style={{ height: "70px" }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum, architecto? Ex non earum temporibus in? Odio maxime, beatae veritatis inventore et explicabo molestias doloremque doloribus sed dolor omnis iusto nulla?</div>
                     {drawer}
                 </Drawer>
             </Box >

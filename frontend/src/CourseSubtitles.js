@@ -7,6 +7,8 @@ import ToggleButton from '@mui/material/ToggleButton'
 import ExamForm from "./components/ExamForm";
 import Lesson from "./components/Lesson";
 import ResponsiveDrawer from "./utility/Drawer";
+import "./stylesheets/courseSubtitles.css"
+
 const CourseSubtitles = () => {
     const [materialBody, setMaterialBody] = useState(<div></div>)
     const [selectedMaterial, setSelectedMaterial] = useState("");
@@ -14,8 +16,9 @@ const CourseSubtitles = () => {
     const CourseMaterials = ({ subtitle }) => {
         // const [subtitle, setSubtitle] = useState([])
         const [materials, setMaterials] = useState("")
-        const {courseId} = useParams()
+        const { courseId } = useParams()
         const subtitleId = subtitle._id
+        console.log(subtitle._id);
         useEffect(() => {
             const temp = subtitle.lessons.concat(subtitle.exercises)
             temp.sort((a, b) => a.position - b.position)
@@ -66,7 +69,7 @@ const CourseSubtitles = () => {
         <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion >
 
             {subtitles && subtitles.map((subtitle, index) => (
-                <Accordion.Item eventKey={index} style={{ borderRadius: "0" }}>
+                <Accordion.Item eventKey={index} style={{ borderRadius: "0" }} className="accordion-item">
                     <Accordion.Header style={{ borderRadius: "0" }}>{subtitle.title}</Accordion.Header>
                     <Accordion.Body style={{ padding: "0" }}>
                         <CourseMaterials subtitle={subtitle} key={subtitle._id} />

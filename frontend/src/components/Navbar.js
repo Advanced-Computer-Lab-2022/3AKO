@@ -53,8 +53,6 @@ const StyledNavbar = ({ handleExchangeRate }) => {
   const search = () => {
     history.push('/', { searchValue })
   }
-
-
   return (
     <nav className={style.myNav}>
       <ul className={style.left}>
