@@ -1,13 +1,24 @@
 const express = require('express')
 
-const {addIndividualTrainee} = require('../controllers/individualTraineeController')
+const {addIndividualTrainee,checkout,getMyData,createPayment,payWithCard,payWithWallet,checkBeforeProceed,test} = require('../controllers/individualTraineeController')
 
 const {requireIndividualTrainee} = require('../middleware/requireAuth')
 
 const router = express.Router()
 
-//router.use(requireIndividualTrainee)
-
 router.post('/signup', addIndividualTrainee)
+
+router.use(requireIndividualTrainee)
+
+router.get('/getMyData',getMyData)
+
+router.post('/checkout',checkout)
+
+router.post('/createPayment',createPayment)
+router.post('/payWithCard',payWithCard)
+router.post('/payWithWallet',payWithWallet)
+router.post('/checkBeforeProceed',checkBeforeProceed)
+
+router.post('/test',test)
 
 module.exports = router

@@ -388,6 +388,16 @@ const addSubtitleToCourse = async (req, res) => {
     }
 }
 
+const getPriceInfo = async (req,res) => {
+    try{
+        const courseId = req.params.courseId
+        const data = await courseModel.findOne({_id:courseId},'title subject price instructorName promotion totalHours -_id').lean()
+        res.status(200).json(data)
+    }
+    catch(err){
+        res.status(400).json({ error: err.message })
+    }
+}
 
 module.exports = {
     getAllCourses,
@@ -409,4 +419,5 @@ module.exports = {
     removePromotion
     , instructorLoadSubtitle
     , loadExercise
+    , getPriceInfo
 }

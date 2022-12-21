@@ -13,14 +13,14 @@ export const useLogin = () => {
         await axios({method: "post",url:`http://localhost:5000/user/login`, withCredentials: true,data:{username,password} }).then(
             (res) => { 
                 //console.log(user)
-                localStorage.setItem('user',JSON.stringify(res.data)) 
+                // localStorage.setItem('user',JSON.stringify(res.data)) 
                 dispatch({type:'LOGIN',payload:res.data})
                 setIsLoading(false)
                 success = res.data
             }
         ).catch(error => {
             setIsLoading(false)
-            setError(error)
+            setError(error.response.data.error)
         })
         return success
     }

@@ -27,14 +27,14 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
           setSearchedCourses(res.data)
         }
       ).catch(error => {
-        alert('invalid request')
+        alert("can't fetch courses please check that backend is working properly")
       })
       await axios({ method: "get", url: subjectsFetch, withCredentials: true }).then(
         (res) => {
           setSubjects(res.data)
         }
       ).catch(error => {
-        alert('request denied')
+        alert("can't fetch subjects please check that backend is working properly")
       })
     }
     fetchCourses()

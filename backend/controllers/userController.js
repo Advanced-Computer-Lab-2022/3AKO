@@ -75,7 +75,7 @@ const login = async (req, res) => {
             const token = createToken(user._id)
             if (user.type === 'trainee') {
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
-                const trainee = await traineeModel.findOne({ _id: user._id }, 'name type -_id').lean()
+                const trainee = await traineeModel.findOne({ _id: user._id }, 'name type courseList.courseId -_id').lean()
                 res.status(200).json(trainee)
             }
             else if (user.type === 'instructor') {
@@ -188,4 +188,45 @@ const verifyPassword = async (req, res) => {
     }
 }
 
-module.exports = { editPassword, editEmail, login, temp, logout, sendEmail, verifyPassword };
+const restoreData = async (req, res) => {
+    try{
+        console.log('we got here');
+        const id = req._id
+        const user = await userModel.findOne({_id:id},'type -_id')
+        if (user.type === 'trainee') {
+            const trainee = await traineeModel.findOne({ _id: id }, 'name type courseList.courseId -_id').lean()
+            res.status(200).json(trainee)
+        }
+        else if (user.type === 'instructor') {
+            const instrucrtor = await instructorModel.findOne({ _id: id }, 'name -_id').lean()
+            res.status(200).json({ ...instrucrtor, type: "instructor" })
+        }
+        else if (user.type === 'admin') {
+            //const admin = await adminModel.findOne({ _id: id }).lean()
+            res.status(200).json({ type: "admin" })
+        }
+        else {
+            res.status(401).json({ error: "Bad user entery" })
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(401).json({ error: err.message })
+    }
+}
+
+const changeCountry = async (req, res) => {
+    try{
+        const id = req._id
+        const {country} = req.body
+        if(!country) return res.status(400).json({error:'You must add a country'})
+        else if(country.length !== 2) return res.status(400).json({error:'Country value should be 2 charechters long'})
+        await userModel.updateOne({_id:id},{country},{new:true,upsert:true})
+        return res.status(200).json({message:'successful'})
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
+    }
+}
+
+module.exports = { editPassword, editEmail, login, temp, logout, sendEmail, verifyPassword, restoreData, changeCountry };

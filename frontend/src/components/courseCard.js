@@ -11,14 +11,39 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from "react-bootstrap/Modal";
+import { useUserContext } from '../hooks/useUserContext';
+import { useHistory } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   const [hasPromotion, setHasPromotion] = useState(false)
   const [promotion, setPromotion] = useState(0);
   const [endDate, setEndDate] = useState(null);
   const [show, setShow] = useState(false);
+  const { user , loading } = useUserContext()
+  const history = useHistory()
+  const [open,setOpen] = useState()
+  const [processing,setProcessing] = useState(false)
+  const [requsted,setRequested] = useState(false)
+  const [requstedOpen,setRequestedOpen] = useState(false)
+  const handleRequestedClose = () => setRequestedOpen(false)
+  const handleClose = () => setOpen(false);
+  const handleRequest = async()=>{
+    setProcessing(true)
+    console.log(course,course._id);
+    axios({method:'patch',url:'http://localhost:5000/corporateTrainee/requestCourse',withCredentials:true,data:{courseId:course._id}}).then((response)=>{
+      setRequested(true)
+      setRequestedOpen(true)
+    }).catch((error)=>{
+      setProcessing(false)
+    })
+  }
 
   let price = <p>{course.price}</p>
-  if (course.promotion !== null && (course.promotion).discount > 0) {
+  if (course.promotion !== null && (course.promotion).discount > 0 && new Date(course.promotion.saleEndDate)> new Date()) {
     price = <p className='display-10'><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).discount / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.discount}% OFF)</span></span></p>
   }
   var today = new Date()
@@ -32,7 +57,6 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   }
 
   const definePromotion = () => {
-
     axios({
       method: 'patch', url: `http://localhost:5000/instructor/addPromotion`, withCredentials: true,
       data: {
@@ -61,7 +85,21 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   }, [])
 
   const enroll = () => {
-
+    if(loading) return
+    if(user && user.type==='individual trainee'){
+      history.push(`/checkout/${course._id}`)
+    }
+    else{
+      if(user && user.type==='corporate trainee'){
+        setOpen(true)
+      }
+      else if(user){
+        history.push('/')
+      }
+      else{
+        history.push('/login')
+      }
+    }
   }
 
 
@@ -122,8 +160,24 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
       </Modal>
 
       <ToastContainer />
+        {!requsted && 
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle ><b>Request this course from admins </b></DialogTitle>
+          <DialogTitle>{course.title}</DialogTitle>
+          <DialogTitle>By {course.instructorName}</DialogTitle>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button disabled={processing} onClick={handleRequest}>Request</Button>
+            </DialogActions>
+        </Dialog>}
+        {requsted && 
+        <Dialog open={requstedOpen} onClose={handleRequestedClose}>
+          <DialogTitle>Request sent</DialogTitle>
+            <DialogActions>
+              <Button onClick={handleRequestedClose}>continue</Button>
+            </DialogActions>
+        </Dialog>}
     </Card>
-
 
   );
 }

@@ -90,7 +90,7 @@ export default function LogIn() {
                 <Grid item xs={12} marginTop={2}>
                 <Alert severity="error" fullWidth> 
             {/* <AlertTitle>Error</AlertTitle> */}
-            {error.message}
+            {error}
             </Alert>
             </Grid>
             )}
