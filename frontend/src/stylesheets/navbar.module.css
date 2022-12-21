@@ -1,4 +1,4 @@
-nav {
+nav.myNav {
     background-color: #A00407;
     height: 70px;
     display: flex;
@@ -10,17 +10,17 @@ nav {
     text-transform: capitalize;
 }
 
-nav ul {
+nav.myNav ul {
     list-style: none;
 }
 
-nav ul li {
+nav.myNav ul li {
     display: inline-block;
     margin: auto 10px;
-    cursor: pointer
+    cursor: pointer;
 }
 
-nav ul li img {
+nav.myNav ul li img {
     height: 70px;
     width: 175px;
 }
@@ -29,14 +29,14 @@ nav ul li img {
     margin: auto 20px auto auto;
 }
 
-nav ul li input {
+nav.myNav ul li input {
     align-items: center;
     color: #979797;
     border: none;
     border-radius: 0;
     outline: none;
     padding: 2px 15px 2px 15px;
-    text-transform: capitalize;
+    width: 400px;
 }
 
 .searchIcon {
@@ -52,4 +52,13 @@ nav ul li input {
 
 .search {
     position: relative;
+}
+
+.dropdownItem {
+    --bs-dropdown-link-active-bg: #E00018;
+}
+
+.countryDropdownMenu {
+    height: 600px;
+    overflow-y: scroll;
 }

@@ -1,10 +1,13 @@
 import CourseCard from './courseCard';
 import { useEffect, useState } from "react";
 import { Select, MenuItem } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instrucrtorFilter }) => {
+  const location = useLocation()
+  const history = useHistory()
+
   const [courses, setCourses] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [allCourses, setAllCourses] = useState(null)
@@ -16,36 +19,43 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const [minRating, setMinRating] = useState(0)
   const [maxRating, setMaxRating] = useState(5)
   const userId = useParams()
+  // console.log(location.state.searchValue + " " + searchValue)
+
+  const fetchCourses = async () => {
+    await axios({ method: "get", url: coursesFetch, withCredentials: true }).then(
+      (res) => {
+        setCourses(res.data)
+        setAllCourses(res.data)
+        setSearchedCourses(res.data)
+      }
+    ).catch(error => {
+      alert('invalid request')
+    })
+    await axios({ method: "get", url: subjectsFetch, withCredentials: true }).then(
+      (res) => {
+        setSubjects(res.data)
+      }
+    ).catch(error => {
+      alert('request denied')
+    })
+  }
 
   useEffect(() => {
-
-    const fetchCourses = async () => {
-      await axios({ method: "get", url: coursesFetch, withCredentials: true }).then(
-        (res) => {
-          setCourses(res.data)
-          setAllCourses(res.data)
-          setSearchedCourses(res.data)
-        }
-      ).catch(error => {
-        alert("can't fetch courses please check that backend is working properly")
-      })
-      await axios({ method: "get", url: subjectsFetch, withCredentials: true }).then(
-        (res) => {
-          setSubjects(res.data)
-        }
-      ).catch(error => {
-        alert("can't fetch subjects please check that backend is working properly")
-      })
-    }
+    history.push('/')
     fetchCourses()
+
   }, [])
 
+  useEffect(() => {
+    if (location.state !== undefined) {
+      const searchFormNav = location.state.searchValue
+      setSearchValue(searchFormNav)
+    }
+  }, [location.state])
 
+  useEffect(() => { search() }, [searchValue, allCourses])
 
   const handleFilter = (e) => {
-
-    //console.log(subject)
-    //console.log(courses)
 
     if (subject !== "All") {
       const newCourses = searchedCourses.filter(course => (course.subject === subject && course.price <= maxPrice && course.price >= minPrice))
@@ -55,21 +65,23 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       const newCourses = searchedCourses.filter(course => (course.price <= maxPrice && course.price >= minPrice))
       setCourses(newCourses)
     }
-    //console.log(courses)
 
   }
 
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
+      search()
+    }
+  }
+
+  const search = () => {
+    if (allCourses !== null) {
       var newCourses;
       if (instrucrtorFilter) {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.instructorName.toLowerCase()).startsWith(searchValue.toLowerCase()));
       } else {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).startsWith(searchValue.toLowerCase()) || (course.subject.toLowerCase()).startsWith(searchValue.toLowerCase()));
       }
-      newCourses.map((course) => {
-        console.log(course.instructorName)
-      })
       setCourses(newCourses);
       setSearchedCourses(newCourses);
     }
@@ -80,7 +92,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     <div>
       {<div className="searchBar">
         <input type="search" placeholder='search' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onKeyUp={handleSearch} />
-        <button onClick={handleSearch}>search</button>
+        <button onClick={search}>search</button>
       </div>}
       <div className="courses">
         {courses && courses.map((course) => (

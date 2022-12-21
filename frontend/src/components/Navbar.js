@@ -13,12 +13,15 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useState } from "react";
+import { useEffect } from "react";
 
 const StyledNavbar = ({ handleExchangeRate }) => {
   const { user } = useUserContext()
   const { logout } = useLogout()
   const history = useHistory()
   const location = useLocation()
+  const [searchValue, setSearchValue] = useState('')
   console.log(location.pathname)
 
   const handleLogout = async () => {
@@ -42,41 +45,24 @@ const StyledNavbar = ({ handleExchangeRate }) => {
     }
   }
 
+  const handleSearch = (e) => {
+    if (e.key === 'Enter')
+      search()
+  }
+
+  const search = () => {
+    history.push('/', { searchValue })
+  }
+
+
   return (
-
-    // <Navbar bg="light" expand="lg">
-    //   <Container fluid>
-    //     <Navbar.Brand href="#">Navbar scroll</Navbar.Brand>
-    //     <Navbar.Toggle aria-controls="navbarScroll" />
-    //     <Navbar.Collapse id="navbarScroll">
-    //       <Nav
-    //         className="me-auto my-2 my-lg-0"
-    //         style={{ maxHeight: '100px' }}
-    //         navbarScroll
-    //       >
-    //         <Nav.Link href="#action1">Home</Nav.Link>
-    //         <Nav.Link href="#action2">Link</Nav.Link>
-    //         <Nav.Link href="#" disabled>
-    //           Link
-    //         </Nav.Link>
-    //       </Nav>
-    //       <Form className="d-flex">
-    //         <Form.Control
-    //           type="search"
-    //           placeholder="Search"
-    //           className="me-2"
-    //           aria-label="Search"
-    //         />
-    //         <Button variant="outline-success">Search</Button>
-    //       </Form>
-    //     </Navbar.Collapse>
-    //   </Container>
-    // </Navbar>
-
-    <nav>
+    <nav className={style.myNav}>
       <ul className={style.left}>
         <li><Nav.Link href="/"><img src={require('../logo.png')} /></Nav.Link></li>
-        <li className={style.search}><input type='text' placeholder="search" /><AiOutlineSearch className={style.searchIcon} /></li>
+        <li className={style.search}>
+          <input type='text' placeholder="What do you want to learn?" onChange={(e) => setSearchValue(e.target.value)} onKeyUp={handleSearch} value={searchValue} />
+          <AiOutlineSearch className={style.searchIcon} onClick={search} />
+        </li>
       </ul>
       <ul className={style.right}>
         {user && (user.type == 'corporate trainee' || user.type === 'individual trainee') && <li><Nav.Link href="/trainee/myCourses">my courses</Nav.Link></li>}
@@ -85,12 +71,12 @@ const StyledNavbar = ({ handleExchangeRate }) => {
         {!user && location.pathname !== '/login' && location.pathname !== '/signup' && <li><Nav.Link href="/login">Login</Nav.Link></li>}
 
         {user && <li><NavDropdown title={<CgProfile style={{ width: '26px', height: '26px' }} />}>
-          <NavDropdown.Item onClick={handleEdit}>Edit profile</NavDropdown.Item>
-          {user && user.type === 'instructor' && <NavDropdown.Item>Earnings</NavDropdown.Item>}
-          {user && user.type === 'individual trainee' && <NavDropdown.Item>Payments</NavDropdown.Item>}
-          {user && user.type === 'corporate trainee' && <NavDropdown.Item>course requests</NavDropdown.Item>}
+          <NavDropdown.Item onClick={handleEdit} className={style.dropdownItem}>Edit profile</NavDropdown.Item>
+          {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem}>Earnings</NavDropdown.Item>}
+          {user && user.type === 'individual trainee' && <NavDropdown.Item className={style.dropdownItem}>Payments</NavDropdown.Item>}
+          {user && user.type === 'corporate trainee' && <NavDropdown.Item className={style.dropdownItem}>course requests</NavDropdown.Item>}
           <NavDropdown.Divider />
-          <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+          <NavDropdown.Item onClick={handleLogout} className={style.dropdownItem}>Log out</NavDropdown.Item>
         </NavDropdown> </li>}
         <li><CountryModal handleExchangeRate={handleExchangeRate} /></li>
       </ul>
