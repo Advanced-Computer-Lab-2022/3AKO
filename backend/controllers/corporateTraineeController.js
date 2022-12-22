@@ -4,6 +4,8 @@ const { Error } = require('mongoose');
 
 const {corporateTrainee} = require('../models/corporateTraineeModel')
 const userModel = require("../models/userModel");
+const { corporateRequests } = require('../models/CorporateRequestsModel');
+const { courseModel } = require('../models/courseModel');
 
 const addCorporateTrainee = async (req, res) => {
     const {username, password} = req.body
@@ -32,11 +34,21 @@ const getOne = async (req,res) => {
 
 const requestCourse= async(req, res) => {
     try{
-        const corporateTraineeId= req._id
+        const corporateId= req._id
         const{courseId} = req.body
-        const newCourseList = await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{courseRequests:{courseId:courseId}}})
-        res.status(200).json({courseId})
+        console.log(req.body,courseId);
+        const previousRequest = await corporateRequests.findOne({courseId:courseId,corporateId:corporateId,status:'pending'}).lean()
+        if(previousRequest) return res.status(401).json({error : 'You already requsted this course'})
+        const courseData = await courseModel.findOne({_id:courseId},'title -_id').lean()
+        const courseTitle = courseData.title
+        const data = await userModel.findOne({_id:corporateId},'username -_id').lean()
+        const corporateUserName = data.username
+        //await corporateTrainee.updateOne({_id:corporateTraineeId},{$addToSet:{courseRequests:{courseId:courseId}}})
+        await corporateRequests.create({corporateId:corporateId,corporateUserName,courseId,courseTitle,status:'pending'})
+        
+        res.status(200).json({message : 'successful'})
     }catch(err){
+        console.log(err);
         res.status(400).json({error : err.message})
     }
 }

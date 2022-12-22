@@ -1,0 +1,48 @@
+ .topbar {
+     background: #89969F;
+     color: #F6F8F9;
+ }
+
+ .accordion-item {
+     --bs-accordion-active-color: black;
+     background-color: #545e65;
+     border: none;
+     border-bottom: 0.5px solid #89969F;
+ }
+
+ .accordion-item .accordion-button {
+     background-color: #454D58;
+     box-shadow: none;
+     color: #DEE7EE;
+     border: none;
+ }
+
+ .accordion-item:first-of-type .accordion-button {
+     border-top-left-radius: 0;
+     border-top-right-radius: 0
+ }
+
+ .accordion-item:last-of-type .accordion-button.collapsed {
+     border-bottom-right-radius: 0;
+     border-bottom-left-radius: 0;
+ }
+
+ .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+     background: #454D58;
+     border: none
+ }
+
+ .accordion-button::after {
+     filter: brightness(0) saturate(100%) invert(1);
+ }
+
+ .lesson-summary {
+     font-family: poppins;
+     font-size: 16px;
+     width: 832px
+ }
+
+ .lesson-summary.readings {
+     margin-top: 15px;
+     width: 960px;
+ }

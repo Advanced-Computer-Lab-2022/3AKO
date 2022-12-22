@@ -27,7 +27,9 @@ import LessonView from "./components/lessonView";
 import AdminHome from "./components/AdminHome";
 import { useUserContext } from "./hooks/useUserContext";
 import { useEffect } from "react";
-import CheckoutSuccess from "./components/CheckoutSuccess";
+import PaymentSuccess from "./components/PaymentSuccess";
+import Checkout from "./components/Checkout";
+import Payment from "./components/Payment";
 function App() {
   const { user, loading } = useUserContext()
   const { dispatch } = useUserContext()
@@ -124,9 +126,15 @@ function App() {
             <Route exact path="/admin/home">
               <AdminHome />
             </Route>
-            <Route exact path="/checkout-success/:courseId">
-            <CheckoutSuccess />
-          </Route>
+            <Route exact path="/payment-success/:courseId">
+            <PaymentSuccess />
+            </Route>
+            <Route exact path="/checkout/:courseId">
+            <Checkout />
+            </Route>
+            <Route exact path="/payment/:courseId">
+            <Payment />
+            </Route>
           </Switch>
         </div>
       </div>

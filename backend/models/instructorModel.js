@@ -73,6 +73,20 @@ const instructorSchema = new Schema({
     consent : {
         type : Boolean,
         default : false
+    },
+    earnings : {
+        type : [{
+            startDate : {
+                type : Date,
+                required : true
+            },
+            sum : {
+                type : Number,
+                min : 0,
+                required : true
+            }
+        }],
+        default : []
     }
 
 }, {timestamps : true})

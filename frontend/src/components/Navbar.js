@@ -1,17 +1,12 @@
 import { useLogout } from "../hooks/useLogout";
 import { useUserContext } from "../hooks/useUserContext";
-import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CountryModal } from "./CountryModal";
 import style from "../stylesheets/navbar.module.css";
 import { CgProfile } from 'react-icons/cg';
 import { AiOutlineSearch } from 'react-icons/ai';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useState } from "react";
 import { useEffect } from "react";

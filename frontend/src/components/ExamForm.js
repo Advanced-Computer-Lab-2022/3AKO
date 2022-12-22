@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import "../stylesheets/test.css"
+import "../stylesheets/examform.css"
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const ExamForm = ({ exercise, subtitleId, courseId }) => {
@@ -10,7 +10,6 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
     const [grade, setGrade] = useState(0);
     const [mySol, setMySol] = useState(null);
     const [trueAnswers, setTrueAnswers] = useState([])
-    const [solved, setSolved] = useState(true)
     const maxGrade = exercise.questions.length;
     const submitExam = (event) => {
         console.log(sol);
@@ -19,6 +18,8 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
         const loadExamAnswers = async () => {
             await axios({
                 method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`, withCredentials: true,
+
+
                 data: {
                     courseId: courseId
                     , subtitleId: subtitleId
@@ -38,8 +39,8 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                     method: "patch", url: `http://localhost:5000/trainee/addExerciseRecord`, withCredentials: true,
                     data: {
                         courseId: courseId
+                        , subtitleId: subtitleId
                         , exerciseId: exercise._id
-                        , grade: myGrade
                         , answers: sol
                     }
                 })
@@ -47,8 +48,6 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
             })
         }
         loadExamAnswers();
-        setMySol(sol)
-
     }
     useEffect(() => {
         axios({
@@ -74,7 +73,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                 setGrade(response.data.grade)
             }
         })
-    }, [solved])
+    }, [])
 
     const change = (value, position, label) => {
         const x = document.getElementsByClassName("circle " + position)
@@ -89,9 +88,6 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
         label.style = "border-color: #8e498e"
         label.firstChild.firstChild.style = "border: 6px solid #8e498e; background-color: #fff"
         // console.log(label.firstChild.firstChild.style)
-        console.log(value);
-        console.log(label.firstChild.firstChild);
-
         let arr = [...sol]
         arr[position] = value;
         setSol(arr);
@@ -114,6 +110,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
     return (
         <div className="py-3" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div>
+                <h3 style={{ textTransform: "capitalize", marginBottom: "30px" }}>{exercise.title}</h3>
                 {mySol && <div>
 
                     {exercise.questions && exercise.questions.map((question, index) => (
