@@ -14,7 +14,7 @@ const CourseSubtitles = () => {
     const CourseMaterials = ({ subtitle }) => {
         // const [subtitle, setSubtitle] = useState([])
         const [materials, setMaterials] = useState("")
-        const {courseId} = useParams()
+        const { courseId } = useParams()
         const subtitleId = subtitle._id
         useEffect(() => {
             const temp = subtitle.lessons.concat(subtitle.exercises)
@@ -63,7 +63,7 @@ const CourseSubtitles = () => {
         })
     }, [])
     return (
-        <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion >
+        <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} placeHolderAndTitle={true} drawer={<Accordion >
 
             {subtitles && subtitles.map((subtitle, index) => (
                 <Accordion.Item eventKey={index} style={{ borderRadius: "0" }}>

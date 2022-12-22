@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
-    const { window, materialBody, drawer, currentLesson } = props;
+    const { window, materialBody, drawer, currentLesson, placeHolderAndTitle } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
@@ -25,7 +25,7 @@ function ResponsiveDrawer(props) {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar
+            {placeHolderAndTitle & <AppBar
                 position="fixed"
                 sx={{
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
@@ -38,7 +38,7 @@ function ResponsiveDrawer(props) {
                         {currentLesson}
                     </Typography>
                 </Toolbar>
-            </AppBar>
+            </AppBar>}
             <Box
                 style={{ backgroundColor: "white" }}
                 component="nav"
@@ -56,7 +56,7 @@ function ResponsiveDrawer(props) {
                     }}
                     open
                 >
-                    <div style={{ height: "70px" }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt possimus soluta non assumenda inventore dolore a hic aliquam, quis aliquid porro voluptatum excepturi provident explicabo consequatur qui officia reprehenderit adipisci.</div>
+                    {placeHolderAndTitle & <div style={{ height: "70px" }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt possimus soluta non assumenda inventore dolore a hic aliquam, quis aliquid porro voluptatum excepturi provident explicabo consequatur qui officia reprehenderit adipisci.</div>}
                     {drawer}
                 </Drawer>
             </Box >

@@ -29,7 +29,7 @@ const StyledNavbar = ({ handleExchangeRate }) => {
       const success = await logout()
       console.log({ success });
       if (success) {
-        history.push('/login')
+        navigate('/login')
       }
     }
     catch (error) {
@@ -38,10 +38,10 @@ const StyledNavbar = ({ handleExchangeRate }) => {
   }
   const handleEdit = async () => {
     if (user.type === 'instructor') {
-      history.push('/instructor/profile')
+      navigate('/instructor/profile')
     }
     else if (user.type === 'corporate trainee' || user.type === 'individual trainee') {
-      history.push('/trainee/profile')
+      navigate('/trainee/profile')
     }
   }
 
@@ -54,21 +54,27 @@ const StyledNavbar = ({ handleExchangeRate }) => {
     history.push('/', { searchValue })
   }
 
+  const navigate = (url) => {
+    if (url !== '/')
+      setSearchValue('')
+    history.push(url)
+
+  }
 
   return (
     <nav className={style.myNav}>
       <ul className={style.left}>
-        <li><Nav.Link href="/"><img src={require('../logo.png')} /></Nav.Link></li>
+        <li><Nav.Link onClick={() => navigate('/')}><img src={require('../logo.png')} /></Nav.Link></li>
         <li className={style.search}>
           <input type='text' placeholder="What do you want to learn?" onChange={(e) => setSearchValue(e.target.value)} onKeyUp={handleSearch} value={searchValue} />
           <AiOutlineSearch className={style.searchIcon} onClick={search} />
         </li>
       </ul>
       <ul className={style.right}>
-        {user && (user.type == 'corporate trainee' || user.type === 'individual trainee') && <li><Nav.Link href="/trainee/myCourses">my courses</Nav.Link></li>}
+        {user && (user.type == 'corporate trainee' || user.type === 'individual trainee') && <li><Nav.Link onClick={() => navigate('/trainee/myCourses')}>my courses</Nav.Link></li>}
         {/* <li>{user && user.type == 'instructor' && <Nav.Link to="/instructor/myCourses">my courses</Nav.Link>}</li> */}
-        {user && user.type === 'instructor' && <li><Nav.Link href="/instructor/addCourse">Create course</Nav.Link></li>}
-        {!user && location.pathname !== '/login' && location.pathname !== '/signup' && <li><Nav.Link href="/login">Login</Nav.Link></li>}
+        {user && user.type === 'instructor' && <li><Nav.Link onClick={() => navigate('/instructor/addCourse')} >Create course</Nav.Link></li>}
+        {!user && location.pathname !== '/login' && location.pathname !== '/signup' && <li><Nav.Link onClick={() => navigate('/login')} >Login</Nav.Link></li>}
 
         {user && <li><NavDropdown title={<CgProfile style={{ width: '26px', height: '26px' }} />}>
           <NavDropdown.Item onClick={handleEdit} className={style.dropdownItem}>Edit profile</NavDropdown.Item>
