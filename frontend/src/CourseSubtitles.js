@@ -66,7 +66,7 @@ const CourseSubtitles = () => {
         })
     }, [])
     return (
-        <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion >
+        <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion style={{ marginTop: '70px' }}>
 
             {subtitles && subtitles.map((subtitle, index) => (
                 <Accordion.Item eventKey={index} style={{ borderRadius: "0" }} className="accordion-item">

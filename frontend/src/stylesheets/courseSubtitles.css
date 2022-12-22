@@ -3,7 +3,6 @@
      color: #F6F8F9;
  }
 
-
  .accordion-item {
      --bs-accordion-active-color: black;
      background-color: #545e65;
@@ -35,4 +34,15 @@
 
  .accordion-button::after {
      filter: brightness(0) saturate(100%) invert(1);
+ }
+
+ .lesson-summary {
+     font-family: poppins;
+     font-size: 16px;
+     width: 832px
+ }
+
+ .lesson-summary.readings {
+     margin-top: 15px;
+     width: 960px;
  }

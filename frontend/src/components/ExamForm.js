@@ -110,6 +110,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
     return (
         <div className="py-3" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div>
+                <h3 style={{ textTransform: "capitalize", marginBottom: "30px" }}>{exercise.title}</h3>
                 {mySol && <div>
 
                     {exercise.questions && exercise.questions.map((question, index) => (

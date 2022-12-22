@@ -27,20 +27,6 @@ function ResponsiveDrawer(props) {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar
-                position="fixed"
-                sx={{
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
-                }}
-                style={{ top: "70px" }}
-            >
-                <Toolbar className='topbar' >
-                    <Typography variant="h6" noWrap component="div">
-                        {currentLesson}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
             <Box
                 component="nav"
                 sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -49,7 +35,7 @@ function ResponsiveDrawer(props) {
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
 
                 <Drawer
-                    style={{ position: "fixed" }}
+                    style={{ position: "fixed", minWidth: "600px", width: "150px" }}
                     variant="permanent"
                     sx={{
                         display: { xs: 'none', sm: 'block' },
@@ -57,14 +43,13 @@ function ResponsiveDrawer(props) {
                     }}
                     open
                 >
-                    <div style={{ height: "70px" }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum, architecto? Ex non earum temporibus in? Odio maxime, beatae veritatis inventore et explicabo molestias doloremque doloribus sed dolor omnis iusto nulla?</div>
                     {drawer}
                 </Drawer>
             </Box >
             <Box
                 component="main"
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-                style={{ backgroundColor: "white", marginTop: "50px" }}
+                style={{ backgroundColor: "white" }}
             >
 
                 {materialBody}
