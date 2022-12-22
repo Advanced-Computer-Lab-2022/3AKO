@@ -35,7 +35,7 @@ function ResponsiveDrawer(props) {
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
 
                 <Drawer
-                    style={{ position: "fixed", minWidth: "600px", width: "150px" }}
+                    style={{ position: "fixed" }}
                     variant="permanent"
                     sx={{
                         display: { xs: 'none', sm: 'block' },
