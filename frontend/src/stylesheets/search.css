@@ -1,0 +1,22 @@
+/* .courses {
+    height: 650px;
+    overflow-y: scroll;
+} */
+
+.vr {
+    margin-left: 10px;
+}
+
+.filters {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.filters h5 {
+    border-bottom: 1px solid #666;
+    width: 80%;
+    font-weight: bold;
+}
