@@ -24,11 +24,14 @@ import {
     Typography,
 } from "@mui/material";
 import AddUser from "./addUser";
+import CourseRequest from "./courseRequest";
+
 export default function AdminHome() {
     const [page, setPage] = useState("Add User");
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const drawerWidth = 240;
+    const [materialBody, setMaterialBody] = useState(<AddUser />);
     const drawerFun = () => {
         return (
             <List>
@@ -37,6 +40,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Add User");
+                            setMaterialBody(<AddUser />);
                         }}
                     >
                         <ListItemText primary={"Add User"} />
@@ -52,6 +56,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Complaints");
+                            setMaterialBody(<div>under construction</div>);
                         }}
                     >
                         <ListItemText primary={"Complaints"} />
@@ -67,6 +72,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Course Requests");
+                            setMaterialBody(<CourseRequest />);
                         }}
                     >
                         <ListItemText primary={"Course Requests"} />
@@ -110,8 +116,7 @@ export default function AdminHome() {
         );
     };
     const drawer = drawerFun();
-    
-    const materialBody = AddUser();
+
     const title = <div>{page}</div>;
 
     return (
@@ -119,6 +124,7 @@ export default function AdminHome() {
             <CssBaseline />
             <AppBar
                 position="fixed"
+                style={{ position: "fixed", marginTop: "70px" }}
                 sx={{
                     width: {
                         sm: `calc(100% - ${drawerOpen ? drawerWidth : 0}px)`,
@@ -128,7 +134,7 @@ export default function AdminHome() {
                     ml: { sm: `${drawerOpen ? drawerWidth : 0}px` },
                 }}
             >
-                <Toolbar>
+                <Toolbar style={{ background: "#AA4427" }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -146,6 +152,7 @@ export default function AdminHome() {
                 </Toolbar>
             </AppBar>
             <Box
+                style={{ zIndex: "0", marginTop: "70px" }}
                 component="nav"
                 sx={{
                     width: { sm: drawerOpen ? drawerWidth : 0 },
@@ -168,7 +175,7 @@ export default function AdminHome() {
                     }}
                     open={false}
                 >
-                    {drawer}
+                    <div style={{ marginTop: "70px" }}> {drawer}</div>
                 </Drawer>
             </Box>
             <Box
@@ -181,9 +188,9 @@ export default function AdminHome() {
                     },
                     transition: "width 0.3s ease-in",
                 }}
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", marginTop: "70px" }}
             >
-                {materialBody}
+                <Box>{materialBody}</Box>
             </Box>
         </Box>
     );
