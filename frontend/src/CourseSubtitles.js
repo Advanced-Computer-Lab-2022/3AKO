@@ -13,12 +13,12 @@ const CourseSubtitles = () => {
     const [materialBody, setMaterialBody] = useState(<div></div>)
     const [selectedMaterial, setSelectedMaterial] = useState("");
     const [currentLesson, setCurrentLesson] = useState("");
+    const [lessonList, setLessonList] = useState([]);
     const CourseMaterials = ({ subtitle }) => {
         // const [subtitle, setSubtitle] = useState([])
         const [materials, setMaterials] = useState("")
         const { courseId } = useParams()
         const subtitleId = subtitle._id
-        console.log(subtitle._id);
         useEffect(() => {
             const temp = subtitle.lessons.concat(subtitle.exercises)
             temp.sort((a, b) => a.position - b.position)
@@ -28,13 +28,31 @@ const CourseSubtitles = () => {
         const handleClick = (material) => {
             setCurrentLesson(material.title)
             setSelectedMaterial(material)
+            console.log("this is lesson ID " + material._id);
+
+            if (material.videoURL && !(lessonList.find(e => {
+                console.log(e.lessonId === material._id, e.lessonId, material._id);
+                return e.lessonId === material._id
+            }))) {
+                axios({
+                    method: 'patch', url: `http://localhost:5000/trainee/addLessonRecord`, withCredentials: true,
+                    data: {
+                        courseId: courseId,
+                        lessonId: material._id
+                    }
+                }).then((response) => {
+                    setLessonList([...lessonList, { lessonId: material._id, note: "" }])
+
+                }).catch((err) => {
+                })
+            }
             setMaterialBody(
                 <div>
                     {
                         material.questions && <ExamForm exercise={material} subtitleId={subtitleId} courseId={courseId} key={material._id} />
                     }
                     {
-                        material.videoURL && <Lesson lesson={material} />
+                        material.videoURL && <Lesson key={material._id} lesson={material} courseId={courseId} noteText={(lessonList.filter(e => e.lessonId === material._id).length > 0 ? lessonList.filter(e => e.lessonId === material._id)[0].note : "")} />
                     }
                 </div>
             );
@@ -62,8 +80,14 @@ const CourseSubtitles = () => {
             setSubtitles(response.data)
 
         }).catch((err) => {
-            console.log(err.response)
         })
+        axios({ method: 'get', url: `http://localhost:5000/trainee/getLessonsList/${courseId}`, withCredentials: true }).then((response) => {
+
+            setLessonList(response.data)
+        }).catch((err) => {
+        })
+
+
     }, [])
     return (
         <ResponsiveDrawer materialBody={materialBody} currentLesson={currentLesson} drawer={<Accordion >
