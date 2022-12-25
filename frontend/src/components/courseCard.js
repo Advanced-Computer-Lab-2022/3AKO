@@ -42,9 +42,13 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
     })
   }
 
-  let price = <span>${course.price}</span>
-  if (course.promotion !== null && (course.promotion).discount > 0 && new Date(course.promotion.saleEndDate) > new Date()) {
-    price = <span><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * ((course.promotion).discount / 100)} <span className='h6' style={{ color: '#F92A2A' }}>({course.promotion.discount}% OFF)</span></span></span>
+  let price = <span>{course.price}</span>
+  let discount = !course.promotion? 0 : (new Date(course.promotion.saleEndDate)> new Date())? course.promotion.discount:0
+  const adminDiscount = !course.adminPromotion? 0 : (new Date(course.adminPromotion.saleEndDate)> new Date())? course.adminPromotion.discount:0
+  if(discount<adminDiscount) discount = adminDiscount
+  //if(courseData.promotion) price = (new Date(courseData.promotion.saleEndDate)<new Date())? courseData.price:courseData.price-courseData.promotion.discount/100*courseData.price
+  if (discount>0) {
+    price = <span><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * discount / 100} <span className='h6' style={{ color: '#F92A2A' }}>({discount}% OFF)</span></span></span>
   }
   var today = new Date()
   var currentDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();

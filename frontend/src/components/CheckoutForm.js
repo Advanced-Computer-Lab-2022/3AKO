@@ -68,7 +68,7 @@ const CheckoutForm = (params) => {
   return (
     <form onSubmit={handleSubmit} className='paymentElement'>
       <PaymentElement/>
-      <Button className='paymentFormButton' type='submit' disabled={!stripe&&waiting}>Complete payment</Button>
+      <Button className='paymentFormButton' type='submit' disabled={!stripe || waiting}>Complete payment</Button>
     </form>
   )
 };

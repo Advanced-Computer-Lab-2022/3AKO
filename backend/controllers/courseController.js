@@ -270,6 +270,7 @@ const addQuestion = async (req, res) => {
 const addPromotion = async (req, res) => {
     try {
         const { courseId, discount, date } = req.body
+        if(!courseId || !discount || !date) throw new Error("All fields must be satisfied")
         const Endate = new Date(date)
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: { discount: discount, saleEndDate: Endate } }, { new: true, upsert: true })
         res.status(200).json(updatedCourse)
@@ -279,6 +280,83 @@ const addPromotion = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+const addAdminPromotion = async (req, res) => {
+  try {
+    const { courseIds, discount, date } = req.body;
+    if(!courseIds || !discount || !date) throw new Error("All fields must be satisfied")
+    const Endate = new Date(date);
+    const updatedCourse = await courseModel.findOneAndUpdate(
+      { _id: { $in: courseIds } },
+      { adminPromotion: { discount: discount, saleEndDate: Endate } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json(updatedCourse);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const addAdminPromotionToAllCourses = async (req, res) => {
+  try {
+    const { discount, date } = req.body;
+    if(!discount || !date) throw new Error("All fields must be satisfied")
+    const Endate = new Date(date);
+    const updatedCourse = await courseModel.updateMany(
+      {},
+      { adminPromotion: { discount: discount, saleEndDate: Endate } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json(updatedCourse);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const addAdminPromotionWithSubject = async (req, res) => {
+  try {
+    const { subject, discount, date } = req.body;
+    if(!subject || !discount || !date) throw new Error("All fields must be satisfied")
+    const Endate = new Date(date);
+    const updatedCourse = await courseModel.updateMany(
+      { subject: subject },
+      { adminPromotion: { discount: discount, saleEndDate: Endate } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json(updatedCourse);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const getCoursesWithAdminPromotion = async (req, res) => {
+  try {
+    const data = await courseModel.find(
+      { "adminPromotion.saleEndDate": { $gte: new Date() } },
+      "title subject"
+    );
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const getCoursesWithPromotion = async (req, res) => {
+    try {
+      const data = await courseModel.find(
+        { $or:[ {"promotion.saleEndDate": { $gte: new Date() }}, { "adminPromotion.saleEndDate": { $gte: new Date() } } ]},
+        "title subject"
+      );
+      res.status(200).json(data);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+    }
+  };
 
 const removePromotion = async (req, res) => {
     try {
@@ -391,7 +469,7 @@ const addSubtitleToCourse = async (req, res) => {
 const getPriceInfo = async (req,res) => {
     try{
         const courseId = req.params.courseId
-        const data = await courseModel.findOne({_id:courseId},'title subject price instructorName promotion totalHours -_id').lean()
+        const data = await courseModel.findOne({_id:courseId},'title subject price instructorName promotion adminPromotion totalHours -_id').lean()
         res.status(200).json(data)
     }
     catch(err){
@@ -420,4 +498,9 @@ module.exports = {
     , instructorLoadSubtitle
     , loadExercise
     , getPriceInfo
+    ,getCoursesWithAdminPromotion
+    ,getCoursesWithPromotion
+    ,addAdminPromotionToAllCourses
+    ,addAdminPromotionWithSubject
+    ,addAdminPromotion
 }
