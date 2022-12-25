@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose')
 const { Error } = require('mongoose');
 const { traineeModel, courseRecordModel } = require('../models/traineeModel')
 const { courseModel } = require('../models/courseModel')
+const instructorModel = require('../models/instructorModel')
 
 const userModel = require("../models/userModel");
 
@@ -136,4 +137,15 @@ const getMyAnswers = async (req, res) => {
 
 }
 
-module.exports = { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers }
+const viewInstructor = async (req, res) => {
+    try {
+        const { instructorId } = req.body
+        const instructor = await instructorModel.findOne({ _id: instructorId })
+        res.status(200).json(instructor)
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
+    }
+}
+
+module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers }

@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses,getMyInfo, editTraineeInfo, getMyAnswers} = require('../controllers/traineeController')
+const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, viewInstructor } = require('../controllers/traineeController')
 
 const { addComplaint } = require('../controllers/complaintController')
 
@@ -8,9 +8,9 @@ const { loadSubtitle, loadExamAnswers, rateCourse, getSubtitles } = require('../
 
 const { rateInstructor } = require('../controllers/instructorController')
 
-const {temp,editPassword} = require('../controllers/userController')
+const { temp, editPassword } = require('../controllers/userController')
 
-const {requireTrainee,requireOwnership} = require('../middleware/requireAuth')
+const { requireTrainee, requireOwnership } = require('../middleware/requireAuth')
 
 const router = express.Router()
 
@@ -18,34 +18,36 @@ const router = express.Router()
 
 router.patch('/addCourseToTrainee/:id', addCourseToTrainee) //how dose this work with payment ?
 
-router.patch('/addLessonRecord',requireOwnership, addLessonRecord)
+router.patch('/addLessonRecord', requireOwnership, addLessonRecord)
 
-router.patch('/addExerciseRecord',requireOwnership, addExerciseRecord)
+router.patch('/addExerciseRecord', requireOwnership, addExerciseRecord)
 
-router.post('/addComplaint',requireTrainee, addComplaint)
+router.post('/addComplaint', requireTrainee, addComplaint)
 
-router.patch('/addTraineeInfo',requireTrainee, addTraineeInfo)
+router.patch('/addTraineeInfo', requireTrainee, addTraineeInfo)
 
-router.patch('/rateInstructor',requireOwnership, rateInstructor)
+router.patch('/rateInstructor', requireOwnership, rateInstructor)
 
-router.patch('/rateCourse',requireOwnership, rateCourse)
+router.patch('/rateCourse', requireOwnership, rateCourse)
 
-router.get('/loadSubtitle/:courseId/:subtitleId',requireOwnership, loadSubtitle)
+router.get('/loadSubtitle/:courseId/:subtitleId', requireOwnership, loadSubtitle)
 
-router.post('/loadExamAnswers',requireOwnership, loadExamAnswers)
+router.post('/loadExamAnswers', requireOwnership, loadExamAnswers)
 
-router.get('/myCourses',requireTrainee, myCourses)
+router.get('/myCourses', requireTrainee, myCourses)
 
-router.get("/getSubtitles/:courseId",requireOwnership, getSubtitles)
+router.get("/getSubtitles/:courseId", requireOwnership, getSubtitles)
 
-router.get('/temp',temp)
+router.get('/temp', temp)
 
-router.get('/getMyInfo',requireTrainee,getMyInfo)
+router.get('/getMyInfo', requireTrainee, getMyInfo)
 
-router.patch('/editMyInfo',requireTrainee,editTraineeInfo)
+router.patch('/editMyInfo', requireTrainee, editTraineeInfo)
 
-router.patch('/editPassword',requireTrainee,editPassword)
+router.patch('/editPassword', requireTrainee, editPassword)
 
-router.post("/getMyAnswers/",requireTrainee, getMyAnswers)
+router.post("/getMyAnswers/", requireTrainee, getMyAnswers)
+
+router.post("/viewInstructor/", requireTrainee, viewInstructor)
 
 module.exports = router
