@@ -6,12 +6,10 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import { Select } from '@mui/material';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import {Alert} from '@mui/material';
-import {AlertTitle} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -22,13 +20,11 @@ const theme = createTheme();
 
 export default function SignUp() {
     const [gender,setGender] = useState('')
-    const [unfinshed,setUnfinshed] = useState(false)
     const {signup, isLoading,error} = useSignup()
     const handleSubmit = (event) => {
-        setUnfinshed(false)
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        if(data.get('name') && data.get('username') && data.get('password') && data.get('gender') && data.get('email')){
+        if(data.get('name') && data.get('username') && data.get('password') && data.get('gender') && data.get('email') && data.get('agreement')){
         const traineeData = {
             email: data.get('email'),
             password: data.get('password'),
@@ -38,6 +34,7 @@ export default function SignUp() {
             country : 'eg'
             }
             console.log(traineeData);
+            console.log(data.get('agreement'));
             const request = async(traineeData) => {
                 const trainee = await signup(traineeData)
                 if(trainee){
@@ -46,10 +43,6 @@ export default function SignUp() {
             }
             request(traineeData)
 
-        }
-        else{
-            //alert('You must fill all information')
-            setUnfinshed(true)
         }
   };
 
@@ -71,7 +64,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} >
                 <TextField
@@ -100,6 +93,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  type='email'
                   id="email"
                   label="Email Address"
                   name="email"
@@ -150,8 +144,14 @@ export default function SignUp() {
             </Alert>
             </Grid>
             )}
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox required label='agreement' name='agreement' id='agreement' color="primary" />}
+                label="I agree to the terms of service"
+              />
+            </Grid>
 
-            <Button display={isLoading}
+            <Button disabled={isLoading}
               type="submit"
               fullWidth
               variant="contained"

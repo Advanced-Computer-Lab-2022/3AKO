@@ -55,7 +55,6 @@ const AddUser = () => {
         <form className="addUser" onSubmit={handleAdd}>
             <Box>
                 <Typography>Select user type</Typography>
-
                 <Select
                     defaultValue={"Admin"}
                    

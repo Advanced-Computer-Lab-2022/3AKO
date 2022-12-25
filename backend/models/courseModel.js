@@ -196,6 +196,18 @@ const courseSchema = new Schema({
             default : '2020-01-01'
         }
     },
+    adminPromotion :{
+        discount : {
+            type : Number,
+            default : 0,
+            min : 0,
+            max : 100
+        },
+        saleEndDate : {
+            type : Date,
+            default : '2020-01-01'
+        }
+    },
     numOfViews : {
         type : Number,
         default : 0

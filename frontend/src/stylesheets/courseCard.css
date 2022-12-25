@@ -1,20 +1,19 @@
 .coursecard {
-    color: black;
-    width: 25%;
+    width: 300px;
+    height: 400px;
     margin: auto;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-.coursecard img {
-    width: 100%;
-    height: 42%;
-    border-radius: 5px 5px 0px 0px;
-
+.coursecard:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-.priceEnroll {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.card-img {
+    width: 300px;
+    height: 150px;
+    background-image: url("https://www.educationafter12th.com/wp-content/uploads/2016/11/digital-marketing-seo-course-detail-syllabus.jpg");
+    background-size: 100% 150px;
 }
 
 .rating {
@@ -24,4 +23,40 @@
 .cardLink {
     text-decoration: none;
     color: black;
+}
+
+.cardLink:hover {
+    color: black;
+}
+
+.card-body {
+    margin: 10px;
+}
+
+.card-body .price {
+    margin-left: 20px;
+    width: fit-content;
+}
+
+.card-body .summary {
+    height: 48px;
+}
+
+.card-body i {
+    margin-top: -7px;
+    margin-right: -13px;
+}
+
+.card-body .num-rating {
+    color: #aaa;
+}
+
+.card-body .ratingAndHours {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 8px 5px 8px;
+}
+
+.card-body h5 {
+    height: 48px;
 }

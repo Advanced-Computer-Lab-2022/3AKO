@@ -2,7 +2,6 @@
 import CourseView from "./CourseView";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Home from "./Home";
-import { CountryModal } from "./components/CountryModal";
 import InstructorCourses from "./instructorCoursesView";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddCourse from "./AddCourse";
@@ -26,14 +25,13 @@ import SubtitleExercise from "./subtitleExercise";
 import LessonView from "./components/lessonView";
 import AdminHome from "./components/AdminHome";
 import { useUserContext } from "./hooks/useUserContext";
-import { useEffect } from "react";
 import PaymentSuccess from "./components/PaymentSuccess";
 import Checkout from "./components/Checkout";
 import Payment from "./components/Payment";
+import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 function App() {
   const { user, loading } = useUserContext()
-  const { dispatch } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
   const [currency, setCurrency] = useState("");
 
@@ -53,8 +51,14 @@ function App() {
           <Switch >
 
             <Route exact path="/">
-              {!user ? <Home /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <Home /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />}
+              {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
             </Route>
+
+            <Route exact path="/search">
+              <SearchPage />
+            </Route>
+
+            {/* {!user ? <SearchPage /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <SearchPage /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />} */}
 
             <Route exact path="/course/:courseId">
               <CourseView exchangeRate={exchangeRate} currency={currency} />
@@ -64,12 +68,8 @@ function App() {
               {(user && user.type === 'instructor') ? <AddCourse /> : user ? <Redirect to="/" /> : loading ? <AddCourse /> : <Redirect to="/login" />}
             </Route>
 
-            {/* <Route exact path="/instructor">
-            <InstructorCourses />
-          </Route> */}
-
-            <Route exact path="/instructor/personalInfo/:id">
-              <PersonalInfo />
+            <Route exact path="/instructor/myCourses">
+              <InstructorCourses />
             </Route>
 
             <Route exact path="/admin/addInstructor">

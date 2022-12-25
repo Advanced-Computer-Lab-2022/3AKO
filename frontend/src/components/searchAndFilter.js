@@ -1,6 +1,5 @@
 import CourseCard from './courseCard';
 import { useEffect, useState } from "react";
-// import { Select, MenuItem } from '@mui/material';
 import { Checkbox, FormControlLabel, Rating } from '@mui/material';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -51,7 +50,6 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   }
 
   useEffect(() => {
-    history.push('/')
     fetchCourses()
 
   }, [])
@@ -67,7 +65,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
 
   const handleFilter = (e) => {
     if (searchedCourses != null) {
-      const tmp = searchedCourses.filter(course => (course.price <= maxPrice && course.price >= minPrice && course.rating.total >= rating))
+      const tmp = searchedCourses.filter(course => (course.price * (course.promotion !== null ? (course.promotion).discount / 100 : 1) <= maxPrice && course.price * (course.promotion !== null ? (course.promotion).discount / 100 : 1) >= minPrice && course.rating.total >= rating))
       const newCourses = []
       tmp.map(course => {
         if (subjects.length === 0 || subjects.includes(course.subject))
@@ -162,28 +160,34 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   </div>
 
   const side = <div className='filters'>
-    <h5>Subject</h5>
-    {allSubjects && allSubjects.map((subject) => (
-      <FormControlLabel control={<Checkbox sx={{
-        color: '#E00018',
-        '&.Mui-checked': {
+    <div className='subject'>
+      <h5>Subject</h5>
+      {allSubjects && allSubjects.map((subject) => (
+        <FormControlLabel className='checkbox-with-label' control={<Checkbox sx={{
           color: '#E00018',
-        },
-      }} />} label={subject} onChange={(e) => handleCheck(e)} key={subject} value={subject} checked={subjects.includes(subject)} />
-    ))}
+          '&.Mui-checked': {
+            color: '#E00018',
+          },
+          display: 'block'
+        }} />} label={subject} onChange={(e) => handleCheck(e)} key={subject} value={subject} checked={subjects.includes(subject)} />
+      ))}
+    </div>
     {!isCorporateTrainee &&
-      <div>
+      <div className='fiters-price'>
         <h5>Price</h5>
-        <input type="number" onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
-        <input type="number" onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} />
+        <span>Min : </span><input type="number" style={{ width: '175px', marginLeft: '4px' }} onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
+        <span>Max : </span><input type="number" style={{ width: '175px' }} onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} />
       </div>
     }
-    <h5>Minimum Rating</h5>
-    <Rating className='rating'
-      value={rating}
-      onChange={(e) => setRating(e.target.value)} />
-    {/* <button onClick={handleFilter}>Apply</button> */}
-    <button onClick={handleReset}>Reset</button>
+    <div>
+      <h5>Minimum Rating</h5>
+      <Rating className='rating'
+        value={rating}
+        onChange={(e) => setRating(e.target.value)} />
+      {/* <button onClick={handleFilter}>Apply</button> */}
+    </div>
+
+    <button className='style2' onClick={handleReset}>Reset Filters</button>
   </div>
 
   return (

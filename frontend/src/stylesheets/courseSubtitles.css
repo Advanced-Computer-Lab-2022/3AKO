@@ -28,9 +28,13 @@
 
 .lesson-summary.readings {
     margin-top: 15px;
-    width: 960px;
+    width: 940px;
 }
 
 .accordion-button::after {
     filter: brightness(0) saturate(100%);
+}
+
+.course-subtitles .MuiDrawer-paper {
+    margin-top: 70px;
 }

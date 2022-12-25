@@ -1,0 +1,128 @@
+.join {
+    background-image: url('../images/homeback1.jpg');
+    background-size: 100% 650px;
+    height: 650px;
+}
+
+.join h1 {
+    font-size: 70px;
+    margin-top: 130px;
+    margin-bottom: 0;
+    margin-left: 100px;
+    position: relative;
+    display: inline-block;
+    padding: 0 0 35px;
+    width: 30%;
+    font-weight: bold;
+}
+
+.join .content {
+    width: 50%;
+    margin-left: 100px;
+}
+
+.ourCourses {
+    margin-bottom: 10px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.ourCourses h1 {
+    text-align: center;
+    color: #E00018;
+    margin-top: 20px;
+    border-bottom: 1px solid #E00018;
+    width: fit-content;
+}
+
+.ourCourses h3 {
+    margin: 20px auto 20px 50px;
+}
+
+.ourCourses .style2 {
+    margin-top: 20px;
+    width: fit-content;
+}
+
+.mission {
+    background-image: url('../images/homeback2.jpg');
+    background-size: 100% 650px;
+    align-items: center;
+    height: 650px;
+}
+
+
+.mission-text {
+    width: 100%;
+    padding: 20px 100px;
+    color: #fff;
+}
+
+.mission h1 {
+    width: fit-content;
+    border-bottom: 1px solid white;
+}
+
+.mission h3 {
+    margin-top: 30px;
+}
+
+.mission-body {
+    width: 30%;
+}
+
+.community {
+    padding: 20px 100px;
+    height: 590px;
+}
+
+.community h1 {
+    border-bottom: 1px solid #000;
+}
+
+.community-item {
+    width: 300px;
+    margin: auto;
+}
+
+.community img {
+    width: 200px;
+    height: 200px;
+    margin: 10px auto 10px auto;
+    border-radius: 100%;
+}
+
+.community p {
+    text-align: center;
+}
+
+.community h3 {
+    text-align: center;
+    margin: 10px auto 10px auto;
+}
+
+.community h6 {
+    text-align: center;
+    margin: 10px auto 10px auto;
+    color: #666;
+}
+
+.footer {
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+}
+
+.footer img {
+    height: 70px;
+    width: 175px;
+    margin-left: 683px;
+}
+
+.footer span {
+    margin-left: 500px;
+}
