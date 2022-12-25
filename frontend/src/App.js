@@ -50,7 +50,7 @@ function App() {
           <Switch >
 
             <Route exact path="/">
-              <Home />
+            {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
             </Route>
 
             <Route exact path="/search">
