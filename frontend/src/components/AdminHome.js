@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import AddUser from "./addUser";
 import CourseRequest from "./courseRequest";
+import Complaints from "./complaints";
 
 export default function AdminHome() {
     const [page, setPage] = useState("Add User");
@@ -56,7 +57,11 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Complaints");
-                            setMaterialBody(<div>under construction</div>);
+                            setMaterialBody(
+                                <div>
+                                    <Complaints />
+                                </div>
+                            );
                         }}
                     >
                         <ListItemText primary={"Complaints"} />
@@ -88,6 +93,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Refund Requests");
+                            setMaterialBody(<div>under construction</div>);
                         }}
                     >
                         <ListItemText primary={"Refund Requests"} />
@@ -103,6 +109,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Add Discount");
+                            setMaterialBody(<div>under construction</div>);
                         }}
                     >
                         <ListItemText primary={"Add Discount"} />
@@ -124,7 +131,7 @@ export default function AdminHome() {
             <CssBaseline />
             <AppBar
                 position="fixed"
-                style={{ position: "fixed", marginTop: "70px" }}
+                style={{ position: "fixed", marginTop: "70px", zIndex: "0" }}
                 sx={{
                     width: {
                         sm: `calc(100% - ${drawerOpen ? drawerWidth : 0}px)`,
@@ -134,7 +141,7 @@ export default function AdminHome() {
                     ml: { sm: `${drawerOpen ? drawerWidth : 0}px` },
                 }}
             >
-                <Toolbar style={{ background: "#AA4427" }}>
+                <Toolbar style={{ background: "#E00018" }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -175,7 +182,7 @@ export default function AdminHome() {
                     }}
                     open={false}
                 >
-                    <div style={{ marginTop: "70px" }}> {drawer}</div>
+                    <div> {drawer}</div>
                 </Drawer>
             </Box>
             <Box

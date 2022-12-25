@@ -17,6 +17,7 @@ const {
     getPendingComplaints,
     loadComplaint,
     resolveComplaint,
+    markComplaintPending,
 } = require("../controllers/complaintController");
 
 const router = express.Router();
@@ -31,7 +32,9 @@ router.patch("/answerRequest", answerRequest);
 
 router.get("/getPendingComplaints", getPendingComplaints);
 router.patch("/loadComplaint", loadComplaint);
-router.post("/resolveCompalint", resolveComplaint);
+router.patch("/resolveCompalint", resolveComplaint);
+router.patch("/markComplaintPending", markComplaintPending);
+
 router.post("/addAgreementRecord", addAgreementRecord);
 router.patch("/changeAgreements", changeAgreements);
 router.get("/getCourseRequests", getCourseRequests);
