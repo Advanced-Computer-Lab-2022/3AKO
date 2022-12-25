@@ -33,7 +33,7 @@ const CourseView = (props) => {
             {courseData && <div className="courseView">
                 <h1>{courseData.title}</h1>
                 <p>{courseData.summary}</p>
-                <h2>price: {courseData.price * exchangeRate}</h2>
+                <h2>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2>
                 {/* {<RatingInfo rating={courseData.rating} price={courseData.price * exchangeRate} promotion={(new Date(courseData.promotion.saleEndDate) > new Date() ? courseData.promotion.saleByInstructor : 0)} views={courseData.numOfViews} hours={courseData.totalHours} currency={currency}></RatingInfo>} */}
                 <h2>{courseData.subject}</h2>
                 <p>Subtitles :</p>

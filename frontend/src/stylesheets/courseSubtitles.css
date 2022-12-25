@@ -35,6 +35,6 @@
     filter: brightness(0) saturate(100%);
 }
 
-.MuiDrawer-paper {
+.course-subtitles .MuiDrawer-paper {
     margin-top: 70px;
 }

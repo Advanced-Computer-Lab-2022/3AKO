@@ -5,7 +5,9 @@ const {
     addAgreementRecord,
     changeAgreements,
     getCourseRequests,
-    answerRequest,
+    answerRequest,    
+    getRefundRequests,
+    answerRefundRequest
 } = require("../controllers/adminController");
 const { addInstructor } = require("../controllers/instructorController");
 const {
@@ -17,7 +19,9 @@ const {
     getPendingComplaints,
     loadComplaint,
     resolveComplaint,
+    markComplaintPending,
 } = require("../controllers/complaintController");
+const {getCoursesWithAdminPromotion,getCoursesWithPromotion,addAdminPromotionToAllCourses,addAdminPromotion,addAdminPromotionWithSubject} = require('../controllers/courseController')
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -31,8 +35,17 @@ router.patch("/answerRequest", answerRequest);
 
 router.get("/getPendingComplaints", getPendingComplaints);
 router.patch("/loadComplaint", loadComplaint);
-router.post("/resolveCompalint", resolveComplaint);
+router.patch("/resolveCompalint", resolveComplaint);
+router.patch("/markComplaintPending", markComplaintPending);
+
 router.post("/addAgreementRecord", addAgreementRecord);
 router.patch("/changeAgreements", changeAgreements);
 router.get("/getCourseRequests", getCourseRequests);
+router.get('/getCoursesWithAdminPromotion',getCoursesWithAdminPromotion)
+router.get('/getCoursesWithPromotion',getCoursesWithPromotion)
+router.post('/addAdminPromotionToAllCourses',addAdminPromotionToAllCourses)
+router.post('/addAdminPromotionWithSubject',addAdminPromotionWithSubject)
+router.post('/addAdminPromotion',addAdminPromotion)
+router.get('/getRefundRequests',getRefundRequests)
+router.post('/answerRefundRequest',answerRefundRequest)
 module.exports = router;

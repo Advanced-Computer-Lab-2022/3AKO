@@ -24,6 +24,7 @@ export default function Payment() {
         axios({method:'post',url:'http://localhost:5000/individualTrainee/createPayment',withCredentials:true,data:{
             courseId
         }}).then((response)=>{
+            console.log(response.data.client_secret);
             setOptions({clientSecret: response.data.clientSecret})
             setMethod(response.data.method)
             setPaymentIntentId(response.data.paymentIntentId)
@@ -37,7 +38,7 @@ export default function Payment() {
 
   return (
     <div>
-        {options &&
+        {options && stripePromise && paymentIntentId &&
         <Elements stripe={stripePromise} options={options} paymentIntentId = {paymentIntentId}>
         <CheckoutForm courseId={courseId} paymentIntentId = {paymentIntentId} />
         </Elements>}
