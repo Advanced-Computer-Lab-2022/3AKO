@@ -22,6 +22,7 @@ const Checkout = () => {
     const {courseId} = useParams()
     const history = useHistory()
     const [courseData,setCourseData] = useState('')
+    const [price,setPrice] = useState('')
     useEffect(() => {
         if(loading) return
         if(user && user.type==='individual trainee'){
@@ -34,14 +35,22 @@ const Checkout = () => {
                 setData(response.data)
             })
             axios({method:'get', url : `http://localhost:5000/course/getPriceInfo/${courseId}`}).then((response)=>{
-                if(response.data.promotion){
-                    setCourseData(response.data)
-                }
-                else{
-                    let data = response.data
+                let data = response.data
+                if(!data.promotion){
                     data.promotion = {saleEndDate:'2020-01-01',discount:0}
-                    setCourseData(data)
                 }
+                if(!data.adminPromotion){
+                    data.adminPromotion = {saleEndDate:'2020-01-01',discount:0}
+                }
+                setCourseData(data)
+                let price = data.price
+                let discount = !data.promotion? 0 : (new Date(data.promotion.saleEndDate)> new Date())? data.promotion.discount:0
+                const adminDiscount = !data.adminPromotion? 0 : (new Date(data.adminPromotion.saleEndDate)> new Date())? data.adminPromotion.discount:0
+                if(discount<adminDiscount) discount = adminDiscount
+                //if(courseData.promotion) price = (new Date(courseData.promotion.saleEndDate)<new Date())? courseData.price:courseData.price-courseData.promotion.discount/100*courseData.price
+                if(discount>0) price = price - price*discount/100
+
+                setPrice(price)
             })
         }
     },[loading])
@@ -66,9 +75,11 @@ const Checkout = () => {
                 <Grid item>
                 <Item>{courseData.totalHours} Hours</Item>
             </Grid>
-            <Grid item>
-                <Item>Price {parseFloat((new Date(courseData.promotion.saleEndDate)<new Date())? courseData.price:courseData.price-courseData.promotion.discount/100*courseData.price).toFixed(2)} USD</Item>
-            </Grid>
+            {price &&
+                <Grid item>
+                    <Item>Price {parseFloat(price).toFixed(2)} USD</Item>
+                </Grid>
+            }
             <Grid item >
                 <Item>Your Wallet Has {parseFloat(data.wallet||0).toFixed(2) } USD</Item>
             </Grid>
@@ -78,7 +89,7 @@ const Checkout = () => {
             flexDirection: 'column',
             alignItems: 'center',
           }}>
-                <CheckoutButton courseId={courseId} price={(new Date(courseData.promotion.saleEndDate)<new Date())? courseData.price:courseData.price-courseData.promotion.discount/100*courseData.price} wallet={data.wallet ||0}/>
+                <CheckoutButton courseId={courseId} price={price} wallet={data.wallet ||0}/>
             </Grid>
         </Grid>}
 
