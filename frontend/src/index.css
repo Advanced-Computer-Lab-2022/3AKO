@@ -81,10 +81,9 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  column-gap: 20px;
-  row-gap: 20px;
-  column-count: 3;
-  margin: auto;
+  row-gap: 30px;
+  justify-content: space-evenly;
+  margin: 20px;
 }
 
 .upper-pannel {
@@ -119,77 +118,110 @@ form.login button {
   background-color: rgb(171, 240, 240);
 }
 
-  .payment-success
-{
-  border:1px solid #f2f2f2;
-  height:280px;
-      border-radius:20px;
-      background:#fff;
+.payment-success {
+  border: 1px solid #f2f2f2;
+  height: 280px;
+  border-radius: 20px;
+  background: #fff;
 }
-  .payment-success_header
-  {
-    background: #A00407;
-    padding:20px;
-      border-radius:20px 20px 0px 0px;
-    
-  }
-  
-  .payment-success-check
-  {
-    margin:0px auto;
-    width:50px;
-    height:50px;
-    border-radius:100%;
-    background:#fff;
-    text-align:center;
-  }
-  
-  .payment-success-check svg
-  {
-    margin-top: 5px;
-    vertical-align:middle;
-    line-height:50px;
-    font-size:30px;
-  }
 
-  .payment-success-content 
-  {
-      text-align:center;
-      margin: 30px;
-  }
+.payment-success_header {
+  background: #A00407;
+  padding: 20px;
+  border-radius: 20px 20px 0px 0px;
 
-  .payment-success-content  h1
-  {
-      font-size:25px;
-      padding-top:25px;
-      padding-bottom: 25px;
-  }
+}
 
-  .payment-success-content a
-  {
-      text-decoration: none;
-      width:200px;
-      height:35px;
-      color:#fff;
-      border-radius:30px;
-      padding:5px 10px;
-      background: #A00407;
-      transition:all ease-in-out 0.3s;
-  }
+.payment-success-check {
+  margin: 0px auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: #fff;
+  text-align: center;
+}
 
-  .payment-success-content a:hover
-  {
-      text-decoration:none;
-      color: #A00407;
-      background:#999;
-  }
-  .paymentElement{
-    max-width: 800px;
-    margin: 0 auto 0 auto;
-    padding: 100px 0 20px 0;
-  }
-  .paymentElement .paymentFormButton {
-    display: block;
-    width: 200px;
-    margin: auto;
-  }
+.payment-success-check svg {
+  margin-top: 5px;
+  vertical-align: middle;
+  line-height: 50px;
+  font-size: 30px;
+}
+
+.payment-success-content {
+  text-align: center;
+  margin: 30px;
+}
+
+.payment-success-content h1 {
+  font-size: 25px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.payment-success-content a {
+  text-decoration: none;
+  width: 200px;
+  height: 35px;
+  color: #fff;
+  border-radius: 30px;
+  padding: 5px 10px;
+  background: #A00407;
+  transition: all ease-in-out 0.3s;
+}
+
+.payment-success-content a:hover {
+  text-decoration: none;
+  color: #A00407;
+  background: #999;
+}
+
+.paymentElement {
+  max-width: 800px;
+  margin: 0 auto 0 auto;
+  padding: 100px 0 20px 0;
+}
+
+.paymentElement .paymentFormButton {
+  display: block;
+  width: 200px;
+  margin: auto;
+}
+
+.style1 {
+  color: #E00018;
+  background: none;
+  border: 1.5px solid #E00018;
+  border-radius: 2px;
+  padding: 10px 20px;
+  transition: all .5s ease-in-out;
+}
+
+.style1:hover {
+  background-color: #E00018;
+  border-color: #E00018;
+  color: #fff;
+}
+
+.style2 {
+  background-color: #E00018;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  padding: 10px;
+  transition: all .3s ease-in-out;
+}
+
+.style2:hover {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.style3 {
+  background-color: #E00018;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  padding: 5px 10px;
+}

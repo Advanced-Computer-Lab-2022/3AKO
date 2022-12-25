@@ -28,14 +28,14 @@ const Item = styled(Paper)(({ theme }) => ({
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 8,
   borderRadius: 5,
-  maxWidth:400,
+  maxWidth: 400,
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor:
       theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+    backgroundColor: theme.palette.mode === "light" ? "#E00018" : "#308fe8",
   },
 }));
 
@@ -56,7 +56,7 @@ const RatingCard = ({ course }) => {
       course.rating["3"] * 3 +
       course.rating["4"] * 4 +
       course.rating["5"] * 5) /
-      count || 0;
+    count || 0;
 
   const maxRate = Math.max(
     course.rating["1"],
@@ -65,8 +65,6 @@ const RatingCard = ({ course }) => {
     course.rating["4"],
     course.rating["5"]
   );
-
-  useEffect(() => {}, []);
 
   return (
     <Card sx={{ p: 3, boxShadow: 3 }}>
@@ -87,11 +85,11 @@ const RatingCard = ({ course }) => {
               value={rate}
               readOnly
               precision={0.5}
-              sx={{ color: "#1a90ff" }}
+              sx={{ color: "#E00018" }}
             />
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-            {Object.entries(course.rating)
+            {Object.entries(course.rating).splice(0, 5)
               .map(([rating, value]) => {
                 return (
                   <Box
