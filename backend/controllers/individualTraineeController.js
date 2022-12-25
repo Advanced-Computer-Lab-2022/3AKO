@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken')
 const { courseModel } = require('../models/courseModel');
 const instructorModel = require('../models/instructorModel');
 const agreementModel = require('../models/agreementModel');
+const { refundRequests } = require('../models/refundRequestsModel');
 
 const createToken= (_id) => {
     return jwt.sign({_id}, process.env.SECRET, {expiresIn :'1d'})
@@ -425,5 +426,27 @@ const test = async(req,res)=>{
   }
 }
 
+const requestRefund = async (req, res) => {
+  try{
+    const id = req._id
+    const {courseId} = req.body
+    if(!courseId) throw new Error("courseId is required")
+    const data = await individualTraineeModel.findOne({_id:id},{wallet:0,_id:0,payments: { $elemMatch: { courseId: courseId,status:'completed' }}}).lean()
+    if(data && data.payments && data.payments[0]){
+      const traineeData = await userModel.findOne({_id:id},'username -_id').lean()
+      const courseData = await courseModel.findOne({_id:id},'title -_id').lean()
+      await refundRequests.create({traineeId : id, traineeUserName: traineeData.username ,courseId : courseId, courseTitle: courseData.title ,status: "pendding"})
+      res.status(200).json({message: "request successful"})
+    }
+    else{
+      throw new Error("You do now own this course")
+    }
+  }
+  catch(err){
+    console.log(err);
+    res.status(401).json({error:err.message})
+  }
+}
 
-module.exports = {addIndividualTrainee,checkout,getMyData,createPayment,payWithCard,payWithWallet,checkBeforeProceed,test}
+
+module.exports = {addIndividualTrainee,checkout,getMyData,createPayment,payWithCard,payWithWallet,checkBeforeProceed,test,requestRefund}
