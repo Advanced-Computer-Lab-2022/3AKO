@@ -54,6 +54,10 @@ nav.myNav ul li input {
     position: relative;
 }
 
+.borderHover:hover {
+    border-bottom: 1px solid #fff;
+}
+
 .dropdownItem {
     --bs-dropdown-link-active-bg: #E00018;
 }

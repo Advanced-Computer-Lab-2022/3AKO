@@ -34,3 +34,7 @@
 .accordion-button::after {
     filter: brightness(0) saturate(100%);
 }
+
+.MuiDrawer-paper {
+    margin-top: 70px;
+}

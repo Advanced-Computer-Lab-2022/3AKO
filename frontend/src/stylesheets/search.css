@@ -1,17 +1,12 @@
-/* .courses {
-    height: 650px;
-    overflow-y: scroll;
-} */
-
 .vr {
     margin-left: 10px;
 }
 
 .filters {
-    margin-top: 50px;
+    margin: 85px 10px 0 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     height: 100%;
 }
 
@@ -19,4 +14,13 @@
     border-bottom: 1px solid #666;
     width: 80%;
     font-weight: bold;
+}
+
+.filters .checkbox-with-label {
+    display: flex;
+}
+
+.filters button {
+    margin-left: -10px;
+    margin-right: -10px;
 }
