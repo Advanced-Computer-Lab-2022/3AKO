@@ -5,7 +5,7 @@ import { useParams, useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../stylesheets/search.css'
 import Drawer from '../utility/Drawer';
-const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instrucrtorFilter }) => {
+const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instructorFilter }) => {
   const location = useLocation()
   const history = useHistory()
 
@@ -20,7 +20,10 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const [rating, setRating] = useState(0)
   const userId = useParams()
 
-
+  // for the instructor courses
+  const [publishedCourses, setPublishedCourses] = useState([])
+  const [unpublishedCourses, setUnpublishedCourses] = useState([])
+  const [closedCourses, setClosedCourses] = useState([])
 
   // console.log(location.state.searchValue + " " + searchValue)
 
@@ -30,6 +33,9 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
         setCourses(res.data)
         setAllCourses(res.data)
         setSearchedCourses(res.data)
+        divideCourses(res.data)
+
+
       }
     ).catch(error => {
       alert('invalid request')
@@ -66,14 +72,22 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
           newCourses.push(course)
       })
       setCourses(newCourses)
+      if (!instructorFilter)
+        divideCourses(newCourses)
     }
 
+  }
+
+  const divideCourses = (courses) => {
+    setPublishedCourses(courses.filter(course => (course.status) == "published"))
+    setUnpublishedCourses(courses.filter(course => (course.status) == "unpublished"))
+    setClosedCourses(courses.filter(course => (course.status) == "closed"))
   }
 
   const search = () => {
     if (allCourses !== null) {
       var newCourses;
-      if (instrucrtorFilter) {
+      if (instructorFilter) {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(searchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(searchValue.toLowerCase()) || (course.instructorName.toLowerCase()).includes(searchValue.toLowerCase()));
       } else {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(searchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(searchValue.toLowerCase()));
@@ -118,8 +132,32 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
 
   const body = <div className="courses">
     {courses && courses.map((course) => (
-      <CourseCard course={course} isInstructor={!instrucrtorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
+      <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
     ))}</div>
+
+  const instructorBody = <div className="instructorCourses">
+    <h3>Published Courses </h3>
+    <hr></hr>
+    <div className='courses'>
+      {publishedCourses && publishedCourses.map((course) => (
+        <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
+      ))}
+    </div>
+    <h3>Unpublished Courses </h3>
+    <hr></hr>
+    <div className='courses'>
+      {unpublishedCourses && unpublishedCourses.map((course) => (
+        <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
+      ))}
+    </div>
+    <h3>Closed Courses</h3>
+    <hr></hr>
+    <div className='courses'>
+      {closedCourses && closedCourses.map((course) => (
+        <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
+      ))}
+    </div>
+  </div>
 
   const side = <div className='filters'>
     <div className='subject'>
@@ -153,7 +191,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   </div>
 
   return (
-    <Drawer materialBody={body} drawer={side} placeHolderAndTitle={false}> </Drawer>
+    <Drawer materialBody={instructorFilter ? body : instructorBody} drawer={side} placeHolderAndTitle={false}> </Drawer>
 
   );
 }

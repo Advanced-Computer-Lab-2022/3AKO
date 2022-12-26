@@ -29,6 +29,7 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import Checkout from "./components/Checkout";
 import Payment from "./components/Payment";
 import SearchPage from "./searchPage";
+import InstructorProfileView from "./InstructorProfileView";
 function App() {
   const { user, loading } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -50,7 +51,7 @@ function App() {
           <Switch >
 
             <Route exact path="/">
-            {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
+              {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
             </Route>
 
             <Route exact path="/search">
@@ -83,6 +84,9 @@ function App() {
               <AddCorporateTrainee />
             </Route>
 
+            {/* <Route exact path="/trainee/myCourses">
+            <MyCoursesTrainee />
+          </Route> */}
             <Route exact path={"/trainee/myCourses"}>
               {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
             </Route>
@@ -113,6 +117,9 @@ function App() {
             </Route>
             <Route exact path="/trainee/profile">
               <TraineeProfile />
+            </Route>
+            <Route exact path="/trainee/viewInstructorProfile">
+              <InstructorProfileView instructorId={"6382b88604535ae16caf113d"} />
             </Route>
             <Route exact path="/forgotPassword">
               <ForgotPassword />

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-const Rate = ({ traineeId, type, id }) => {
+const Rate = ({ type, id }) => {
 
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState('')
@@ -32,13 +32,20 @@ const Rate = ({ traineeId, type, id }) => {
 
     const handleSubmit = () => {
         var url = ''
-        if (type === 'course')
-            url = 'trainee/rateCourse'
-        axios.patch(`http://localhost:5000/${url}/${traineeId}`, {
+        let data = {
             rating: rating,
-            comment: review,
-            courseId: id
-        })
+            comment: review
+        }
+        if (type === 'course') {
+            url = '/trainee/rateCourse'
+            data.courseId = id
+        }
+        else if (type === 'instructor') {
+            url = '/trainee/rateInstructor'
+            data.instructorId = id
+        }
+
+        axios({ method: 'patch', url: `http://localhost:5000/${url}`, withCredentials: true, data })
             .then(alert("review added successfully"))
             .catch((e) => console.log(e))
     }

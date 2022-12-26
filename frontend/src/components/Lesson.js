@@ -4,14 +4,12 @@ import Fab from '@mui/material/Fab';
 import { MdEditNote } from "react-icons/md";
 import PersistentDrawerRight from "../utility/LessonDrawer"
 
-const Lesson = ({ lesson }) => {
+const Lesson = ({ lesson, courseId, noteText }) => {
     const [notesOpen, setNotesOpen] = React.useState("none")
-    const handleNotes = () => {
 
-    }
     return (
 
-        <PersistentDrawerRight openNote={notesOpen} lesson={
+        <PersistentDrawerRight key={lesson._id} noteText={noteText} openNote={notesOpen} courseId={courseId} lessonId={lesson._id} lesson={
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
                 <h3 style={{ textTransform: "capitalize", width: "832px" }}>{lesson.title}</h3>
