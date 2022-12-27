@@ -107,6 +107,25 @@ export default function PersistentDrawerRight({ lesson, openNote, courseId, less
         }).then((response) => {
         })
     }
+    const [downloading,setDownloading] = useState(false)
+    const handleDownload = () => {
+        setDownloading(true)
+        axios({method: "get",
+        url: `http://localhost:5000/trainee/downloadNotes/${courseId}`,
+        withCredentials: true,responseType:'arraybuffer'}).then((res)=>{
+            const url = window.URL.createObjectURL(new Blob([res.data]
+                ,{type: "application/pdf"}))
+              let link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'notes.pdf');
+              document.body.appendChild(link);
+              link.click();
+            setDownloading(false)
+        }).catch((error)=>{
+            console.log(error);
+            setDownloading(false)
+        })
+    }
 
     return (
         <Box sx={{ display: 'flex', overflowX: "hidden" }}>
@@ -139,7 +158,7 @@ export default function PersistentDrawerRight({ lesson, openNote, courseId, less
                     <Button variant="contained" disabled={saveDisable} onClick={handleSave} endIcon={<SaveIcon />}>
                         save
                     </Button>
-                    <Button variant="contained" endIcon={<FileDownloadIcon />}>
+                    <Button disabled={downloading} onClick={handleDownload} variant="contained" endIcon={<FileDownloadIcon />}>
                         Download
                     </Button>
 

@@ -214,7 +214,6 @@ const downloadNotes = async (req, res) => {
         else{
             let traineeNotes = courseListData.courseList[0].lessonsList
             const courseData = await courseModel.findOne({_id:courseId},{subtitles: {lessons:{title:1,_id:1},title:1},title:1}).lean()
-            console.log(courseData);
             const notes = courseData.subtitles.reduce((sum,sub)=>{
                 let notesInSub = []
                 traineeNotes.forEach(note => {
@@ -229,9 +228,7 @@ const downloadNotes = async (req, res) => {
                 })
                 if (notesInSub.length!==0) sum.push({title:sub.title,notes:notesInSub})
                 return sum
-            },[])
-            console.log(notes);
-            
+            },[])            
             // example data
             // const notes =  [
             //     {title:"first title", notes: [{title : "lesson 1", note:"haha"},{title : "lesson 2", note:"hahahs"},{title : "lesson 3", note:"hahahsha"}]},
