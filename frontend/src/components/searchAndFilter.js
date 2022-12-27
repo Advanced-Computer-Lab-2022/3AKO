@@ -11,6 +11,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
 
   const [courses, setCourses] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  const [instructorSearchValue, setInstructorSearchValue] = useState('')
   const [allCourses, setAllCourses] = useState(null)
   const [searchedCourses, setSearchedCourses] = useState(null)
   const [subjects, setSubjects] = useState([])
@@ -50,6 +51,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   }
 
   useEffect(() => {
+    console.log(instructorFilter)
     fetchCourses()
 
   }, [])
@@ -85,17 +87,27 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   }
 
   const search = () => {
+    // console.log(searchValue)
     if (allCourses !== null) {
       var newCourses;
       if (instructorFilter) {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(searchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(searchValue.toLowerCase()) || (course.instructorName.toLowerCase()).includes(searchValue.toLowerCase()));
       } else {
-        newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(searchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(searchValue.toLowerCase()));
+        newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(instructorSearchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(instructorSearchValue.toLowerCase()));
       }
+      console.log(newCourses)
       setCourses(newCourses);
       setSearchedCourses(newCourses);
+      if (!instructorFilter)
+        divideCourses(newCourses)
     }
 
+  }
+
+  const handleSearch = (e) => {
+    console.log(e.key)
+    if (e.key === 'Enter')
+      search()
   }
 
   const removeSubject = (subject) => {
@@ -160,6 +172,12 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   </div>
 
   const side = <div className='filters'>
+    {!instructorFilter &&
+      <div>
+        <input type="text" placeholder='Search in your courses' value={instructorSearchValue} onChange={(e) => setInstructorSearchValue(e.target.value)} onKeyUp={handleSearch} />
+        <button onClick={search}>search</button>
+      </div>
+    }
     <div className='subject'>
       <h5>Subject</h5>
       {allSubjects && allSubjects.map((subject) => (
@@ -184,7 +202,6 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       <Rating className='rating'
         value={rating}
         onChange={(e) => setRating(e.target.value)} />
-      {/* <button onClick={handleFilter}>Apply</button> */}
     </div>
 
     <button className='style2' onClick={handleReset}>Reset Filters</button>

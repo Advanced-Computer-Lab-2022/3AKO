@@ -217,7 +217,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                                     <label for={index + "2"} className="box question">
                                         <div className="course">
                                             <span className={"circle " + index}></span>
-                                            <span className="subject"> {question.choice3}</span>
+                                            <span className="subject"> {question.choice2}</span>
                                         </div>
                                     </label>
                                     <input type="radio" name={index} id={index + "3"} value="3" onChange={(e) => change(e.target.value, index, e.target.nextElementSibling)} />

@@ -6,7 +6,7 @@ const instructorModel = require('../models/instructorModel')
 
 const getAllCourses = async (req, res) => {
     try {
-        const allCoures = await courseModel.find({})
+        const allCoures = await courseModel.find({ status: 'published' })
         res.status(200).json(allCoures)
     } catch (err) {
         res.status(400).json({ error: err.message })
