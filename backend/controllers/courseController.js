@@ -6,7 +6,7 @@ const instructorModel = require('../models/instructorModel')
 
 const getAllCourses = async (req, res) => {
     try {
-        const allCoures = await courseModel.find({})
+        const allCoures = await courseModel.find({ status: 'published' })
         res.status(200).json(allCoures)
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -17,7 +17,7 @@ const createCourse = async (req, res) => {
         console.log('well well well' + req._id);
         const instructorId = req._id
         const instrucrtorData = await instructorModel.find({ _id: instructorId }, 'name -_id')
-        const instructorName = instrucrtorData[0].name
+        const instructorName = instrucrtorData[0].name || "unnamed"
         const { title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL } = req.body
         // subtitles taken from the json is an array of the titles of the subtitles
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
@@ -192,10 +192,10 @@ const addLesson = async (req, res) => {
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         const match = vidUrl.match(reg)
         if (match && match[1].length == 11) {
-            const courseData = await courseModel.findOne({_id:courseId},'materialCount -_id').lean()
+            const courseData = await courseModel.findOne({ _id: courseId }, 'materialCount -_id').lean()
             const position = courseData.materialCount + 1
             const lesson = await new lessonsModel({ title: title, description: description, videoURL: match[1], readings: readings, position: position })
-            const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].lessons': lesson }, $inc : {'materialCount':1}}, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+            const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].lessons': lesson }, $inc: { 'materialCount': 1 } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
             res.status(200).json(updatedCourse)
         }
         else {
@@ -228,10 +228,10 @@ const addPreviewLink = async (req, res) => {
 const addExercise = async (req, res) => {
     try {
         const { courseId, title, subtitleId } = req.body
-        const courseData = await courseModel.findOne({_id:courseId},'materialCount -_id').lean()
+        const courseData = await courseModel.findOne({ _id: courseId }, 'materialCount -_id').lean()
         const position = courseData.materialCount + 1
         const exercise = await new exerciseModel({ title: title, position: position })
-        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise }, $inc : {'materialCount':1}}, { arrayFilters: [{ "a._id": subtitleId }], new: true })
+        await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise }, $inc: { 'materialCount': 1 } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
         res.status(200).json(exercise)
     }
     catch (err) {
@@ -270,7 +270,7 @@ const addQuestion = async (req, res) => {
 const addPromotion = async (req, res) => {
     try {
         const { courseId, discount, date } = req.body
-        if(!courseId || !discount || !date) throw new Error("All fields must be satisfied")
+        if (!courseId || !discount || !date) throw new Error("All fields must be satisfied")
         const Endate = new Date(date)
         const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { promotion: { discount: discount, saleEndDate: Endate } }, { new: true, upsert: true })
         res.status(200).json(updatedCourse)
@@ -282,81 +282,81 @@ const addPromotion = async (req, res) => {
 }
 
 const addAdminPromotion = async (req, res) => {
-  try {
-    const { courseIds, discount, date } = req.body;
-    if(!courseIds || !discount || !date) throw new Error("All fields must be satisfied")
-    const Endate = new Date(date);
-    const updatedCourse = await courseModel.findOneAndUpdate(
-      { _id: { $in: courseIds } },
-      { adminPromotion: { discount: discount, saleEndDate: Endate } },
-      { new: true, upsert: true }
-    );
-    res.status(200).json(updatedCourse);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
+    try {
+        const { courseIds, discount, date } = req.body;
+        if (!courseIds || !discount || !date) throw new Error("All fields must be satisfied")
+        const Endate = new Date(date);
+        const updatedCourse = await courseModel.findOneAndUpdate(
+            { _id: { $in: courseIds } },
+            { adminPromotion: { discount: discount, saleEndDate: Endate } },
+            { new: true, upsert: true }
+        );
+        res.status(200).json(updatedCourse);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message });
+    }
 };
 
 const addAdminPromotionToAllCourses = async (req, res) => {
-  try {
-    const { discount, date } = req.body;
-    if(!discount || !date) throw new Error("All fields must be satisfied")
-    const Endate = new Date(date);
-    const updatedCourse = await courseModel.updateMany(
-      {},
-      { adminPromotion: { discount: discount, saleEndDate: Endate } },
-      { new: true, upsert: true }
-    );
-    res.status(200).json(updatedCourse);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
+    try {
+        const { discount, date } = req.body;
+        if (!discount || !date) throw new Error("All fields must be satisfied")
+        const Endate = new Date(date);
+        const updatedCourse = await courseModel.updateMany(
+            {},
+            { adminPromotion: { discount: discount, saleEndDate: Endate } },
+            { new: true, upsert: true }
+        );
+        res.status(200).json(updatedCourse);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message });
+    }
 };
 
 const addAdminPromotionWithSubject = async (req, res) => {
-  try {
-    const { subject, discount, date } = req.body;
-    if(!subject || !discount || !date) throw new Error("All fields must be satisfied")
-    const Endate = new Date(date);
-    const updatedCourse = await courseModel.updateMany(
-      { subject: subject },
-      { adminPromotion: { discount: discount, saleEndDate: Endate } },
-      { new: true, upsert: true }
-    );
-    res.status(200).json(updatedCourse);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
+    try {
+        const { subject, discount, date } = req.body;
+        if (!subject || !discount || !date) throw new Error("All fields must be satisfied")
+        const Endate = new Date(date);
+        const updatedCourse = await courseModel.updateMany(
+            { subject: subject },
+            { adminPromotion: { discount: discount, saleEndDate: Endate } },
+            { new: true, upsert: true }
+        );
+        res.status(200).json(updatedCourse);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message });
+    }
 };
 
 const getCoursesWithAdminPromotion = async (req, res) => {
-  try {
-    const data = await courseModel.find(
-      { "adminPromotion.saleEndDate": { $gte: new Date() } },
-      "title subject"
-    );
-    res.status(200).json(data);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
+    try {
+        const data = await courseModel.find(
+            { "adminPromotion.saleEndDate": { $gte: new Date() } },
+            "title subject"
+        );
+        res.status(200).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message });
+    }
 };
 
 const getCoursesWithPromotion = async (req, res) => {
     try {
-      const data = await courseModel.find(
-        { $or:[ {"promotion.saleEndDate": { $gte: new Date() }}, { "adminPromotion.saleEndDate": { $gte: new Date() } } ]},
-        "title subject"
-      );
-      res.status(200).json(data);
+        const data = await courseModel.find(
+            { $or: [{ "promotion.saleEndDate": { $gte: new Date() } }, { "adminPromotion.saleEndDate": { $gte: new Date() } }] },
+            "title subject"
+        );
+        res.status(200).json(data);
     } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
+        console.log(err);
+        res.status(400).json({ error: err.message });
     }
-  };
+};
 
 const removePromotion = async (req, res) => {
     try {
@@ -458,7 +458,7 @@ const addSubtitleToCourse = async (req, res) => {
     try {
         const { title, courseId, totalHours } = req.body
         const subtitle = await new subtitlesModel({ title, totalHours })
-        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle }, $inc : {'totalHours':totalHours} }, { new: true, upsert: true })
+        const updatedCourse = await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles': subtitle }, $inc: { 'totalHours': totalHours } }, { new: true, upsert: true })
         res.status(200).json(updatedCourse)
     }
     catch (err) {
@@ -466,13 +466,50 @@ const addSubtitleToCourse = async (req, res) => {
     }
 }
 
-const getPriceInfo = async (req,res) => {
-    try{
+const getPriceInfo = async (req, res) => {
+    try {
         const courseId = req.params.courseId
-        const data = await courseModel.findOne({_id:courseId},'title subject price instructorName promotion adminPromotion totalHours -_id').lean()
+        const data = await courseModel.findOne({ _id: courseId }, 'title subject price instructorName promotion adminPromotion totalHours -_id').lean()
         res.status(200).json(data)
     }
-    catch(err){
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
+const publishCourse = async (req, res) => {
+    try {
+        const id = req._id
+        const { courseId } = req.body
+        const courseData = await courseModel.findOne({ _id: courseId }, 'instructorId -_id').lean()
+        if (courseData && courseData.instructorId && courseData.instructorId.toString() === id.toString()) {
+            await courseModel.updateOne({ _id: courseId }, { status: 'published' }, { new: true, upsert: true })
+            res.status(200).json({ message: 'successful' })
+        }
+        else {
+            res.status(401).json({ error: "invalid course id" })
+        }
+
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+const closeCourse = async (req, res) => {
+    try {
+        const id = req._id
+        const { courseId } = req.body
+        const courseData = await courseModel.findOne({ _id: courseId }, 'instructorId -_id').lean()
+        if (courseData && courseData.instructorId && courseData.instructorId === id) {
+            await courseModel.updateOne({ _id: courseId }, { status: 'closed' }, { new: true, upsert: true })
+            res.status(200).json({ message: 'successful' })
+        }
+        else {
+            res.status(401).json({ error: "invalid course id" })
+        }
+
+    }
+    catch (err) {
         res.status(400).json({ error: err.message })
     }
 }
@@ -498,9 +535,11 @@ module.exports = {
     , instructorLoadSubtitle
     , loadExercise
     , getPriceInfo
-    ,getCoursesWithAdminPromotion
-    ,getCoursesWithPromotion
-    ,addAdminPromotionToAllCourses
-    ,addAdminPromotionWithSubject
-    ,addAdminPromotion
+    , getCoursesWithAdminPromotion
+    , getCoursesWithPromotion
+    , addAdminPromotionToAllCourses
+    , addAdminPromotionWithSubject
+    , addAdminPromotion
+    , publishCourse
+    , closeCourse
 }

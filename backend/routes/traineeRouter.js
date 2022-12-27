@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList } = require('../controllers/traineeController')
+const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, viewInstructor } = require('../controllers/traineeController')
 
 const { addComplaint } = require('../controllers/complaintController')
 
@@ -52,5 +52,6 @@ router.patch('/addNote', requireOwnership, addNote)
 
 router.get('/getLessonsList/:courseId', requireOwnership, lessonsList)
 
+router.post("/viewInstructor/", requireTrainee, viewInstructor)
 
 module.exports = router

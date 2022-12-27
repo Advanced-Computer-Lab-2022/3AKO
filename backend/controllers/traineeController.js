@@ -170,6 +170,16 @@ const lessonsList = async (req, res) => {
 
     }
 }
+const viewInstructor = async (req, res) => {
+    try {
+        const { instructorId } = req.body
+        const instructor = await instructorModel.findOne({ _id: instructorId })
+        res.status(200).json(instructor)
+    }
+    catch (err) {
+        res.status(401).json({ error: err.message })
+    }
+}
 
 
-module.exports = { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList }
+module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList }
