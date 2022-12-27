@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <mate charest="utf-8" />
+    <title>Notes</title>
+  </head>
+  <body>
+    {{#each title}}
+    <h1>{{title}} Notes</h1>
+    {{/each}}
+
+    <ul>
+      {{#each notes}}
+      <h2>subtitle : {{title}}</h2>
+      <br />
+      {{#each notes}}
+      <li>lesson: {{title}}</li>
+      <ul>
+          <li>note: {{note}}</li>
+          <br />
+      </ul>
+        {{/each}}
+      {{/each}}
+    </ul>
+
+  </body>
+</html>

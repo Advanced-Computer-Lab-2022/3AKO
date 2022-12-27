@@ -5,6 +5,30 @@ const { courseModel } = require('../models/courseModel')
 
 const userModel = require("../models/userModel");
 
+const pdf = require("pdf-node");
+const fs = require("fs");
+
+const notesTemplate = fs.readFileSync("template.html", "utf8");
+
+const options = {
+    format: "A3",
+    orientation: "portrait",
+    border: "10mm",
+    header: {
+        height: "45mm",
+        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>'
+    },
+    footer: {
+        height: "28mm",
+        contents: {
+            first: 'Cover page',
+            2: 'Second page', // Any page number is working. 1-based index
+            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+            last: 'Last Page'
+        }
+    }
+};
+
 const addCourseToTrainee = async (req, res) => {//works with corporate but how with indiviual
     try {
         const { id } = req.params
@@ -181,5 +205,64 @@ const viewInstructor = async (req, res) => {
     }
 }
 
+const downloadNotes = async (req, res) => {
+    try {
+        const id = req._id
+        const {courseId} = req.params
+        const courseListData = await traineeModel.findOne({_id:id},{_id:0, complaints:0, profileImag:0, type:0, gender:0, name:0, courseList: { $elemMatch: { courseId: courseId } }}).lean()
+        if(!courseListData || !courseListData.courseList) throw new Error("you do not own this course")
+        else{
+            let traineeNotes = courseListData.courseList[0].lessonsList
+            const courseData = await courseModel.findOne({_id:courseId},{subtitles: {lessons:{title:1,_id:1},title:1},title:1}).lean()
+            console.log(courseData);
+            const notes = courseData.subtitles.reduce((sum,sub)=>{
+                let notesInSub = []
+                traineeNotes.forEach(note => {
+                    let lesson = sub.lessons.find((l)=>{ 
+                        if(!note.lessonId||!l._id) {return}
+                        return l._id.toString()===note.lessonId.toString()})
+                    if(lesson){
+                        
+                        notesInSub.push({title:lesson.title,note:note.note})
+                    }
+                    
+                })
+                if (notesInSub.length!==0) sum.push({title:sub.title,notes:notesInSub})
+                return sum
+            },[])
+            console.log(notes);
+            
+            // example data
+            // const notes =  [
+            //     {title:"first title", notes: [{title : "lesson 1", note:"haha"},{title : "lesson 2", note:"hahahs"},{title : "lesson 3", note:"hahahsha"}]},
+            //     {title:"second title", notes: [{title : "lesson 1", note:"jaja"},{title : "lesson 2", note:"jajaja"},{title : "lesson 3", note:"jajajaja"}]}
+            // ]
+            var document = {
+                html: notesTemplate,
+                data: {
+                  notes: notes,
+                  title:[{title:courseData.title}]
+                },
+                path: `./notePdfs/${courseData.title}${id}.pdf`,
+                type: "pdf",
+              };
+            pdf(document, options)
+            .then((response) => {
+                var data =fs.readFileSync(`./notePdfs/${courseData.title}${id}.pdf`);
+                res.contentType("application/pdf");
+                res.status(200).send(data)
+                fs.unlinkSync(`./notePdfs/${courseData.title}${id}.pdf`)
+            })
+            .catch((error) => {
+                res.status(400).json({error:error.message})
+            });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(401).json({ error: err.message })
+    }
+}
 
-module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList }
+
+module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, downloadNotes }
