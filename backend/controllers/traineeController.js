@@ -3,12 +3,16 @@ const { Error } = require('mongoose');
 const { traineeModel, courseRecordModel } = require('../models/traineeModel')
 const { courseModel } = require('../models/courseModel')
 
+
+
 const userModel = require("../models/userModel");
 
-const pdf = require("pdf-node");
+const pdf = require("pdf-creator-node");
 const fs = require("fs");
+const path = require("path")
 
 const notesTemplate = fs.readFileSync("template.html", "utf8");
+const certifaceTemplate = fs.readFileSync("certficateTemplate.html", "utf8");
 
 const options = {
     format: "A3",
@@ -28,6 +32,18 @@ const options = {
         }
     }
 };
+
+////////////////////////////////////////////////////////////////////
+var assestspath = path.join(__dirname + "/../");
+assestspath = assestspath.replace(new RegExp(/\\/g), '/');
+console.log(assestspath);
+var options2 = {
+    "height": "12.93cm", // allowed units: mm, cm, in, px
+    "width": "16.85cm", // allowed units: mm, cm, in, px
+
+};
+
+
 
 const addCourseToTrainee = async (req, res) => {//works with corporate but how with indiviual
     try {
@@ -208,27 +224,28 @@ const viewInstructor = async (req, res) => {
 const downloadNotes = async (req, res) => {
     try {
         const id = req._id
-        const {courseId} = req.params
-        const courseListData = await traineeModel.findOne({_id:id},{_id:0, complaints:0, profileImag:0, type:0, gender:0, name:0, courseList: { $elemMatch: { courseId: courseId } }}).lean()
-        if(!courseListData || !courseListData.courseList) throw new Error("you do not own this course")
-        else{
+        const { courseId } = req.params
+        const courseListData = await traineeModel.findOne({ _id: id }, { _id: 0, complaints: 0, profileImag: 0, type: 0, gender: 0, name: 0, courseList: { $elemMatch: { courseId: courseId } } }).lean()
+        if (!courseListData || !courseListData.courseList) throw new Error("you do not own this course")
+        else {
             let traineeNotes = courseListData.courseList[0].lessonsList
-            const courseData = await courseModel.findOne({_id:courseId},{subtitles: {lessons:{title:1,_id:1},title:1},title:1}).lean()
-            const notes = courseData.subtitles.reduce((sum,sub)=>{
+            const courseData = await courseModel.findOne({ _id: courseId }, { subtitles: { lessons: { title: 1, _id: 1 }, title: 1 }, title: 1 }).lean()
+            const notes = courseData.subtitles.reduce((sum, sub) => {
                 let notesInSub = []
                 traineeNotes.forEach(note => {
-                    let lesson = sub.lessons.find((l)=>{ 
-                        if(!note.lessonId||!l._id) {return}
-                        return l._id.toString()===note.lessonId.toString()})
-                    if(lesson){
-                        
-                        notesInSub.push({title:lesson.title,note:note.note})
+                    let lesson = sub.lessons.find((l) => {
+                        if (!note.lessonId || !l._id) { return }
+                        return l._id.toString() === note.lessonId.toString()
+                    })
+                    if (lesson) {
+
+                        notesInSub.push({ title: lesson.title, note: note.note })
                     }
-                    
+
                 })
-                if (notesInSub.length!==0) sum.push({title:sub.title,notes:notesInSub})
+                if (notesInSub.length !== 0) sum.push({ title: sub.title, notes: notesInSub })
                 return sum
-            },[])            
+            }, [])
             // example data
             // const notes =  [
             //     {title:"first title", notes: [{title : "lesson 1", note:"haha"},{title : "lesson 2", note:"hahahs"},{title : "lesson 3", note:"hahahsha"}]},
@@ -237,23 +254,65 @@ const downloadNotes = async (req, res) => {
             var document = {
                 html: notesTemplate,
                 data: {
-                  notes: notes,
-                  title:[{title:courseData.title}]
+                    notes: notes,
+                    title: [{ title: courseData.title }]
                 },
                 path: `./notePdfs/${courseData.title}${id}.pdf`,
                 type: "pdf",
-              };
-            pdf(document, options)
+            };
+            pdf.create(document, options)
+                .then((response) => {
+                    var data = fs.readFileSync(`./notePdfs/${courseData.title}${id}.pdf`);
+                    res.contentType("application/pdf");
+                    res.status(200).send(data)
+                    fs.unlinkSync(`./notePdfs/${courseData.title}${id}.pdf`)
+                })
+                .catch((error) => {
+                    res.status(400).json({ error: error.message })
+                });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.status(401).json({ error: err.message })
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////
+
+const downloadCertificate = async (req, res) => {
+
+    try {
+        const id = req._id
+        const { courseId } = req.params
+        console.log(req.params);
+        console.log(id);
+        const trainee = await traineeModel.findOne({ _id: id, courseList: { $elemMatch: { courseId: courseId, progress: { $gte: 1 } } } }, { name: 1, _id: 0, courseList: 1 })
+        console.log(trainee);
+        const courseData = await courseModel.findOne({ _id: courseId }, { instructorName: 1, title: 1 }).lean()
+
+        var document = {
+            html: certifaceTemplate,
+            data: {
+                courseName: [{ courseName: courseData.title }],
+                trainee: [{ trainee: trainee.name }],
+                instructorName: [{ instructorName: courseData.instructorName }]
+
+            },
+            path: `./certificatesPdfs/${courseData.title}${id}.pdf`,
+            type: "pdf",
+        };
+
+        pdf.create(document, options2)
             .then((response) => {
-                var data =fs.readFileSync(`./notePdfs/${courseData.title}${id}.pdf`);
+                var data = fs.readFileSync(`./certificatesPdfs/${courseData.title}${id}.pdf`);
                 res.contentType("application/pdf");
                 res.status(200).send(data)
                 fs.unlinkSync(`./notePdfs/${courseData.title}${id}.pdf`)
             })
             .catch((error) => {
-                res.status(400).json({error:error.message})
+                res.status(400).json({ error: error.message })
             });
-        }
+
     }
     catch (err) {
         console.log(err);
@@ -262,4 +321,7 @@ const downloadNotes = async (req, res) => {
 }
 
 
-module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, downloadNotes }
+
+
+
+module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, downloadNotes, downloadCertificate }

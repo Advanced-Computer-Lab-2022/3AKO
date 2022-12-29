@@ -1,5 +1,5 @@
 import { height } from '@mui/system';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom'
 import Rate from './rate'
 import "../stylesheets/mycoursesTrainee.css"
@@ -9,6 +9,7 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { Button, Divider } from '@mui/material';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import DownloadIcon from '@mui/icons-material/Download';
+import axios from 'axios';
 const BorderLinearProgress = styled(LinearProgress)(({ theme, graduated }) => ({
     height: 10,
     borderRadius: 5,
@@ -23,15 +24,30 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme, graduated }) => ({
 
 
 const MyCourse = ({ course }) => {
-    //   const history = useHistory()
-
     var x = document.getElementsByClassName("gradDivider")
     for (let i = 0; i < x.length; i++) {
         x[i].classList.remove("css-9mgopn-MuiDivider-root")
     }
-    const downloadCertificate = (e) => {
-        // e.style = "color :red"
-        console.log(e);
+    const [downloading, setDownloading] = useState(false);
+    const downloadCertificate = () => {
+        setDownloading(true)
+        axios({
+            method: "get",
+            url: `http://localhost:5000/trainee/downloadCertificate/${course.courseId}`,
+            withCredentials: true, responseType: 'arraybuffer'
+        }).then((res) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]
+                , { type: "application/pdf" }))
+            let link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Certficate.pdf');
+            document.body.appendChild(link);
+            link.click();
+            setDownloading(false)
+        }).catch((error) => {
+            console.log(error);
+            setDownloading(false)
+        })
     }
 
     return (
@@ -55,7 +71,7 @@ const MyCourse = ({ course }) => {
                             <Divider className='gradDivider' />
                             <div className='px-5' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <span className='h4 p-4'><SchoolOutlinedIcon style={{ marginRight: '10px', color: '#E00018' }} /> Graduated</span>
-                                <Link className='certiface-Link'> <Button id='123' onClick={(e) => { downloadCertificate(e.target) }} variant="contained" endIcon={<DownloadIcon />}>
+                                <Link disabled={true} className='certiface-Link'> <Button disabled={downloading} id='123' onClick={(e) => { downloadCertificate(e.target) }} variant="contained" endIcon={<DownloadIcon />}>
                                     Download Certificate
                                 </Button></Link>
 
