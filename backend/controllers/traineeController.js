@@ -307,7 +307,7 @@ const downloadCertificate = async (req, res) => {
                 var data = fs.readFileSync(`./certificatesPdfs/${courseData.title}${id}.pdf`);
                 res.contentType("application/pdf");
                 res.status(200).send(data)
-                fs.unlinkSync(`./notePdfs/${courseData.title}${id}.pdf`)
+                fs.unlinkSync(`./certificatesPdfs/${courseData.title}${id}.pdf`)
             })
             .catch((error) => {
                 res.status(400).json({ error: error.message })

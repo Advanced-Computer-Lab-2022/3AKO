@@ -4,12 +4,14 @@ const { Error } = require("mongoose");
 const addComplaint = async (req, res) => {
     try {
         const id = req._id;
-        const { title, body, reportedCourse } = req.body;
+        const { title, body, reportedCourse, reportType } = req.body;
+        console.log(req.body);
         const complaint = await complaintModel.create({
             title,
             body,
             userId: id,
             reportedCourse,
+            reportType
         });
         res.status(200).json(complaint);
     } catch (err) {
@@ -85,7 +87,7 @@ const markComplaintPending = async (req, res) => {
             { _id: complaintId },
             { status: "pending" }
         );
-    res.status(200).json({ success: true });
+        res.status(200).json({ success: true });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

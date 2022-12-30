@@ -32,6 +32,10 @@ const complaintSchema = new Schema(
             type: [mongoose.ObjectId],
             default: [],
         },
+        reportType: {
+            type: String,
+            default: 'other'
+        }
     },
     { timestamps: true }
 );
