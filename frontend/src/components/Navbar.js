@@ -78,6 +78,7 @@ const StyledNavbar = ({ handleExchangeRate }) => {
           {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem}>Earnings</NavDropdown.Item>}
           {user && user.type === 'individual trainee' && <NavDropdown.Item className={style.dropdownItem}>Payments</NavDropdown.Item>}
           {user && user.type === 'corporate trainee' && <NavDropdown.Item className={style.dropdownItem}>course requests</NavDropdown.Item>}
+          <NavDropdown.Item className={style.dropdownItem} onClick={() => navigate('/reports/')} >Reports</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item onClick={handleLogout} className={style.dropdownItem}>Log out</NavDropdown.Item>
         </NavDropdown> </li>}

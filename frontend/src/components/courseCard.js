@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import "../stylesheets/courseCard.css";
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { useEffect, useState } from 'react';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
@@ -18,6 +17,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+
+
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   const [hasPromotion, setHasPromotion] = useState(false)
   const [promotion, setPromotion] = useState(0);
@@ -43,11 +49,11 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   }
 
   let price = <span>{course.price}</span>
-  let discount = !course.promotion? 0 : (new Date(course.promotion.saleEndDate)> new Date())? course.promotion.discount:0
-  const adminDiscount = !course.adminPromotion? 0 : (new Date(course.adminPromotion.saleEndDate)> new Date())? course.adminPromotion.discount:0
-  if(discount<adminDiscount) discount = adminDiscount
+  let discount = !course.promotion ? 0 : (new Date(course.promotion.saleEndDate) > new Date()) ? course.promotion.discount : 0
+  const adminDiscount = !course.adminPromotion ? 0 : (new Date(course.adminPromotion.saleEndDate) > new Date()) ? course.adminPromotion.discount : 0
+  if (discount < adminDiscount) discount = adminDiscount
   //if(courseData.promotion) price = (new Date(courseData.promotion.saleEndDate)<new Date())? courseData.price:courseData.price-courseData.promotion.discount/100*courseData.price
-  if (discount>0) {
+  if (discount > 0) {
     price = <span><del>${course.price}</del> <span style={{ color: '#F92A2A' }}>Now ${course.price - course.price * discount / 100} <span className='h6' style={{ color: '#F92A2A' }}>({discount}% OFF)</span></span></span>
   }
   var today = new Date()
@@ -111,7 +117,38 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
     <div>
 
       <Link to={`/course/${course._id}`} className="cardLink"  >
-        <div className='coursecard' >
+        <Card sx={{ maxWidth: 345, minWidth: 345 }}>
+          <CardActionArea>
+            {/* <div className='card-img' style={{ backgroundImage: `url(${course.imageURL})` }}></div> */}
+            <CardMedia
+              component="img"
+              height="140"
+              image={course.imageURL}
+              alt="Course Image"
+            />
+            <CardContent>
+              <Typography style={{ height: '60px' }} gutterBottom variant="h5" component="div">
+                {course.title}
+              </Typography>
+              {/* <Typography variant="body2" color="text.secondary"> */}
+              <div className='card-body'>
+                <p className='fw-bold'>Taught by: <span className='fw-normal'>{course.instructorName}</span></p>
+                <div className='ratingAndHours'>
+                  <Rating className='rating'
+                    value={course.rating.total}
+                    readOnly
+                    precision={0.5}
+
+                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />} /> <span className='num-rating'>({course.numOfRatings})</span>
+                  <i class="bi bi-clock p-2 "></i> <span>{course.totalHours} hours</span>
+                </div>
+                {!isCorporateTrainee && <div className='price'>Price : {price}</div>}
+              </div>
+              {/* </Typography> */}
+            </CardContent>
+          </CardActionArea>
+        </Card>
+        {/* <div className='coursecard' >
           <div className='card-img'></div>
           <div className='card-body'>
             <h5>{course.title}</h5>
@@ -121,15 +158,16 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
             <p className='fw-bold'>Taught by: <span className='fw-normal'>{course.instructorName}</span></p>
             <div className='ratingAndHours'>
               <Rating className='rating'
-                value={course.rating}
+                value={course.rating.total}
                 readOnly
                 precision={0.5}
+
                 emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />} /> <span className='num-rating'>({course.numOfRatings})</span>
               <i class="bi bi-clock p-2 "></i> <span>{course.totalHours} hours</span>
             </div>
             {!isCorporateTrainee && <div className='price'>Price : {price}</div>}
           </div>
-        </div>
+        </div> */}
       </Link >
       {/* {!isInstructor &&
         <Button className='fw-normal px-4' onClick={enroll}

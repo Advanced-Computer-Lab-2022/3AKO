@@ -147,11 +147,14 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
     ))}</div>
 
+
+  // instructor Courses /////////////////////////////
   const instructorBody = <div className="instructorCourses">
     <h3>Published Courses </h3>
     <hr></hr>
     <div className='courses'>
       {publishedCourses && publishedCourses.map((course) => (
+
         <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
       ))}
     </div>
@@ -170,6 +173,9 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       ))}
     </div>
   </div>
+  /////////////////////////////////////
+
+
 
   const side = <div className='filters'>
     {!instructorFilter &&

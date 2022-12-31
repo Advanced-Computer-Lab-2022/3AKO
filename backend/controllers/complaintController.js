@@ -93,10 +93,36 @@ const markComplaintPending = async (req, res) => {
     }
 };
 
+const getMyComplaints = async (req, res) => {
+    const id = req._id;
+
+    try {
+        const complaints = await complaintModel.find({ userId: id }, { seenBy: 0 })
+        res.status(200).json(complaints);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+
+
+}
+
+const addFollowUp = async (req, res) => {
+    const id = req._id;
+    const { complaintId, followUp } = req.body
+    try {
+        const complaints = await complaintModel.findOneAndUpdate({ userId: id, _id: complaintId }, { $push: { followUps: followUp }, status: 'unseen' })
+        res.status(200).json(complaints);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
 module.exports = {
     addComplaint,
     getPendingComplaints,
     loadComplaint,
     resolveComplaint,
     markComplaintPending,
+    getMyComplaints,
+    addFollowUp,
 };
