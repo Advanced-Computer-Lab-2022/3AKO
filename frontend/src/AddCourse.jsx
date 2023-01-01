@@ -6,14 +6,16 @@ import { useUserContext } from './hooks/useUserContext';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Modal from "react-bootstrap/Modal";
-import Button from 'react-bootstrap/Button';
+
+// import Button from 'react-bootstrap/Button';
 import { LoremIpsum } from "react-lorem-ipsum";
 import { ToastContainer, toast } from 'react-toastify';
+import { TextField, Card, CardMedia, CardContent, Typography, Button } from '@mui/material'
 import 'react-toastify/dist/ReactToastify.css';
+
 const AddCourse = () => {
-  const [outline, setOutline] = useState('')
-  const [subtitle, setSubtitle] = useState('')
-  const [hours, setHours] = useState(0)
+
+
   const { user, loading } = useUserContext()
   const history = useHistory()
   const [allValues, setAllValues] = useState({
@@ -25,39 +27,16 @@ const AddCourse = () => {
     totalHours: 0,
     imageURL: '',
   });
-  const [extraValues, setExtravalues] = useState({
-    outlines: [],
-    subtitles: []
-  })
+  const [outlines, setOutlines] = useState([''])
   // for the contract
   const [show, setShow] = useState(false);
   const [consent, setConsent] = useState(false);
   const [checked, setChecked] = useState(false);
   //
 
-  const handelExtraValues = e => {
-    if (e.target.value === '') {
-      alert('you need to fill in a value')
-      return
-    }
-    if (e.target.name === 'subtitles') {
-      setExtravalues({
-        ...extraValues,
-        [e.target.name]: [...extraValues[[e.target.name]], { title: e.target.value, totalHours: hours }]
-      })
-    }
-    else {
-      setExtravalues({
-        ...extraValues,
-        [e.target.name]: [...extraValues[[e.target.name]], e.target.value]
-      })
-
-    }
-    console.log(extraValues);
-  }
 
   const handleChange = (e) => {
-    console.log(extraValues);
+    console.log(allValues)
     setAllValues({
       ...allValues,
       [e.target.name]: e.target.value,
@@ -108,11 +87,12 @@ const AddCourse = () => {
 
   };
 
-  const handleAdd = e => {
+  const handleAdd = (e) => {
+    e.preventDefault()
     if (!validate())
       return
     handleConsent()
-    const courseData = { ...allValues, ...extraValues }
+    const courseData = { ...allValues, outlines }
     try {
       axios({ method: "post", url: `http://localhost:5000/instructor/createCourse/`, withCredentials: true, data: courseData })
         .then((response) => {
@@ -128,6 +108,7 @@ const AddCourse = () => {
             progress: undefined,
             theme: "light",
           });
+          history.push()
         })
         .catch((error) => {
           console.log(error);
@@ -169,7 +150,6 @@ const AddCourse = () => {
     else {
       if (user) {
         if (user.type !== 'instructor') {
-          history.push('/')
         }
       }
       else {
@@ -180,36 +160,106 @@ const AddCourse = () => {
     }
   }, [loading])
 
+  const handleOutlineChange = (value, index) => {
+    let arr = [...outlines]
+    arr[index] = value
+    setOutlines(arr)
+
+  }
+  const addOutLine = (event) => {
+    event.preventDefault();
+    let arr = [...outlines]
+    arr.push("")
+    setOutlines(arr)
+    console.log(arr);
+    console.log(outlines.length)
+  }
+
   return (
-    <div className="addcourse">
+    <div >
+      <h3 style={{ textAlign: 'center', marginTop: '90px', fontFamily: 'poppins' }}>Create New Course</h3>
+      <div className='addcourse'>
+        <form action="" className='createCourseForm' onSubmit={consent ? handleAdd : handleOpen} >
+          <TextField required
+            label='Course Title' placeholder='Title...'
+            id="title" name="title"
+            onChange={handleChange} value={allValues.title}
+          />
+          <TextField required
+            label='Subtitle' placeholder='Subtitle...'
+            id="subject" name="subject"
+            onChange={handleChange} value={allValues.subject}
+          />
+          <TextField required
+            label='Summary'
+            id="summary" name="summary"
+            onChange={handleChange} value={allValues.summary}
+            multiline
 
-      <p>* Course title</p>
-      <input type="text" placeholder='Title ie. Introduction to ...' id="title" name="title" onChange={handleChange} value={allValues.title} />
-      <p>* Subject</p>
-      <input type="text" placeholder='Subject ie. Computer Science' id="subject" name="subject" onChange={handleChange} value={allValues.subject} />
-      <p>* Summary</p>
-      <input type="text" placeholder='Summary of the course' id="summary" name="summary" onChange={handleChange} value={allValues.summary} />
-      <p>* Preview video link</p>
-      <input type="text" placeholder='Preview video link' id="previewVideo" name="previewVideo" onChange={handleChange} value={allValues.previewVideo} />
-      <p>* Course fees</p>
-      <input type="number" placeholder='Course fees per month in US dollars' id="price" name="price" onChange={handleChange} value={allValues.price} />
-      <p>* Course hours</p>
-      <input type="number" placeholder='Total course hours' id="totalHours" name="totalHours" onChange={handleChange} value={allValues.totalHours} />
-      <p>* Image link</p>
-      <input type="text" placeholder='Add a course image link' id="imageURL" name="imageURL" onChange={handleChange} value={allValues.imageURL} />
+          />
+          <TextField required
+            label='Preview Video' placeholder='URL'
+            id="previewVideo" name="previewVideo"
+            onChange={handleChange} value={allValues.previewVideo}
+            type='url'
+          />
+          <TextField required
+            label='Course Fees'
+            id="price" name="price"
+            min="0" max="300"
+            onChange={handleChange} value={allValues.price}
+            type='number'
+          />
+          <TextField required
+            label='Image Link'
+            id="imageURL" name="imageURL"
+            onChange={handleChange} value={allValues.imageURL}
+            type='url'
+          />
 
-      <ol>Outlines: {extraValues.outlines.map(x => <li>{x}</li>)}</ol>
-      <input type="text" placeholder='Add outline' id="outline" name="outline" onChange={e => setOutline(e.target.value)} value={outline} />
-      <button onClick={handelExtraValues} name="outlines" value={outline}>Add outline</button>
+          <h4>Outlines:</h4>
+          {outlines && outlines.map((outline, index) =>
 
-      <ol>Subtitles: {extraValues.subtitles.map(x => <li>{x.title + "  " + x.totalHours + " hours"}</li>)}</ol>
-      <input type="text" placeholder='Add subtitle title' id="subtitle" name="subtitle" onChange={e => setSubtitle(e.target.value)} value={subtitle} />
-      <input type="number" placeholder='Add subtitle total hours' id="subtitle-hours" name="subtitle-hours" onChange={e => setHours(e.target.value)} value={hours} />
-      <button onClick={handelExtraValues} name="subtitles" value={subtitle}>Add subtitle</button>
+            <TextField required value={outline} label={'Outline'}
+              onChange={(e) => { handleOutlineChange(e.target.value, index) }} />
+          )}
+          <Button style={{ margin: 'auto' }} variant='outlined' onClick={addOutLine}>Add outline</Button>
 
-      <Button variant="primary" onClick={consent ? handleAdd : handleOpen}>
-        Create Course
-      </Button>
+          <Button variant="contained"
+            type='submit'
+            style={{ display: 'block' }}>
+            Create Course
+          </Button>
+        </form>
+        <div>
+          <Card sx={{ maxWidth: 345, minWidth: 345 }}>
+            <CardMedia
+              component="img"
+              alt="Course Image"
+              height="140"
+              image={allValues.imageURL}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {allValues.title == '' ? <div style={{ color: 'gray' }}>Title..</div> : allValues.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <div className='card-body'>
+                  <p className='fw-bold'>Taught by: <span className='fw-normal'>Name</span></p>
+
+                  <div className='price'>Price : {allValues.price == 0 ? 'Free' : allValues.price + '$'}</div>
+                </div>
+              </Typography>
+            </CardContent>
+
+          </Card>
+          <p className='mt-3'>Preview Video :</p>
+          <iframe width="345" height="194" src={"https://www.youtube.com/embed/" + allValues.previewVideo.substring(allValues.previewVideo.length - 11)} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+        </div>
+
+
+      </div>
+
 
       <Modal show={show} onHide={() => setShow(false)} size="lg">
         <Modal.Header closeButton>
@@ -225,7 +275,7 @@ const AddCourse = () => {
       </Modal>
 
       <ToastContainer />
-    </div>
+    </div >
   );
 }
 

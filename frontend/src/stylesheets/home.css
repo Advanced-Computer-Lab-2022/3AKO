@@ -126,3 +126,22 @@
 .footer span {
     margin-left: 500px;
 }
+
+.addcourse {
+    border: 1px solid gray;
+    border-radius: 20px;
+    margin: 180px;
+    margin-top: 15px;
+    padding: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.createCourseForm {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    row-gap: 20px;
+}

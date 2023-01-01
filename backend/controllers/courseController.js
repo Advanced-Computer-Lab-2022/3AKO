@@ -14,18 +14,18 @@ const getAllCourses = async (req, res) => {
 }
 const createCourse = async (req, res) => {
     try {
-        console.log('well well well' + req._id);
         const instructorId = req._id
+
         const instrucrtorData = await instructorModel.find({ _id: instructorId }, 'name -_id')
         const instructorName = instrucrtorData[0].name || "unnamed"
-        const { title, outlines, summary, previewVideo, subject, subtitles, price, totalHours, imageURL } = req.body
+        const { title, outlines, summary, previewVideo, subject, price, totalHours, imageURL } = req.body
         // subtitles taken from the json is an array of the titles of the subtitles
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         const match = previewVideo.match(reg)
-        const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
-        const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
+        // const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
+        // const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
 
-        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, subtitles: subtitlesData, price, totalHours, imageURL, instructorId, instructorName })
+        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, price, totalHours, imageURL, instructorId, instructorName })
         console.log('we got here' + course._id);
         await instructorModel.updateOne({ _id: instructorId }, { $push: { 'courses': course._id } }, { new: true, upsert: true })
         console.log('we did it ' + course._id);

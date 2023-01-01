@@ -103,8 +103,8 @@ const LessonView = ({ courseId, subtitleId, stateChanger }) => {
                     {readingsKey ?
                         <TextField
                             value={readingsValue}
-                            className='lesson-summary' id="descreption" name='descreption'
-                            required label='Descreption' placeholder='Lesson descreption'
+                            className='lesson-summary' id="readings" name='readings'
+                            required label='readings' placeholder='Readings'
                             onChange={(e) => { setReadingsValue(e.target.value) }}
                             onBlur={handleReadingsBlur} />
                         : <p className="lesson-summary">{readingsValue} <button onClick={() => { setReadingsKey(true) }} style={{ border: 'none', background: 'none' }}><i class="bi bi-pencil-square"></i></button> </p>
