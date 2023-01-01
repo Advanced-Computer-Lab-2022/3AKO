@@ -189,6 +189,7 @@ const addSubVid = async (req, res) => { // adds a video link to a lesson and dis
 const addLesson = async (req, res) => {
     try {
         const { vidUrl, courseId, subtitleId, title, readings, description } = req.body
+        console.log(req.body);
         const reg = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
         const match = vidUrl.match(reg)
         if (match && match[1].length == 11) {
@@ -225,12 +226,17 @@ const addPreviewLink = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+///////////////////////////////////////////add Ex
 const addExercise = async (req, res) => {
     try {
-        const { courseId, title, subtitleId } = req.body
+        const { courseId, title, subtitleId, questions } = req.body
+        console.log(req.body.courseId);
+        console.log(req.body.subtitleId);
+        console.log(req.body.title);
         const courseData = await courseModel.findOne({ _id: courseId }, 'materialCount -_id').lean()
         const position = courseData.materialCount + 1
-        const exercise = await new exerciseModel({ title: title, position: position })
+        const exercise = await new exerciseModel({ title: title, position: position, questions: questions })
         await courseModel.findOneAndUpdate({ _id: courseId }, { $push: { 'subtitles.$[a].exercises': exercise }, $inc: { 'materialCount': 1 } }, { arrayFilters: [{ "a._id": subtitleId }], new: true })
         res.status(200).json(exercise)
     }

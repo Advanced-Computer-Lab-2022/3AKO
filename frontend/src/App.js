@@ -105,7 +105,7 @@ function App() {
             </Route>
 
             <Route exact path="/instructor/incompleteCourse/:courseId">
-              <IncompleteCourse />
+              <CourseSubtitles />
             </Route>
             <Route exact path="/login">
               <LogIn />

@@ -17,7 +17,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { CardHeader, Avatar } from '@mui/material'
+import { red } from '@mui/material/colors';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -116,8 +119,8 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   return (
     <div>
 
-      <Link to={!user ? `/course/${course._id}` : (user.type !== 'instructor') ? `/course/${course._id}` : (course.status === 'published') ? `/course/${course._id}` : `/instructor/incompletecourse/${course._id}`} className="cardLink"  >
-        <Card sx={{ maxWidth: 345, minWidth: 345 }}>
+      <Card sx={{ maxWidth: 345, minWidth: 345 }}>
+        <Link to={!user ? `/course/${course._id}` : (user.type !== 'instructor') ? `/course/${course._id}` : (course.status === 'published') ? `/course/${course._id}` : `/instructor/incompletecourse/${course._id}`} className="cardLink"  >
           <CardActionArea>
             {/* <div className='card-img' style={{ backgroundImage: `url(${course.imageURL})` }}></div> */}
             <CardMedia
@@ -147,8 +150,9 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
               {/* </Typography> */}
             </CardContent>
           </CardActionArea>
-        </Card>
-        {/* <div className='coursecard' >
+        </Link >
+      </Card>
+      {/* <div className='coursecard' >
           <div className='card-img'></div>
           <div className='card-body'>
             <h5>{course.title}</h5>
@@ -168,7 +172,6 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
             {!isCorporateTrainee && <div className='price'>Price : {price}</div>}
           </div>
         </div> */}
-      </Link >
       {/* {!isInstructor &&
         <Button className='fw-normal px-4' onClick={enroll}
           style={{ backgroundColor: '#A00407', border: 'none' }}>
