@@ -49,8 +49,28 @@ const IncompleteCourse = () => {
   const [exerciseTitle, setExerciseTitle] = React.useState("");
   const [titleValue, setTitleValue] = React.useState("");
   const [totalHours, setTotalHours] = React.useState(0);
-
+  const [openPublish, setOpenPublish] = React.useState(false);
   const [description, setDescription] = useState('');
+  const handleOpenPublish = () => setOpenPublish(true);
+  const handleClosePublish = () => setOpenPublish(false);
+  const handlePublish = () => {
+    axios({
+      method: 'post', url: `http://localhost:5000/instructor/publishCourse`, data: {
+        courseId: courseId,
+      }, withCredentials: true
+    })
+      .then((response) => {
+        console.log(response.data);
+        console.log('course published');
+      }).catch((error) => {
+        console.log(error); //Logs a string: Error: Request failed with status code 404
+      });
+    handleClosePublish();
+    history.push(`/instructor/myCourses`);
+
+
+
+  }
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -86,9 +106,12 @@ const IncompleteCourse = () => {
     setTotalHours(0);
     handleClose();
   }
-  const handleAddLesson = (subtitleId) => {
-    const index = id;
+  const handleAddLesson = (e) => {
+    setId(e.target.id);
+    const index = e.target.id;
     console.log('hi');
+    console.log(subtitles[index]);
+    console.log(e.target.id);
     history.push(`/instructor/incompleteCourse/lesson/${courseId}/${subtitles[index]._id}`);
   }
   const handleAddExercise = (e) => {
@@ -155,7 +178,7 @@ const IncompleteCourse = () => {
                 return <div> {lesson.title}</div>
 
               })}
-              <Button onClick={() => handleAddLesson(subtitle)}>Add lesson</Button>
+              <Button id={index} onClick={handleAddLesson}>Add lesson</Button>
               <Button key={index} id={index} variant="outlined" onClick={handleClickOpenExerciseTitle}>Add Exercise</Button>
 
 
@@ -274,7 +297,23 @@ const IncompleteCourse = () => {
       </div>}
 
       <div>
+        <Button variant="outlined" onClick={handleOpenPublish}>
+          Publish Course
+        </Button>
+        <Dialog open={openPublish} onClose={handleClosePublish}>
+          <DialogTitle>Publish Course</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to publish this course?
+              published courses CANNOT be modified or deleted later.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClosePublish}>Cancel</Button>
+            <Button onClick={handlePublish}>Publish Course</Button>
 
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
 

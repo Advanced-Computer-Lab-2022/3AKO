@@ -1,0 +1,46 @@
+.mycourse-card {
+    /* display: flex; */
+    /* flex-direction: row; */
+    margin: auto;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.mycourse-card:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.mycourses-cardLink {
+    width: 80%;
+    margin: auto;
+    border-radius: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.mycourses-cardLink:hover {
+    color: black;
+}
+
+.certiface-Link {
+    text-decoration: none;
+    color: black;
+
+}
+
+.certiface-Link :hover {
+    text-decoration: none;
+    color: white;
+
+}
+
+.options-Link :hover {
+    text-decoration: none;
+    color: black;
+
+}
+
+.options-Link {
+    text-decoration: none;
+    color: black;
+
+}

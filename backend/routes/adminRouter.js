@@ -5,7 +5,9 @@ const {
     addAgreementRecord,
     changeAgreements,
     getCourseRequests,
-    answerRequest,
+    answerRequest,    
+    getRefundRequests,
+    answerRefundRequest
 } = require("../controllers/adminController");
 const { addInstructor } = require("../controllers/instructorController");
 const {
@@ -44,4 +46,6 @@ router.get('/getCoursesWithPromotion',getCoursesWithPromotion)
 router.post('/addAdminPromotionToAllCourses',addAdminPromotionToAllCourses)
 router.post('/addAdminPromotionWithSubject',addAdminPromotionWithSubject)
 router.post('/addAdminPromotion',addAdminPromotion)
+router.get('/getRefundRequests',getRefundRequests)
+router.post('/answerRefundRequest',answerRefundRequest)
 module.exports = router;

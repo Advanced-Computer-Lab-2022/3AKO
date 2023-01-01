@@ -1,6 +1,6 @@
 const express = require('express')
 
-const {addIndividualTrainee,checkout,getMyData,createPayment,payWithCard,payWithWallet,checkBeforeProceed,test} = require('../controllers/individualTraineeController')
+const {addIndividualTrainee,checkout,getMyData,createPayment,payWithCard,payWithWallet,checkBeforeProceed,test,requestRefund} = require('../controllers/individualTraineeController')
 
 const {requireIndividualTrainee} = require('../middleware/requireAuth')
 
@@ -20,5 +20,6 @@ router.post('/payWithWallet',payWithWallet)
 router.post('/checkBeforeProceed',checkBeforeProceed)
 
 router.post('/test',test)
+router.post('/requestRefund',requestRefund)
 
 module.exports = router

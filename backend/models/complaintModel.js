@@ -35,6 +35,10 @@ const complaintSchema = new Schema(
         courseTitle: {
             type: String,
             required: true,
+        },
+        reportType: {
+            type: String,
+            default: 'other'
         }
     },
     { timestamps: true }
