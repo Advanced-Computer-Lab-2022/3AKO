@@ -11,6 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+
 import {
     AppBar,
     CssBaseline,
@@ -26,6 +27,7 @@ import {
 import AddUser from "./addUser";
 import CourseRequest from "./courseRequest";
 import Complaints from "./complaints";
+import RefundRequest from "./refundRequest";
 
 export default function AdminHome() {
     const [page, setPage] = useState("Add User");
@@ -93,7 +95,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Refund Requests");
-                            setMaterialBody(<div>under construction</div>);
+                            setMaterialBody(<RefundRequest />);
                         }}
                     >
                         <ListItemText primary={"Refund Requests"} />
@@ -178,6 +180,7 @@ export default function AdminHome() {
                             boxSizing: "border-box",
                             width: drawerOpen ? drawerWidth : 0,
                             transition: "width 0.3s ease-in",
+                            marginTop: "70px",
                         },
                     }}
                     open={false}

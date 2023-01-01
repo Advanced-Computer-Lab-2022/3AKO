@@ -13,16 +13,25 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     AppBar,
     Card,
     CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     FormControl,
     IconButton,
     InputLabel,
     MenuItem,
     NativeSelect,
     Select,
+    TextField,
     Toolbar,
     Typography,
 } from "@mui/material";
@@ -44,6 +53,58 @@ const CourseRequest = () => {
     useEffect(() => {
         fetchComplaints();
     }, []);
+
+
+
+const Complaint = ({ complaint }) => {
+    const [reportId, setReportId] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    return (
+        <div>
+            <Accordion style={{ margin: "10px 0" }}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            width: "100%",
+                            margin: "0 20px",
+                        }}
+                    >
+                        <Typography style={{ fontWeight: "bold" }}>
+                            {complaint.title}
+                        </Typography>
+                        <Typography
+                            style={
+                                complaint.status == "resolved"
+                                    ? { color: "#4BB543" }
+                                    : complaint.status == "pending"
+                                    ? { color: "#FFCC00" }
+                                    : { color: "red" }
+                            }
+                        >
+                            {complaint.status}
+                        </Typography>
+                    </div>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography>{complaint.body}</Typography>
+                    <ul>
+                        {complaint.followUps &&
+                            complaint.followUps.map((followUp) => (
+                                <li>{followUp}</li>
+                            ))}
+                    </ul>
+                </AccordionDetails>
+            </Accordion>
+        </div>
+    );
+};
+
     return (
         <Box>
             {complaints &&
@@ -51,21 +112,15 @@ const CourseRequest = () => {
                     <Card
                         variant="outlined"
                         sx={{
-                            background:
-                                complaint.status === "pending"
-                                    ? "yellow"
-                                    : "white",
                             padding: "0.5rem",
                         }}
                     >
-                        <Typography>
-                            {complaint.userId}
+                        <Typography style={{ fontWeight: "bold" }}>
+                            {complaint.username}
                             {" is complaining about "}
-                            {complaint.title}
-                            {" course"}
-                            {" he says "}
-                            {complaint.body}
+                            {complaint.courseTitle}
                         </Typography>
+                        <Complaint complaint={complaint} key={complaint._id} />
                         <Button
                             variant="contained"
                             color="success"

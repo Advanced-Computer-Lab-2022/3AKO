@@ -16,6 +16,10 @@ const complaintSchema = new Schema(
             type: mongoose.ObjectId,
             required: true,
         },
+        username: {
+            type: String,
+            required: true,
+        },
         followUps: {
             type: [String],
             default: [],
@@ -28,9 +32,9 @@ const complaintSchema = new Schema(
             type: mongoose.ObjectId,
             required: true,
         },
-        seenBy: {
-            type: [mongoose.ObjectId],
-            default: [],
+        courseTitle: {
+            type: String,
+            required: true,
         },
         reportType: {
             type: String,
