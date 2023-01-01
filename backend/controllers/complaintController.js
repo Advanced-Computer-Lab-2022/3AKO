@@ -1,17 +1,23 @@
 const complaintModel = require("../models/complaintModel");
+const userModel = require("../models/userModel");
 const { Error } = require("mongoose");
+const { courseModel } = require("../models/courseModel");
 
 const addComplaint = async (req, res) => {
     try {
         const id = req._id;
         const { title, body, reportedCourse } = req.body;
+        const userData = await userModel.findOne({_id:id},'username -_id').lean()
+        const courseData = await courseModel.findOne({_id:reportedCourse},'title -_id').lean()
         const complaint = await complaintModel.create({
             title,
             body,
             userId: id,
             reportedCourse,
+            username: userData.username,
+            courseTitle:courseData.title,
         });
-        res.status(200).json(complaint);
+        res.status(200).json({message : 'successful'});
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -41,26 +47,13 @@ const loadComplaint = async (req, res) => {
     try {
         const id = req._id;
         const { complaintId } = req.body;
-        const seen = await complaintModel
-            .findOne({ _id: complaintId }, "seenBy -_id")
-            .lean();
-        const check = seen.seenBy.find((adminId) => {
-            return adminId.toString() === id.toString();
-        });
-        if (check) {
-            const data = await complaintModel.findOne(
-                { _id: complaintId },
-                "-seenBy"
-            );
-            return res.status(200).json(data);
-        } else {
-            const data = await complaintModel.findOneAndUpdate(
-                { _id: complaintId },
-                { $push: { seenBy: id } },
-                { fields: { seenBy: 0 }, new: true, upsert: true }
-            );
-            res.status(200).json(data);
-        }
+
+        const data = await complaintModel.findOne(
+            { _id: complaintId },
+            "-seenBy"
+        );
+        return res.status(200).json(data);
+
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

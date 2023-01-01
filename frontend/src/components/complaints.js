@@ -59,9 +59,9 @@ const CourseRequest = () => {
                         }}
                     >
                         <Typography>
-                            {complaint.userId}
+                            {complaint.username}
                             {" is complaining about "}
-                            {complaint.title}
+                            {complaint.courseTitle}
                             {" course"}
                             {" he says "}
                             {complaint.body}
