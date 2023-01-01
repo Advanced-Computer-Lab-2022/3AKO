@@ -11,6 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+
 import {
     AppBar,
     CssBaseline,
@@ -178,6 +179,7 @@ export default function AdminHome() {
                             boxSizing: "border-box",
                             width: drawerOpen ? drawerWidth : 0,
                             transition: "width 0.3s ease-in",
+                            marginTop: "70px",
                         },
                     }}
                     open={false}
