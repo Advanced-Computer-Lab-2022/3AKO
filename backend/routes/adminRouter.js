@@ -5,9 +5,9 @@ const {
     addAgreementRecord,
     changeAgreements,
     getCourseRequests,
-    answerRequest,    
+    answerRequest,
     getRefundRequests,
-    answerRefundRequest
+    answerRefundRequest,
 } = require("../controllers/adminController");
 const { addInstructor } = require("../controllers/instructorController");
 const {
@@ -21,7 +21,13 @@ const {
     resolveComplaint,
     markComplaintPending,
 } = require("../controllers/complaintController");
-const {getCoursesWithAdminPromotion,getCoursesWithPromotion,addAdminPromotionToAllCourses,addAdminPromotion,addAdminPromotionWithSubject} = require('../controllers/courseController')
+const {
+    getCoursesWithAdminPromotion,
+    getCoursesWithPromotion,
+    addAdminPromotionToAllCourses,
+    addAdminPromotion,
+    addAdminPromotionWithSubject,
+} = require("../controllers/courseController");
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -41,11 +47,12 @@ router.patch("/markComplaintPending", markComplaintPending);
 router.post("/addAgreementRecord", addAgreementRecord);
 router.patch("/changeAgreements", changeAgreements);
 router.get("/getCourseRequests", getCourseRequests);
-router.get('/getCoursesWithAdminPromotion',getCoursesWithAdminPromotion)
-router.get('/getCoursesWithPromotion',getCoursesWithPromotion)
-router.post('/addAdminPromotionToAllCourses',addAdminPromotionToAllCourses)
-router.post('/addAdminPromotionWithSubject',addAdminPromotionWithSubject)
-router.post('/addAdminPromotion',addAdminPromotion)
-router.get('/getRefundRequests',getRefundRequests)
-router.post('/answerRefundRequest',answerRefundRequest)
+router.get("/getCoursesWithAdminPromotion", getCoursesWithAdminPromotion);
+router.get("/getCoursesWithPromotion", getCoursesWithPromotion);
+router.post("/addAdminPromotionToAllCourses", addAdminPromotionToAllCourses);
+router.post("/addAdminPromotionWithSubject", addAdminPromotionWithSubject);
+router.post("/addAdminPromotion", addAdminPromotion);
+
+router.get("/getRefundRequests", getRefundRequests);
+router.patch("/answerRefundRequest", answerRefundRequest);
 module.exports = router;

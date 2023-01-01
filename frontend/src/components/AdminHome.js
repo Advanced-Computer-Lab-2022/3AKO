@@ -27,6 +27,7 @@ import {
 import AddUser from "./addUser";
 import CourseRequest from "./courseRequest";
 import Complaints from "./complaints";
+import RefundRequest from "./refundRequest";
 
 export default function AdminHome() {
     const [page, setPage] = useState("Add User");
@@ -94,7 +95,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Refund Requests");
-                            setMaterialBody(<div>under construction</div>);
+                            setMaterialBody(<RefundRequest />);
                         }}
                     >
                         <ListItemText primary={"Refund Requests"} />
