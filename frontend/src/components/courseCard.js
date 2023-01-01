@@ -116,7 +116,7 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
   return (
     <div>
 
-      <Link to={`/course/${course._id}`} className="cardLink"  >
+      <Link to={!user ? `/course/${course._id}` : (user.type !== 'instructor') ? `/course/${course._id}` : (course.status === 'published') ? `/course/${course._id}` : `/instructor/incompletecourse/${course._id}`} className="cardLink"  >
         <Card sx={{ maxWidth: 345, minWidth: 345 }}>
           <CardActionArea>
             {/* <div className='card-img' style={{ backgroundImage: `url(${course.imageURL})` }}></div> */}
