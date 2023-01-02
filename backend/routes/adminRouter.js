@@ -49,9 +49,9 @@ router.patch("/changeAgreements", changeAgreements);
 router.get("/getCourseRequests", getCourseRequests);
 router.get("/getCoursesWithAdminPromotion", getCoursesWithAdminPromotion);
 router.get("/getCoursesWithPromotion", getCoursesWithPromotion);
-router.post("/addAdminPromotionToAllCourses", addAdminPromotionToAllCourses);
-router.post("/addAdminPromotionWithSubject", addAdminPromotionWithSubject);
-router.post("/addAdminPromotion", addAdminPromotion);
+router.patch("/addAdminPromotionToAllCourses", addAdminPromotionToAllCourses);
+router.patch("/addAdminPromotionWithSubject", addAdminPromotionWithSubject);
+router.patch("/addAdminPromotion", addAdminPromotion);
 
 router.get("/getRefundRequests", getRefundRequests);
 router.patch("/answerRefundRequest", answerRefundRequest);
