@@ -132,9 +132,9 @@ same as the guest and have more features.
 ### instructor's APIs
 #### create a course
 
-http
+```http
   POST /instructor/createCourse
-
+```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -150,41 +150,41 @@ http
 
 #### Get instructor's info
 
-http
+```http
   GET /instructor/getInstructor
-
+```
 
 does not take parameters.
 
 
 #### Get instructor's courses
 
-http
+```http
   GET /instructor/viewMyCourses
-
+```
 
 does not take parameters.
 
 #### Get all instructor's Subjects in which he gave courses 
 
-http
+```http
   GET /instructor/viewMySubjects
-
+```
 
 does not take parameters.
 #### Get instructor's contract state
 
-http
+```http
   GET /instructor/getContractState
-
+```
 
 does not take parameters.
 
 #### set instructor's contract state
 
-http
+```http
   PATCH /instructor/setContractState
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -192,9 +192,9 @@ http
 
 #### set instructor's info
 
-http
+```http
   patch /instructor/editMyInfo
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -205,9 +205,9 @@ http
 
 #### add new lesson to a course
 
-http
+```http
   patch /instructor/addLesson
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -220,9 +220,9 @@ http
 
 #### add an exercise to a subtitle
 
-http
+```http
   patch /instructor/addExercise
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -233,9 +233,9 @@ http
 
 #### load all questions of an Exercise
 
-http
+```http
   POST /instructor/loadExercise
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -243,12 +243,11 @@ http
 | `subtitleId`      | `mongoose.ObjectId` | *Required*. Id of subtitle containing the exercise |
 | `exerciseId`      | `mongoose.ObjectId` | *Required*. Id of exercise |
 
-addPromotion
 #### add a promotion to a course
 
-http
+```http
   patch /instructor/addPromotion
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -258,21 +257,20 @@ http
 
 #### edit instructor's password
 
-http
+```http
   patch /instructor/editPassword
-
+```  
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `oldPassword`      | `string` | *Required*. current account password |
 | `newPassword`      | `string` | *Required*. new password |
 
-addComplaint
 #### send a complaint to the admins
 
-http
+```http
   POST /instructor/addComplaint
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -283,9 +281,9 @@ http
 
 #### add new subtitle to a course
 
-http
+```http
   patch /instructor/addSubtitleToCourse
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -295,9 +293,9 @@ http
 
 #### get all contents of a subtitle
 
-http
+```http
   POST /instructor/loadSubtitle
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -306,9 +304,9 @@ http
 
 #### publish a non-published course
 
-http
+```http
   POST /instructor/publishCourse
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
@@ -316,9 +314,9 @@ http
 
 #### close a published course
 
-http
+```http
   POST /instructor/closeCourse
-
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
