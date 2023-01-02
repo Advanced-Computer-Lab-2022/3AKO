@@ -6,6 +6,8 @@ import RatingInfo from "./RatingInfo";
 import { Button } from '@mui/material'
 import { useUserContext } from "./hooks/useUserContext";
 import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Accordion, AccordionSummary, Typography, AccordionDetails } from "@mui/material";
@@ -15,6 +17,9 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import Rate from "./components/rate";
 
 const CourseView = (props) => {
+  const [addPromotionDialog, setAddPromotionDialog] = useState(false)
+  const [closeCourseDialog, setCloseCourseDialog] = useState(false)
+
   const isWelcome = props.isWelcome
   const CourseMaterials = ({ subtitle }) => {
     const [materials, setMaterials] = useState('')
@@ -46,6 +51,10 @@ const CourseView = (props) => {
   const [processing, setProcessing] = useState(false)
   const [requsted, setRequested] = useState(false)
   const [requstedOpen, setRequestedOpen] = useState(false)
+  const [promotion, setPromotion] = useState(0);
+  const [endDate, setEndDate] = useState(null);
+  var today = new Date()
+  var currentDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   const [corporateError, setCorporateError] = useState('')
   const handleRequestedClose = () => setRequestedOpen(false)
   const handleClose = () => setOpen(false);
@@ -82,6 +91,40 @@ const CourseView = (props) => {
       }
     }
   }
+  const definePromotion = () => {
+    axios({
+      method: 'patch', url: `http://localhost:5000/instructor/addPromotion`, withCredentials: true,
+      data: {
+        courseId: courseData._id,
+        discount: promotion,
+        date: endDate
+      }
+    })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+  const closeCourse = () => {
+    axios({
+      method: 'post', url: `http://localhost:5000/instructor/closeCourse`, withCredentials: true,
+      data: {
+        courseId: courseData._id
+      }
+    })
+      .then((response) => {
+        console.log(response.data)
+        history.push(`/instructor/myCourses`);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
 
   useEffect(() => {
     console.log(props.currency);
@@ -109,6 +152,7 @@ const CourseView = (props) => {
     }
   }, [loading, courseData])
   return (
+
     <div>
       {courseData &&
         <div>
@@ -121,7 +165,12 @@ const CourseView = (props) => {
 
               {((user && user.type !== 'corporate trainee') && !isWelcome) ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
               }
-              {(!user) ? <Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : (user.type == 'instructor' || isWelcome) ? <div></div> : (!isOwned) ? <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : <Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>}
+              {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
+              (user.type == 'instructor' && courseData.status == "published") ? 
+                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true)}} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
+                  (isWelcome)? (<div></div>) : 
+              ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
+              (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
             </div>
             <div className="video" style={{ marginTop: '58px' }}>
               <iframe width="648" height="364.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -186,9 +235,60 @@ const CourseView = (props) => {
               <Button onClick={handleRequestedClose}>continue</Button>
             </DialogActions>
           </Dialog>
+
+   
         </div >
       }
+      <Dialog
+            sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
+            maxWidth="m"
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            // TransitionProps={{ onEntering: handleEntering }}
+            open={addPromotionDialog}
+            onClose={()=>{setAddPromotionDialog(false)}}
 
+          >
+            <DialogTitle>add promotion</DialogTitle>
+            <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <input type="number" min={1} max={100} onChange={(e) => setPromotion(e.target.value)}  />
+              <input type="date" onChange={(e) => setEndDate(e.target.value)} min={currentDate} />
+            </DialogContent>
+            <DialogActions>
+              <Button  onClick={() => { setAddPromotionDialog(false) }}>
+                Cancel
+              </Button>
+              <Button  onClick={() => { definePromotion(); setAddPromotionDialog(false); }}>
+                add promotion
+              </Button>
+
+            </DialogActions>
+          </Dialog>
+
+      <Dialog
+        sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
+        maxWidth="m"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        // TransitionProps={{ onEntering: handleEntering }}
+        open={closeCourseDialog}
+        onClose={() => { setCloseCourseDialog(false) }}
+
+      >
+        <DialogTitle>Close Course</DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography> are you sure you want to close this course</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { setCloseCourseDialog(false) }}>
+            Cancel
+          </Button>
+          <Button onClick={() => { closeCourse(); setCloseCourseDialog(false); }}>
+            close course
+          </Button>
+
+        </DialogActions>
+      </Dialog>
 
 
 
