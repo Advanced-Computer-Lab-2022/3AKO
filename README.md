@@ -71,3 +71,18 @@ By making XML HTTP Requests (XHRs) or GETs or POSTs from your React.js front-end
 If your application stores any data (user profiles, content, comments, uploads, events, etc.), then you’re going to want a database that’s just as easy to work with as React, Express, and Node.
  
 That’s where MongoDB comes in: JSON documents created in your React.js front end can be sent to the Express.js server, where they can be processed and (assuming they’re valid) stored directly in MongoDB for later retrieval. Again, if you’re building in the cloud, you’ll want to look at Atlas. If you’re looking to set up your own MERN stack, read on!
+
+
+## Features 
+ 
+### Guest 
+- Log in using his username and password.
+![Login](https://i.ibb.co/J2SqR7d/login.png)
+- Register as a new user.
+![Register](https://i.ibb.co/bFFhtXr/register.png)
+- Forget his password and recieve an E-mail to change it.
+![forget password](https://i.ibb.co/xGp2Fdb/forgetpassword.png)
+- View Most popular and most viewed courses
+![Most popular](https://i.ibb.co/vcnMKQY/Web-capture-2-1-2023-25851-localhost.jpg)
+- Search for courses by title, subject or instructor name and filter them on subject, price and rating
+![Search for courses](https://i.ibb.co/cXgVp6T/search.png)
