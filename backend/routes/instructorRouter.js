@@ -1,6 +1,6 @@
 const { getMyInfo, editBiography, editInstructorInfo, setContractState, getContractState, getProfileInfo } = require("../controllers/instructorController")
 const { editPassword, editEmail } = require('../controllers/userController')
-const { createCourse, viewMyCourses, filterOnSubject, viewMySubjects, addLesson, addSubVid, addPreviewLink, addExercise, addQuestion, addPromotion, addSubtitleToCourse, instructorLoadSubtitle, removePromotion, loadExercise, publishCourse, closeCourse } = require("../controllers/courseController")
+const { createCourse, viewMyCourses, filterOnSubject, viewMySubjects, addLesson, addSubVid, addPreviewLink, addExercise, addQuestion, addPromotion, addSubtitleToCourse, instructorLoadSubtitle, removePromotion, loadExercise, publishCourse, closeCourse, deleteCourse } = require("../controllers/courseController")
 const { addComplaint } = require('../controllers/complaintController')
 const express = require("express")
 const { requireInstructor, requireCourseAuthor } = require('../middleware/requireAuth')
@@ -36,5 +36,8 @@ router.post('/loadSubtitle', instructorLoadSubtitle)
 
 router.post('/publishCourse', requireCourseAuthor, publishCourse);
 router.post('/closeCourse', requireCourseAuthor, closeCourse);
+router.post('/deleteCourse', requireCourseAuthor, deleteCourse);
+
+
 
 module.exports = router

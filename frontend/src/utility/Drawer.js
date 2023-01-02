@@ -30,6 +30,8 @@ function ResponsiveDrawer(props) {
     const { window, materialBody, drawer, courseId, stateChanger, setMaterialBody } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [addSubtitleDialog, setAddSubtitleDialog] = useState(false)
+    const [deleteCourseDialog, setDeleteCourseDialog] = useState(false)
+
     const handleAddSubtitle = () => {
         const titleValue = document.getElementById('titleValue').value
         const totalHours = document.getElementById('hoursValue').value
@@ -71,6 +73,21 @@ function ResponsiveDrawer(props) {
             });
         history.push(`/instructor/myCourses`);
     }
+    const deleteCourse = () => {
+        axios({
+            method: 'post', url: `http://localhost:5000/instructor/deleteCourse`, data: {
+                courseId: courseId,
+            }, withCredentials: true
+        })
+            .then((response) => {
+                console.log(response.data);
+                console.log('course deleted');
+            }).catch((error) => {
+                console.log(error);
+            });
+            console.log("course deleted");
+        history.push(`/instructor/myCourses`);
+    }
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
@@ -99,6 +116,8 @@ function ResponsiveDrawer(props) {
                             <div>
                                 <Button style={{ borderRadius: "0", width: '100%' }} onClick={() => { setAddSubtitleDialog(true) }} >Add New Subtitle</Button>
                                 <Button style={{ borderRadius: "0", width: '100%' }} variant='contained' onClick={() => { publishCourse() }} >Publish Course</Button>
+                                <Button style={{ borderRadius: "0", width: '100%' }} variant='contained' onClick={() => { setDeleteCourseDialog(true) }} >delete Course</Button>
+
                             </div>
                         }
                     </Drawer>
@@ -134,6 +153,30 @@ function ResponsiveDrawer(props) {
                         Cancel
                     </Button>
                     <Button onClick={handleAddSubtitle}>Confirm</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
+                maxWidth="m"
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                // TransitionProps={{ onEntering: handleEntering }}
+                open={deleteCourseDialog}
+
+            >
+                <DialogTitle>delete course</DialogTitle>
+                <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography> are you sure you want to delete this course</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={() => { setDeleteCourseDialog(false) }}>
+                        Cancel
+                    </Button>
+                    <Button autoFocus onClick={() => { deleteCourse(); setDeleteCourseDialog(false); }}>
+                        delete course
+                    </Button>
+                    
                 </DialogActions>
             </Dialog>
         </div>

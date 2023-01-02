@@ -93,7 +93,7 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
       setHasPromotion(true)
     }
     if (course.promotion != null && (course.promotion).saleEndDate < currentDate) {
-      removePromotion()
+      // removePromotion()
     }
   }, [])
 

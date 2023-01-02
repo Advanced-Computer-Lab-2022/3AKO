@@ -122,10 +122,21 @@ const searchForCourses = async (req, res) => {
 //         res.status(400).json({error:err.message})
 //     }
 // }
+const deleteCourse = async(req,res)=>{
+    try {
+        const id = req._id;
+        const { courseId } = req.body;
+        const ret = await courseModel.deleteOne({_id:courseId})
+        res.status(200).json(ret)
+    } catch(err){
+        res.status(400).json({ error: err.message });
+
+    }
+}
 const getCourseInfo = async (req, res) => {
     try {
         const courseId = req.params.courseId
-        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL')
+        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL status')
         res.status(200).json(courseData[0])
         console.log(courseData);
     } catch (err) {
@@ -740,4 +751,5 @@ module.exports = {
     addAdminPromotion,
     publishCourse,
     closeCourse,
+    deleteCourse,
 };
