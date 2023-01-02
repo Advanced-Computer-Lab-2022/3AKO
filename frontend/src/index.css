@@ -225,3 +225,15 @@ form.login button {
   border-radius: 2px;
   padding: 5px 10px;
 }
+.instrcutorProfilePicture{
+  margin-top: 20px;
+  border-radius: 100%;
+  width: 12em;
+  height: 12em;
+}
+.instrcutorProfileContainer b{
+  display: block;
+  text-align: center;
+  margin: 20px auto 0 auto;
+  font-size: larger;
+}

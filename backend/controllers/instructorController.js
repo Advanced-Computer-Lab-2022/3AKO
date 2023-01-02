@@ -93,6 +93,18 @@ const rateInstructor = async (req, res) => {
     }
 }
 
+const getProfileInfo = async (req, res) => {
+    try{
+        const {id} =req.params
+        let data = await instructorModel.findOne({_id:id},'-gender -consent -earnings -courses -_id').lean()
+        let courses = await courseModel.find({instructorId:id ,status:'published'},{title:1,subject:1, price : 1,totalHours : 1,instructorId : 1,
+        instructorName : 1,promotion :1,adminPromotion :1,numOfViews : 1,numOfRatings : 1,imageURL :1,numOfPurchases : 1}).lean()
+        res.status(200).json({...data,courses})
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
 
 
-module.exports = { getMyInfo, addInstructor, editBiography, editInstructorInfo, setContractState, rateInstructor, getContractState }
+module.exports = { getMyInfo, addInstructor, editBiography, editInstructorInfo, setContractState, rateInstructor, getContractState, getProfileInfo }
