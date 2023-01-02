@@ -21,12 +21,12 @@
 ## Project Description
  
 ### Course 
-Advanced Computer Lab (CSEN 704/ DMET 706), Winter 2021
+Advanced Computer Lab (CSEN 704/ DMET 706), Winter 2022
  
 ### Theme
 The theme of the project, is to create an Online Learning System. An Online Learning
 System is a web application through which trainees can enroll in online courses and
-Instructors can add courses to the system for trainees which they get paid for
+Instructors can add courses to the system for trainees which they get paid for.
 Such websites include coursera.com and udemy.com
  
 ### Overview 
