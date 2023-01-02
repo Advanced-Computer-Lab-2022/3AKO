@@ -37,6 +37,7 @@ import Earnings from "./earnings";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
 import Button from '@mui/material/Button';
+import PageNotFound from "./components/PageNotFound";
 
 const theme = createTheme({
   palette: {
@@ -169,6 +170,9 @@ function App() {
               </Route>
               <Route exact path='/instructor/earnings'>
                 <Earnings />
+              </Route>
+              <Route path="*">
+              <PageNotFound />
               </Route>
             </Switch>
           </div>
