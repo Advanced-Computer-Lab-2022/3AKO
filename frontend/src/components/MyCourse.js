@@ -289,7 +289,7 @@ const MyCourse = ({ course }) => {
 
             <Snackbar open={reportSnackbar} autoHideDuration={6000} onClose={() => { setReportSnackbar(false) }}>
                 <Alert onClose={() => { setReportSnackbar(false) }} severity="info" sx={{ width: '100%' }}>
-                    Report Sent!  <Link>View your reports</Link>
+                    Report Sent!  <Link to={'/reports'}>View your reports</Link>
                 </Alert>
             </Snackbar>
 

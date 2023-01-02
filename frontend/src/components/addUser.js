@@ -39,6 +39,7 @@ const AddUser = () => {
     const handleAdd = async (e) => {
         e.preventDefault();
         const user = { username, password, email };
+        console.log(user)
         await axios({
             method: "post",
             url: `http://localhost:5000/admin/add${userType}`,
@@ -110,7 +111,7 @@ const AddUser = () => {
                     </div>
                 )}
 
-                <Button>Add {userType}</Button>
+                <Button type="submit">Add {userType}</Button>
 
                 {success && <div>{success}</div>}
 

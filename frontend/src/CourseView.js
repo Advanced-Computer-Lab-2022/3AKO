@@ -166,9 +166,9 @@ const CourseView = (props) => {
               {((user && user.type !== 'corporate trainee') && !isWelcome) ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
               }
               {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
-              (user.type == 'instructor' && courseData.status == "published") ? 
+              (user.type == 'instructor' && courseData.status == "published" && courseData.instructorId==user._id) ? 
                   (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true)}} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
-                  (isWelcome)? (<div></div>) : 
+                  (user.type == 'instructor' || isWelcome)? (<div></div>) : 
               ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
               (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
             </div>

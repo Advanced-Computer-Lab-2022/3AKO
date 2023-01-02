@@ -97,6 +97,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       if (instructorFilter) {
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(searchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(searchValue.toLowerCase()) || (course.instructorName.toLowerCase()).includes(searchValue.toLowerCase()));
       } else {
+        console.log(allCourses)
         newCourses = allCourses.filter(course => (course.title.toLowerCase()).includes(instructorSearchValue.toLowerCase()) || (course.subject.toLowerCase()).includes(instructorSearchValue.toLowerCase()));
       }
       console.log(newCourses)
