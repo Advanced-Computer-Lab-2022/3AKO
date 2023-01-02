@@ -26,7 +26,7 @@ function ResponsiveDrawer(props) {
     const isSeachAndFilter = props.isSeachAndFilter
 
     const { user, loading } = useUserContext()
-    const drawerWidth = (user && user.type == 'instructor') ? 300 : 240;
+    const drawerWidth = (user && user.type == 'instructor') ? 240 : 240;
     const { window, materialBody, drawer, courseId, stateChanger, setMaterialBody } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [addSubtitleDialog, setAddSubtitleDialog] = useState(false)
