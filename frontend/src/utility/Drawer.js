@@ -15,14 +15,16 @@ import axios from 'axios';
 import { useUserContext } from "../hooks/useUserContext";
 // import CourseMaterials from '../CourseSubtitles'
 import { DialogTitle, DialogContentText, DialogContent, DialogActions, Dialog, TextField, Button } from '@mui/material'
+import CourseView from '../CourseView';
 
 
 
 function ResponsiveDrawer(props) {
+    const isSeachAndFilter = props.isSeachAndFilter
 
     const { user, loading } = useUserContext()
     const drawerWidth = (user && user.type == 'instructor') ? 300 : 240;
-    const { window, materialBody, drawer, courseId, stateChanger } = props;
+    const { window, materialBody, drawer, courseId, stateChanger, setMaterialBody } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [addSubtitleDialog, setAddSubtitleDialog] = useState(false)
     const handleAddSubtitle = () => {
@@ -51,6 +53,10 @@ function ResponsiveDrawer(props) {
 
 
     const container = window !== undefined ? () => window().document.body : undefined;
+    const renderWelcome = () => {
+        setMaterialBody(<CourseView isWelcome={true} />)
+
+    }
 
     return (
         <div>
@@ -72,9 +78,11 @@ function ResponsiveDrawer(props) {
                         }}
                         open
                     >
+                        {!isSeachAndFilter && <Button style={{ borderRadius: "0", width: '100%' }} onClick={renderWelcome} >Welcome</Button>}
+
                         {drawer}
 
-                        {(user && user.type == 'instructor') &&
+                        {(user && user.type == 'instructor' && !isSeachAndFilter) &&
                             <Button style={{ borderRadius: "0", width: '100%' }} onClick={() => { setAddSubtitleDialog(true) }} >Add New Subtitle</Button>
                         }
                     </Drawer>

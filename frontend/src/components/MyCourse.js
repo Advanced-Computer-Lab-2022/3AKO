@@ -17,6 +17,7 @@ import { useUserContext } from "../hooks/useUserContext";
 import { DialogTitle, DialogContentText, DialogContent, DialogActions, Dialog } from '@mui/material'
 import { Alert, Backdrop, AlertTitle, TextField } from '@mui/material'
 import { FormControl, FormControlLabel, RadioGroup, FormLabel, Radio, Snackbar } from '@mui/material'
+import Rate from './rate'
 const BorderLinearProgress = styled(LinearProgress)(({ theme, graduated }) => ({
     height: 10,
     borderRadius: 5,
@@ -182,7 +183,7 @@ const MyCourse = ({ course }) => {
                     </div>
 
                 </Link >
-                {/* <Rate traineeId={traineeId.id} type='course' id={course.courseId} /> */}
+                {/* <Rate type='course' id={course.courseId} /> */}
 
             </div >
 

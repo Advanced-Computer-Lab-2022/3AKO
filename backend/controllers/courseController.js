@@ -44,26 +44,11 @@ const createCourse = async (req, res) => {
         // const subParemters = await subtitles.map(sub => { return { title: sub.title, totalHours: sub.totalHours } })
         // const subtitlesData = await subParemters.map(sub => new subtitlesModel(sub))
 
-        const course = await courseModel.create({
-            title,
-            outlines,
-            summary,
-            previewVideo: match[1],
-            subject,
-            price,
-            totalHours,
-            imageURL,
-            instructorId,
-            instructorName,
-        });
-        console.log("we got here" + course._id);
-        await instructorModel.updateOne(
-            { _id: instructorId },
-            { $push: { courses: course._id } },
-            { new: true, upsert: true }
-        );
-        console.log("we did it " + course._id);
-        res.status(200).json({ message: "Created Successfully" });
+        const course = await courseModel.create({ title, outlines, summary, previewVideo: match[1], subject, price, totalHours, imageURL, instructorId, instructorName })
+        console.log('we got here' + course._id);
+        await instructorModel.updateOne({ _id: instructorId }, { $push: { 'courses': course._id } }, { new: true, upsert: true })
+        console.log('we did it ' + course._id);
+        res.status(200).json(course._id)
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err.message });
@@ -139,12 +124,10 @@ const searchForCourses = async (req, res) => {
 // }
 const getCourseInfo = async (req, res) => {
     try {
-        const courseId = req.params.courseId;
-        const courseData = await courseModel.find(
-            { _id: courseId },
-            "title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL"
-        );
-        res.status(200).json(courseData[0]);
+        const courseId = req.params.courseId
+        const courseData = await courseModel.find({ _id: courseId }, 'title outlines summary previewVideo subject subtitles rating reviews price totalHours instructorId instructorName promotion numOfViews imageURL')
+        res.status(200).json(courseData[0])
+        console.log(courseData);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -718,7 +701,12 @@ const closeCourse = async (req, res) => {
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
-};
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+
+
 
 module.exports = {
     getAllCourses,

@@ -31,6 +31,7 @@ import Payment from "./components/Payment";
 import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 import Reports from "./Reports";
+
 function App() {
   const { user, loading } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -62,7 +63,7 @@ function App() {
             {/* {!user ? <SearchPage /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <SearchPage /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />} */}
 
             <Route exact path="/course/:courseId">
-              <CourseView exchangeRate={exchangeRate} currency={currency} />
+              <CourseView isWelcome={false} exchangeRate={exchangeRate} currency={currency} />
             </Route>
 
             <Route exact path="/instructor/addCourse">

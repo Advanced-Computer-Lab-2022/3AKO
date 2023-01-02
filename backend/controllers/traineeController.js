@@ -2,7 +2,25 @@ const { default: mongoose } = require('mongoose')
 const { Error } = require('mongoose');
 const { traineeModel, courseRecordModel } = require('../models/traineeModel')
 const { courseModel } = require('../models/courseModel')
+const nodemailer = require("nodemailer");
 
+let testAccount = ''
+let transporter = ''
+const initalizeMailer = async () => {
+    try {
+        testAccount = await nodemailer.createTestAccount();
+        transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            auth: {
+                user: process.env.email,
+                pass: process.env.password,
+            },
+        });
+    } catch (err) {
+        console.log({ error: "nodemailer not connected" });
+    }
+}
+initalizeMailer()
 
 
 const userModel = require("../models/userModel");
@@ -64,6 +82,10 @@ const addLessonRecord = async (req, res) => {
         // console.log(req.body);
         const total = await courseModel.findOne({ _id: courseId }, 'materialCount -_id').lean()
         const newCourseList = await traineeModel.findOneAndUpdate({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.lessonsList': { lessonId, note: "" } }, $inc: { 'courseList.$.progress': 1 / total.materialCount } }, { new: true, upsert: true }).lean()
+        let data = newCourseList.courseList.find(l=>{return l.courseId.toString()===courseId.toString()})
+        if(data.progress>.95){
+            sendCertificate(traineeId,courseId)
+        }
         res.status(200).json({ message: "Successful" })
     } catch (err) {
         res.status(400).json({ error: err.message })
@@ -94,7 +116,11 @@ const addExerciseRecord = async (req, res) => {
         }
         //adding a record only if the trainee gets more than half the answers correct
         if (grade < correctAnswers.length / 2) return res.status(200).json({ message: "Exam Failed" })
-        await traineeModel.updateOne({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.exerciseList': { exerciseId: exerciseId, grade: grade, answers } }, $inc: { 'courseList.$.progress': 1 / count } })
+        const newCourseList = await traineeModel.findOneAndUpdate({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.exerciseList': { exerciseId: exerciseId, grade: grade, answers } }, $inc: { 'courseList.$.progress': 1 / count } },{new:true,upsert:true})
+        let data = newCourseList.courseList.find(l=>{return l.courseId.toString()===courseId.toString()})
+        if(data.progress>.95){
+            sendCertificate(traineeId,courseId)
+        }
         res.status(200).json({ grade })
     } catch (err) {
         // console.log(err);
@@ -116,8 +142,13 @@ const addTraineeInfo = async (req, res) => { // adds info for first time trainee
 const myCourses = async (req, res) => {
     try {
         const id = req._id
-        const myCourseData = await traineeModel.findOne({ _id: id }, 'courseList.courseId courseList.progress -_id').lean()
-        const myCourseIds = myCourseData.courseList.map(li => li.courseId)
+        const myCourseData = await traineeModel.findOne({ _id: id }, 'courseList.courseId courseList.progress courseList.status -_id').lean()
+        let myCourseIds = myCourseData.courseList.map(li => {
+            if(li.status && li.status=='active') return li.courseId
+            else return null
+        })
+        myCourseIds = myCourseIds.filter(li => li!=null)
+        // console.log(myCourseIds.filter(li => li!=null));
         // console.log(myCourseIds);
         const findHelper = async (courseId) => {
             // console.log("id " + courseId);
@@ -320,7 +351,61 @@ const downloadCertificate = async (req, res) => {
     }
 }
 
+const sendCertificate = async (id,courseId) => {
+    try{
+        const trainee = await traineeModel.findOne({ _id: id, courseList: { $elemMatch: { courseId: courseId, progress: { $gte: 1 } } } }, { name: 1, _id: 0, courseList: 1 })
+        const courseData = await courseModel.findOne({ _id: courseId }, { instructorName: 1, title: 1 }).lean()
+        var document = {
+            html: certifaceTemplate,
+            data: {
+                courseName: [{ courseName: courseData.title }],
+                trainee: [{ trainee: trainee.name }],
+                instructorName: [{ instructorName: courseData.instructorName }]
 
+            },
+            path: `./certificatesPdfs/${courseData.title}${id}.pdf`,
+            type: "pdf",
+        };
+
+        pdf.create(document, options2)
+            .then((response) => {
+                const execute = async () =>{
+                    const data = await userModel.findOne({_id:id},'email -_id').lean()
+                    await transporter.sendMail({
+                        from: 'The_ACL_Company@gmail.com', // sender address
+                        to: data.email, // list of receivers
+                        subject: "Password Update Link", // Subject line
+                        text: "", // plain text body
+                        html: `<p>Congratulations ! You completed ${courseData.title}. </p>`,
+                        attachments: [{
+                            filename: 'Certificate.pdf',
+                            path: `./certificatesPdfs/${courseData.title}${id}.pdf`,
+                            contentType: 'application/pdf'
+                        }]
+                    }, (error,) => {
+                        if (error) {
+                            console.log("error sending mail");
+                            console.log(error);
+                            fs.unlinkSync(`./certificatesPdfs/${courseData.title}${id}.pdf`)
+                        } else {
+                            console.log("successful");
+                            fs.unlinkSync(`./certificatesPdfs/${courseData.title}${id}.pdf`)
+                        }
+
+                    });
+                }
+                execute()
+            })
+            .catch((error) => {
+                res.status(400).json({ error: error.message })
+            });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(401).json({ error: err.message })
+    }
+
+}
 
 
 

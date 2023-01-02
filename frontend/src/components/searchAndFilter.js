@@ -214,7 +214,7 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   </div>
 
   return (
-    <Drawer materialBody={instructorFilter ? body : instructorBody} drawer={side} placeHolderAndTitle={false}> </Drawer>
+    <Drawer isSeachAndFilter={true} materialBody={instructorFilter ? body : instructorBody} drawer={side} placeHolderAndTitle={false}> </Drawer>
 
   );
 }

@@ -108,7 +108,8 @@ const AddCourse = () => {
             progress: undefined,
             theme: "light",
           });
-          history.push()
+
+          history.push(`/instructor/incompleteCourse/${response.data}`)///////////////////////
         })
         .catch((error) => {
           console.log(error);
@@ -186,7 +187,7 @@ const AddCourse = () => {
             onChange={handleChange} value={allValues.title}
           />
           <TextField required
-            label='Subtitle' placeholder='Subtitle...'
+            label='subject' placeholder='subject...'
             id="subject" name="subject"
             onChange={handleChange} value={allValues.subject}
           />
