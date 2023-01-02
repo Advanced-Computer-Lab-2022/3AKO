@@ -1,4 +1,4 @@
-const { getMyInfo, editBiography, editInstructorInfo, setContractState, getContractState, getProfileInfo } = require("../controllers/instructorController")
+const { getMyInfo, editBiography, editInstructorInfo, setContractState, getContractState, getProfileInfo, getMyEarnings } = require("../controllers/instructorController")
 const { editPassword, editEmail } = require('../controllers/userController')
 const { createCourse, viewMyCourses, filterOnSubject, viewMySubjects, addLesson, addSubVid, addPreviewLink, addExercise, addQuestion, addPromotion, addSubtitleToCourse, instructorLoadSubtitle, removePromotion, loadExercise, publishCourse, closeCourse, deleteCourse } = require("../controllers/courseController")
 const { addComplaint } = require('../controllers/complaintController')
@@ -8,7 +8,7 @@ const { requireInstructor, requireCourseAuthor } = require('../middleware/requir
 
 const router = express.Router()
 //router.use(requireInstructor)
-router.get('/getProfileInfo/:id',getProfileInfo)
+router.get('/getProfileInfo/:id', getProfileInfo)
 router.post("/createCourse", requireInstructor, createCourse)
 router.get("/getInstructor", requireInstructor, getMyInfo)
 router.get("/viewMyCourses", requireInstructor, viewMyCourses)
@@ -36,6 +36,7 @@ router.post('/loadSubtitle', instructorLoadSubtitle)
 
 router.post('/publishCourse', requireCourseAuthor, publishCourse);
 router.post('/closeCourse', requireCourseAuthor, closeCourse);
+router.get('/getEarnings', requireInstructor, getMyEarnings);
 router.post('/deleteCourse', requireCourseAuthor, deleteCourse);
 
 

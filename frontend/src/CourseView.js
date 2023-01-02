@@ -14,7 +14,7 @@ import { Accordion, AccordionSummary, Typography, AccordionDetails } from "@mui/
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleFilledWhiteOutlinedIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-
+import Rate from "./components/rate";
 
 const CourseView = (props) => {
   const [addPromotionDialog, setAddPromotionDialog] = useState(false)
@@ -196,6 +196,7 @@ const CourseView = (props) => {
               </Accordion >
             ))}
           </div>
+          <Rate type={'course'}></Rate>
           <RatingCard course={courseData} key={courseData._id} />
           <Dialog open={open} onClose={handleClose}>
             {!corporateError && <DialogTitle ><b>Request this course from admins </b></DialogTitle>

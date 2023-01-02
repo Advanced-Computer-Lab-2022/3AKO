@@ -32,6 +32,7 @@ import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 import Reports from "./Reports";
 import InstructorView from "./components/InstructorView";
+import Earnings from "./earnings";
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
@@ -120,55 +121,58 @@ function App() {
               <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
                 <LessonView />
               </Route>
-              <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
-                <Rate />
+              <Route exact path="/trainee/rateCourse/:courseId">
+                <Rate type={'course'}/>
               </Route>
 
-            <Route exact path="/instructor/incompleteCourse/:courseId">
-              <CourseSubtitles />
-            </Route>
-            <Route exact path="/login">
-              <LogIn />
-            </Route>
-            <Route exact path="/signup">
-              <SignUp />
-            </Route>
-            <Route exact path="/instructor/profile">
-              <InstructorProfile />
-            </Route>
-            <Route exact path="/trainee/profile">
-              <TraineeProfile />
-            </Route>
-            <Route exact path="/trainee/viewInstructorProfile">
-              <InstructorProfileView instructorId={"6382b88604535ae16caf113d"} />
-            </Route>
-            <Route exact path="/forgotPassword">
-              <ForgotPassword />
-            </Route>
-            <Route exact path="/resetpassword/:token">
-              <ResetPassword />
-            </Route>
-            <Route exact path="/admin/home">
-              <AdminHome />
-            </Route>
-            <Route exact path="/payment-success/:courseId">
-              <PaymentSuccess />
-            </Route>
-            <Route exact path="/checkout/:courseId">
-              <Checkout />
-            </Route>
-            <Route exact path="/payment/:courseId">
-              <Payment />
-            </Route>
-            <Route exact path="/viewInstructor/:id">
-              <InstructorView />
-            </Route>
-            <Route exact path="/reports">
-              <Reports />
-            </Route>
-          </Switch>
+              <Route exact path="/instructor/incompleteCourse/:courseId">
+                <CourseSubtitles />
+              </Route>
+              <Route exact path="/login">
+                <LogIn />
+              </Route>
+              <Route exact path="/signup">
+                <SignUp />
+              </Route>
+              <Route exact path="/instructor/profile">
+                <InstructorProfile />
+              </Route>
+              <Route exact path="/trainee/profile">
+                <TraineeProfile />
+              </Route>
+              <Route exact path="/trainee/viewInstructorProfile">
+                <InstructorProfileView instructorId={"6382b88604535ae16caf113d"} />
+              </Route>
+              <Route exact path="/forgotPassword">
+                <ForgotPassword />
+              </Route>
+              <Route exact path="/resetpassword/:token">
+                <ResetPassword />
+              </Route>
+              <Route exact path="/admin/home">
+                <AdminHome />
+              </Route>
+              <Route exact path="/payment-success/:courseId">
+                <PaymentSuccess />
+              </Route>
+              <Route exact path="/checkout/:courseId">
+                <Checkout />
+              </Route>
+              <Route exact path="/payment/:courseId">
+                <Payment />
+              </Route>
+              <Route exact path="/viewInstructor/:id">
+                <InstructorView />
+              </Route>
+              <Route exact path="/reports">
+                <Reports />
+              </Route>
+              <Route exact path='/instructor/earnings'>
+                <Earnings />
+              </Route>
+            </Switch>
+          </div>
         </div>
-      </div>
       </ThemeProvider>
     </Router >
   );
