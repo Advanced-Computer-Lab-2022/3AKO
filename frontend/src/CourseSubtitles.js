@@ -117,7 +117,7 @@ const CourseSubtitles = () => {
         }
 
 
-        if (!loading && !(user.type == 'instructor')) {
+        if (!loading && user && !(user.type == 'instructor')) {
             axios({ method: 'get', url: `http://localhost:5000/trainee/getLessonsList/${courseId}`, withCredentials: true }).then((response) => {
 
                 setLessonList(response.data)

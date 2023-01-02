@@ -56,83 +56,84 @@ const StyledNavbar = ({ handleExchangeRate }) => {
 
   useEffect(()=>{
 
-    if(location.pathname.indexOf('/signup') === 0){
+    if(location.pathname.toLowerCase().indexOf('/signup'.toLowerCase()) === 0){
       if(user){
         history.push('/')
       }
     }
-    if(location.pathname.indexOf("/login") === 0){
+    if(location.pathname.toLowerCase().indexOf("/login".toLowerCase()) === 0){
       if(user){
         history.push('/')
       }
     }
-    if(location.pathname.indexOf("/forgotPassword") === 0){
+    if(location.pathname.toLowerCase().indexOf("/forgotPassword".toLowerCase()) === 0){
       if(user){
         history.push('/')
       }
     }
-    if(location.pathname.indexOf("/resetpassword") === 0){
+    if(location.pathname.toLowerCase().indexOf("/resetpassword".toLowerCase()) === 0){
       if(user){
         history.push('/')
       }
     }
-    if(location.pathname.indexOf('/instructor/incompleteCourse') === 0){
+    if(location.pathname.toLowerCase().indexOf('/instructor/incompletecourse'.toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='instructor'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf('/instructor/myCourses') === 0){
+    if(location.pathname.toLowerCase().indexOf('/instructor/myCourses'.toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='instructor'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/instructor/addCourse") === 0){
+    if(location.pathname.toLowerCase().indexOf("/instructor/addCourse".toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='instructor'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/admin/addInstructor") === 0){
+    console.log(location.pathname);
+    if(location.pathname.toLowerCase().indexOf("/admin/addInstructor".toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='admin'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/admin/addAdmin") === 0){
+    if(location.pathname.toLowerCase().indexOf("/admin/addAdmin".toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='admin'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/admin/addCorporateTrainee") === 0){
+    if(location.pathname.toLowerCase().indexOf("/admin/addCorporateTrainee".toLowerCase()) === 0){
       if(!loading){
         if(!user || user.type!=='admin'){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/trainee/myCourses") === 0){
+    if(location.pathname.toLowerCase().indexOf("/trainee/myCourses".toLowerCase()) === 0){
       if(!loading){
         if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/trainee/CourseSubtitles") === 0){
+    if(location.pathname.toLowerCase().indexOf("/trainee/CourseSubtitles".toLowerCase()) === 0){
       if(!loading){
         if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
           history.push('/')
         }
       }
     }
-    if(location.pathname.indexOf("/trainee/rateCourse") === 0){
+    if(location.pathname.toLowerCase().indexOf("/trainee/rateCourse".toLowerCase()) === 0){
       if(!loading){
         if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
           history.push('/')
