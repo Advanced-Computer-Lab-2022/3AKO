@@ -27,7 +27,8 @@ const userModel = require("../models/userModel");
 
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
-const path = require("path")
+const path = require("path");
+const instructorModel = require('../models/instructorModel');
 
 const notesTemplate = fs.readFileSync("template.html", "utf8");
 const certifaceTemplate = fs.readFileSync("certficateTemplate.html", "utf8");
@@ -374,7 +375,7 @@ const sendCertificate = async (id,courseId) => {
                     await transporter.sendMail({
                         from: 'The_ACL_Company@gmail.com', // sender address
                         to: data.email, // list of receivers
-                        subject: "Password Update Link", // Subject line
+                        subject: `${courseData.title} Course Certificate`, // Subject line
                         text: "", // plain text body
                         html: `<p>Congratulations ! You completed ${courseData.title}. </p>`,
                         attachments: [{
@@ -406,7 +407,41 @@ const sendCertificate = async (id,courseId) => {
     }
 
 }
+const reviewedInstructor = async (req, res) => {
+    try{
+        const id = req._id
+        const {instructorId} = req.params
+        const data = await instructorModel.findOne({_id:instructorId,'reviews.reviewerId':id},'reviews').lean()
+        if(data && data.reviews){
+            let myReview = data.reviews.find(r=>{return r.reviewerId.toString()===id.toString()})
+            res.status(200).json(myReview)
+        }
+        else{
+            res.status(200).json({message:"instructor unrated"})
+        }
+
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
+const reviewedCourse = async (req, res) => {
+    try{
+        const id = req._id
+        const {courseId} = req.params
+        const data = await courseModel.findOne({_id:courseId,'reviews.reviewerId':id},'reviews').lean()
+        if(data && data.reviews){
+            let myReview = data.reviews.find(r=>{return r.reviewerId.toString()===id.toString()})
+            res.status(200).json(myReview)
+        }
+        else{
+            res.status(200).json({message:"course unrated"})
+        }
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message })
+    }
+}
 
 
-
-module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, downloadNotes, downloadCertificate }
+module.exports = { viewInstructor, addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, downloadNotes, downloadCertificate, reviewedCourse, reviewedInstructor }

@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, viewInstructor, downloadNotes, downloadCertificate } = require('../controllers/traineeController')
+const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, myCourses, getMyInfo, editTraineeInfo, getMyAnswers, addNote, lessonsList, viewInstructor, downloadNotes, downloadCertificate, reviewedCourse, reviewedInstructor } = require('../controllers/traineeController')
 
 const { addComplaint } = require('../controllers/complaintController')
 
@@ -26,7 +26,7 @@ router.post('/addComplaint', requireTrainee, addComplaint)
 
 router.patch('/addTraineeInfo', requireTrainee, addTraineeInfo)
 
-router.patch('/rateInstructor', requireOwnership, rateInstructor)
+router.patch('/rateInstructor', requireTrainee, rateInstructor)
 
 router.patch('/rateCourse', requireOwnership, rateCourse)
 
@@ -57,5 +57,9 @@ router.post("/viewInstructor/", requireTrainee, viewInstructor)
 router.get('/downloadNotes/:courseId', requireOwnership, downloadNotes)
 
 router.get('/downloadCertificate/:courseId', requireOwnership, downloadCertificate)
+
+router.get('/reviewedCourse/:courseId', requireOwnership,reviewedCourse)
+
+router.get('/reviewedInstructor/:instructorId',requireTrainee ,reviewedInstructor)
 
 module.exports = router

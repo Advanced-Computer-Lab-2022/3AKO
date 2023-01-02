@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CourseCard from "./courseCard";
 import RatingCard from "./RatingCard";
-
+import Rate from "./rate";
 const InstructorView = () => {
     const {id} = useParams()
     const [instructorData,setInstructorData] = useState('')
@@ -29,6 +29,7 @@ const InstructorView = () => {
             {instructorData.courses.map((c)=>{
                     <CourseCard course={c} isInstructor={false} userId={' '} isCorporateTrainee={true} key={c._id} />
             })}
+            <Rate type={'instructor'}></Rate>
         <RatingCard course={instructorData}></RatingCard>
         </div>
             }

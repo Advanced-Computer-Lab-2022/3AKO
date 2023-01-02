@@ -26,7 +26,7 @@ const addInstructor = async (req, res) => {
 
 const editBiography = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req._id||req.params.id;
         const { biography } = req.body
         const updatedInstructor = await instructorModel.findOneAndUpdate({ _id: id }, { biography }, { new: true, upsert: true })
         res.status(200).json(updatedInstructor)
@@ -75,10 +75,10 @@ const getContractState = async (req, res) => { // used to either accept the cont
 
 const rateInstructor = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req._id;
         const { rating, comment, instructorId } = req.body
         const instructorData = await instructorModel.findOne({_id:instructorId},'reviews.reviewerId -_id').lean()
-        const check = instructorData.reviews.find( rev => rev.reviewerId.equals( mongoose.Types.ObjectId(id)))
+        const check = instructorData.reviews.find( rev => {return rev.reviewerId.toString()===id.toString()})
         if(check) {throw new Error("You already reviewed this instructor")}
         const addedReview = await instructorModel.findOneAndUpdate({ _id: instructorId }, { $push: { reviews: { rating, comment, reviewerId: id } } }, { new: true, upsert: true }).lean()
         const Rating = addedReview.rating
