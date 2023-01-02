@@ -13,6 +13,8 @@ import "../stylesheets/courseSubtitles.css"
 import { useState } from 'react';
 import axios from 'axios';
 import { useUserContext } from "../hooks/useUserContext";
+import { useHistory } from "react-router-dom";
+
 // import CourseMaterials from '../CourseSubtitles'
 import { DialogTitle, DialogContentText, DialogContent, DialogActions, Dialog, TextField, Button } from '@mui/material'
 import CourseView from '../CourseView';
@@ -20,6 +22,7 @@ import CourseView from '../CourseView';
 
 
 function ResponsiveDrawer(props) {
+    const history = useHistory()
     const isSeachAndFilter = props.isSeachAndFilter
 
     const { user, loading } = useUserContext()
@@ -43,10 +46,7 @@ function ResponsiveDrawer(props) {
                 setAddSubtitleDialog(false)
                 stateChanger(true)
             });
-        // setSubtitles(subtitles);
-        // setTitleValue("");
-        // setTotalHours(0);
-        // handleClose();
+
     }
 
 
@@ -57,7 +57,20 @@ function ResponsiveDrawer(props) {
         setMaterialBody(<CourseView isWelcome={true} />)
 
     }
-
+    const publishCourse = () => {
+        axios({
+            method: 'post', url: `http://localhost:5000/instructor/publishCourse`, data: {
+                courseId: courseId,
+            }, withCredentials: true
+        })
+            .then((response) => {
+                console.log(response.data);
+                console.log('course published');
+            }).catch((error) => {
+                console.log(error);
+            });
+        history.push(`/instructor/myCourses`);
+    }
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
@@ -83,7 +96,10 @@ function ResponsiveDrawer(props) {
                         {drawer}
 
                         {(user && user.type == 'instructor' && !isSeachAndFilter) &&
-                            <Button style={{ borderRadius: "0", width: '100%' }} onClick={() => { setAddSubtitleDialog(true) }} >Add New Subtitle</Button>
+                            <div>
+                                <Button style={{ borderRadius: "0", width: '100%' }} onClick={() => { setAddSubtitleDialog(true) }} >Add New Subtitle</Button>
+                                <Button style={{ borderRadius: "0", width: '100%' }} variant='contained' onClick={() => { publishCourse() }} >Publish Course</Button>
+                            </div>
                         }
                     </Drawer>
                 </Box >
