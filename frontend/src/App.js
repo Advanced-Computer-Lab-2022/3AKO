@@ -31,6 +31,7 @@ import Payment from "./components/Payment";
 import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 import Reports from "./Reports";
+
 function App() {
   const { user, loading } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);

@@ -20,6 +20,7 @@ import CourseView from '../CourseView';
 
 
 function ResponsiveDrawer(props) {
+    const isSeachAndFilter = props.isSeachAndFilter
 
     const { user, loading } = useUserContext()
     const drawerWidth = (user && user.type == 'instructor') ? 300 : 240;
@@ -77,11 +78,11 @@ function ResponsiveDrawer(props) {
                         }}
                         open
                     >
-                        <Button style={{ borderRadius: "0", width: '100%' }} onClick={renderWelcome} >Welcome</Button>
+                        {!isSeachAndFilter && <Button style={{ borderRadius: "0", width: '100%' }} onClick={renderWelcome} >Welcome</Button>}
 
                         {drawer}
 
-                        {(user && user.type == 'instructor') &&
+                        {(user && user.type == 'instructor' && !isSeachAndFilter) &&
                             <Button style={{ borderRadius: "0", width: '100%' }} onClick={() => { setAddSubtitleDialog(true) }} >Add New Subtitle</Button>
                         }
                     </Drawer>
