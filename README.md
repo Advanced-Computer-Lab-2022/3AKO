@@ -1,6 +1,6 @@
 # Online Learning System 3AKO
  
-![HomePage](https://ibb.co/qyd8q7X)
+![HomePage](https://i.ibb.co/7YXDMj8/home1.png)
  
 ## Table of Contents
 - [Project Description](#project-description)
@@ -40,7 +40,7 @@ software.
  
  
 ## Tools and Frameworks
-![MERN_STACK](https://ibb.co/mNjhNCX)
+![MERN_STACK](https://i.ibb.co/qJSmJMW/mern.png)
  
 ### What is the MERN Stack?
 MERN stands for MongoDB, Express, React, Node, after the four key technologies that make up the stack.
@@ -55,7 +55,7 @@ Express and Node make up the middle (application) tier. Express.js is a server-s
 ### How does the MERN stack work?
 The MERN architecture allows you to easily construct a 3-tier architecture (frontend, backend, database) entirely using JavaScript and JSON.
  
-![MERN_ARCH]([https://ibb.co/mNjhNCX](https://ibb.co/ZBTSctW))
+![MERN_ARCH](https://i.ibb.co/HtgCG1n/mern-stack-b9q1kbudz0.png)
  
 #### - React.js Front End
 The top tier of the MERN stack is React.js, the declarative JavaScript framework for creating dynamic client-side applications in HTML. React lets you build up complex interfaces through simple Components, connect them to data on your backend server, and render them as HTML.
