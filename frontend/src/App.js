@@ -169,6 +169,7 @@ function App() {
           </Switch>
         </div>
       </div>
+      </ThemeProvider>
     </Router >
   );
 }
