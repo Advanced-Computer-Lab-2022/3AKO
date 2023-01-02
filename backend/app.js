@@ -44,11 +44,11 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', process.env.FRONT_END_URL);
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', process.env.FRONT_END_URL);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
 });
 app.use("/admin", adminRouter);
 app.use("/instructor", instructorRouter);
@@ -56,5 +56,5 @@ app.use("/corporateTrainee", corporateTraineeRouter);
 app.use("/course", courseRouter);
 app.use("/individualTrainee", individualTraineeRouter);
 app.use("/utils", utilityRoutes);
-app.use('/trainee',traineeRouter)
-app.use('/user',userRouter)
+app.use('/trainee', traineeRouter)
+app.use('/user', userRouter)

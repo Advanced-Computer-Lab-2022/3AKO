@@ -35,7 +35,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.mode === "light" ? "#E00018" : "#308fe8",
+    backgroundColor: theme.palette.mode === "light" ? "#faaf00" : "#faaf00",
   },
 }));
 
@@ -67,7 +67,7 @@ const RatingCard = ({ course }) => {
   );
 
   return (
-    <Card sx={{ p: 3, boxShadow: 3 }}>
+    <Card sx={{ p: 3 }}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Box
           sx={{
@@ -85,7 +85,7 @@ const RatingCard = ({ course }) => {
               value={rate}
               readOnly
               precision={0.5}
-              sx={{ color: "#E00018" }}
+              sx={{ color: "#faaf00" }}
             />
           </Box>
           <Box sx={{ flexGrow: 1 }}>
