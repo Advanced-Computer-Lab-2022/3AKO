@@ -18,6 +18,7 @@ import Rate from "./components/rate";
 
 const CourseView = (props) => {
   const [addPromotionDialog, setAddPromotionDialog] = useState(false)
+  const [closeCourseDialog, setCloseCourseDialog] = useState(false)
 
   const isWelcome = props.isWelcome
   const CourseMaterials = ({ subtitle }) => {
@@ -107,6 +108,23 @@ const CourseView = (props) => {
       })
 
   }
+  const closeCourse = () => {
+    axios({
+      method: 'post', url: `http://localhost:5000/instructor/closeCourse`, withCredentials: true,
+      data: {
+        courseId: courseData._id
+      }
+    })
+      .then((response) => {
+        console.log(response.data)
+        history.push(`/instructor/myCourses`);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
 
   useEffect(() => {
     console.log(props.currency);
@@ -149,7 +167,7 @@ const CourseView = (props) => {
               }
               {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
               (user.type == 'instructor' && courseData.status == "published") ? 
-                  (<div><Button onClick={()=>{setAddPromotionDialog(true)}} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
+                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true)}} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
                   (isWelcome)? (<div></div>) : 
               ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
               (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
@@ -246,6 +264,31 @@ const CourseView = (props) => {
 
             </DialogActions>
           </Dialog>
+
+      <Dialog
+        sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
+        maxWidth="m"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        // TransitionProps={{ onEntering: handleEntering }}
+        open={closeCourseDialog}
+        onClose={() => { setCloseCourseDialog(false) }}
+
+      >
+        <DialogTitle>Close Course</DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography> are you sure you want to close this course</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { setCloseCourseDialog(false) }}>
+            Cancel
+          </Button>
+          <Button onClick={() => { closeCourse(); setCloseCourseDialog(false); }}>
+            close course
+          </Button>
+
+        </DialogActions>
+      </Dialog>
 
 
 

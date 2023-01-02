@@ -698,7 +698,7 @@ const closeCourse = async (req, res) => {
         if (
             courseData &&
             courseData.instructorId &&
-            courseData.instructorId === id
+            courseData.instructorId.toString() === id.toString()
         ) {
             await courseModel.updateOne(
                 { _id: courseId },
