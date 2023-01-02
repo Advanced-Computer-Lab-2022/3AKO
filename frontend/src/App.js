@@ -62,7 +62,7 @@ function App() {
             {/* {!user ? <SearchPage /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <SearchPage /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />} */}
 
             <Route exact path="/course/:courseId">
-              <CourseView exchangeRate={exchangeRate} currency={currency} />
+              <CourseView isWelcome={false} exchangeRate={exchangeRate} currency={currency} />
             </Route>
 
             <Route exact path="/instructor/addCourse">

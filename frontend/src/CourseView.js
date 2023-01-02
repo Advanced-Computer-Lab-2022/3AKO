@@ -15,9 +15,7 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 
 
 const CourseView = (props) => {
-
-
-
+  const isWelcome = props.isWelcome
   const CourseMaterials = ({ subtitle }) => {
     const [materials, setMaterials] = useState('')
     useEffect(() => {
@@ -36,14 +34,6 @@ const CourseView = (props) => {
       </div>
     );
   }
-
-
-
-
-
-
-
-
 
   const { courseId } = useParams()
   const [courseData, setCourseData] = useState(null)
@@ -129,9 +119,9 @@ const CourseView = (props) => {
               <span><span style={{ color: "white" }}>Taught by </span><Link>{courseData.instructorName}</Link></span>
 
 
-              {(user && user.type !== 'corporate trainee') ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
+              {((user && user.type !== 'corporate trainee') && !isWelcome) ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
               }
-              {(!user) ? <Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : (user.type == 'instructor') ? <div></div> : (!isOwned) ? <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : <Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>}
+              {(!user) ? <Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : (user.type == 'instructor' || isWelcome) ? <div></div> : (!isOwned) ? <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : <Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>}
             </div>
             <div className="video" style={{ marginTop: '58px' }}>
               <iframe width="648" height="364.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
