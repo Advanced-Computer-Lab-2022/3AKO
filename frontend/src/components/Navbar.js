@@ -54,98 +54,102 @@ const StyledNavbar = ({ handleExchangeRate }) => {
       setSearchValue('')
   }, [location])
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    if(location.pathname.toLowerCase().indexOf('/signup'.toLowerCase()) === 0){
-      if(user){
+    if (location.pathname.toLowerCase().indexOf('/signup'.toLowerCase()) === 0) {
+      if (user) {
         history.push('/')
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/login".toLowerCase()) === 0){
-      if(user){
+    if (location.pathname.toLowerCase().indexOf("/login".toLowerCase()) === 0) {
+      if (user) {
         history.push('/')
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/forgotPassword".toLowerCase()) === 0){
-      if(user){
+    if (location.pathname.toLowerCase().indexOf("/forgotPassword".toLowerCase()) === 0) {
+      if (user) {
         history.push('/')
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/resetpassword".toLowerCase()) === 0){
-      if(user){
+    if (location.pathname.toLowerCase().indexOf("/resetpassword".toLowerCase()) === 0) {
+      if (user) {
         history.push('/')
       }
     }
-    if(location.pathname.toLowerCase().indexOf('/instructor/incompletecourse'.toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='instructor'){
+    if (location.pathname.toLowerCase().indexOf('/instructor/incompletecourse'.toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'instructor') {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf('/instructor/myCourses'.toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='instructor'){
+    if (location.pathname.toLowerCase().indexOf('/instructor/myCourses'.toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'instructor') {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/instructor/addCourse".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='instructor'){
+    if (location.pathname.toLowerCase().indexOf("/instructor/addCourse".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'instructor') {
           history.push('/')
         }
       }
     }
     console.log(location.pathname);
-    if(location.pathname.toLowerCase().indexOf("/admin/addInstructor".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='admin'){
+    if (location.pathname.toLowerCase().indexOf("/admin/addInstructor".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'admin') {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/admin/addAdmin".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='admin'){
+    if (location.pathname.toLowerCase().indexOf("/admin/addAdmin".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'admin') {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/admin/addCorporateTrainee".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || user.type!=='admin'){
+    if (location.pathname.toLowerCase().indexOf("/admin/addCorporateTrainee".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || user.type !== 'admin') {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/trainee/myCourses".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+    if (location.pathname.toLowerCase().indexOf("/trainee/myCourses".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')) {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/trainee/CourseSubtitles".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+    if (location.pathname.toLowerCase().indexOf("/trainee/CourseSubtitles".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')) {
           history.push('/')
         }
       }
     }
-    if(location.pathname.toLowerCase().indexOf("/trainee/rateCourse".toLowerCase()) === 0){
-      if(!loading){
-        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+    if (location.pathname.toLowerCase().indexOf("/trainee/rateCourse".toLowerCase()) === 0) {
+      if (!loading) {
+        if (!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')) {
           history.push('/')
         }
       }
     }
 
 
-  },[location,loading,user])
+  }, [location, loading, user])
 
   const navigate = (url) => {
     history.push(url)
+  }
+
+  const ViewEarnings = () => {
+    history.push('/instructor/earnings')
   }
 
   return (
@@ -165,7 +169,7 @@ const StyledNavbar = ({ handleExchangeRate }) => {
         {user && <li><NavDropdown title={<CgProfile style={{ width: '26px', height: '26px' }} />}>
           <NavDropdown.Item onClick={handleEdit} className={style.dropdownItem}>Edit profile</NavDropdown.Item>
           {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem} onClick={() => navigate('/instructor/addCourse')} >Create course</NavDropdown.Item>}
-          {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem}>Earnings</NavDropdown.Item>}
+          {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem} onClick={ViewEarnings}>Earnings</NavDropdown.Item>}
           {user && user.type === 'individual trainee' && <NavDropdown.Item className={style.dropdownItem}>Payments</NavDropdown.Item>}
           {user && user.type === 'corporate trainee' && <NavDropdown.Item className={style.dropdownItem}>course requests</NavDropdown.Item>}
           <NavDropdown.Item className={style.dropdownItem} onClick={() => navigate('/reports/')} >Reports</NavDropdown.Item>

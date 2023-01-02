@@ -32,7 +32,7 @@ router.patch('/rateCourse', requireOwnership, rateCourse)
 
 router.get('/loadSubtitle/:courseId/:subtitleId', requireOwnership, loadSubtitle)
 
-router.post('/loadExamAnswers', requireOwnership, loadExamAnswers)
+router.post('/loadExamAnswers', loadExamAnswers)
 
 router.get('/myCourses', requireTrainee, myCourses)
 

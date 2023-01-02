@@ -246,7 +246,7 @@ const AddCourse = () => {
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 <div className='card-body'>
-                  <p className='fw-bold'>Taught by: <span className='fw-normal'>Name</span></p>
+                  <p className='fw-bold'>Taught by: <span className='fw-normal'>{user.name}</span></p>
 
                   <div className='price'>Price : {allValues.price == 0 ? 'Free' : allValues.price + '$'}</div>
                 </div>

@@ -6,7 +6,9 @@ import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { Alert, AlertTitle, Backdrop } from "@mui/material";
 import { Button } from "@mui/material";
+import { useUserContext } from "../hooks/useUserContext";
 const ExamForm = ({ exercise, subtitleId, courseId }) => {
+    const { user, loading } = useUserContext()
     const [flag, setFlag] = useState(false);
     const [sol, setSol] = useState([]);
     const [grade, setGrade] = useState(0);
@@ -78,29 +80,51 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
 
 
     useEffect(() => {
-        axios({
-            method: "post", url: `http://localhost:5000/trainee/getMyAnswers`, withCredentials: true,
-            data: {
-                courseId: courseId,
-                exerciseId: exercise._id
-            }
-        }).then((response) => {
-            if (response.data) {
-                axios({
-                    method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`, withCredentials: true,
-                    data: {
-                        courseId: courseId
-                        , subtitleId: subtitleId
-                        , exerciseId: exercise._id
-                    }
-                }).then((response2) => {
-                    setTrueAnswers(response2.data.answers)
-                    setMySol(response.data.answers)
-                    setGrade(response.data.grade)
-                })
+        if (user && user.type == 'instructor') {
+            axios({
+                method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`,
+                data: {
+                    courseId: courseId
+                    , subtitleId: subtitleId
+                    , exerciseId: exercise._id
+                }
+            }).then((response2) => {
+                setTrueAnswers(response2.data.answers)
+                setMySol(response2.data.answers)
+            })
 
-            }
-        })
+        }
+        else {
+
+
+
+
+
+
+            axios({
+                method: "post", url: `http://localhost:5000/trainee/getMyAnswers`, withCredentials: true,
+                data: {
+                    courseId: courseId,
+                    exerciseId: exercise._id
+                }
+            }).then((response) => {
+                if (response.data) {
+                    axios({
+                        method: "post", url: `http://localhost:5000/trainee/loadExamAnswers`,
+                        data: {
+                            courseId: courseId
+                            , subtitleId: subtitleId
+                            , exerciseId: exercise._id
+                        }
+                    }).then((response2) => {
+                        setTrueAnswers(response2.data.answers)
+                        setMySol(response.data.answers)
+                        setGrade(response.data.grade)
+                    })
+
+                }
+            })
+        }
     }, [solved])
 
     const change = (value, position, label) => {
@@ -152,7 +176,7 @@ const ExamForm = ({ exercise, subtitleId, courseId }) => {
                         </Alert>
                     }
                 </Backdrop>
-                <h3 style={{ textTransform: "capitalize", marginBottom: "30px" }}>{exercise.title}{mySol && <span style={{ marginLeft: "25px", border: "solid 1.5px green", padding: "7px", borderRadius: "5px" }}>Grade : {grade}/{maxGrade}</span>}</h3>
+                <h3 style={{ textTransform: "capitalize", marginBottom: "30px" }}>{exercise.title}{(mySol && user.type !== 'instructor') && <span style={{ marginLeft: "25px", border: "solid 1.5px green", padding: "7px", borderRadius: "5px" }}>Grade : {grade}/{maxGrade}</span>}</h3>
                 {mySol &&
                     <div>
 
