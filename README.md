@@ -8,13 +8,13 @@
 - [Features](#features)
   * [Guest Functionalities](#guest)
   * [General User Functionalities](#General-user)
-  * [Individual Trainee Functionalities](#individualTrainee)
-  * [Corporate Trainee Functionalities](#corporateTrainee)
+  * [Individual Trainee Functionalities](#individual-Trainee)
+  * [Corporate Trainee Functionalities](#corporate-Trainee)
   * [Instructor Functionalities](#instructor)
   * [Admin Functionalities](#administrator)
  - [API References](#api-references)
-  * [Admin Router](#admin-router)
-  * [User Router](#user-router)
+  * [General trainee APIs](#General-trainee-APIs)
+  * [Instructor APIs](#instructor's-APIs)
  
 ## Project Description
  
@@ -128,7 +128,202 @@ same as the guest and have more features.
 - Edit their personal info
 ![edit info](https://i.ibb.co/b2w3kCh/editinfo.png)
 
+- See a course preview after searching including course title, preview video, 
+subtitles, outlines, price and instructor 
+![preview](https://i.ibb.co/Y8kLTTr/preview.png)
+
+- See course ratings in the preview page
+![rating](https://i.ibb.co/8drDfsg/rating.png)
+
+- Pay for courses to enroll in them
+![pay](https://i.ibb.co/nD30CV7/pay.png)
+
+### Corporate Trainee
+Corporate trainees have the same features as individual ones except they
+don't deal with payments and request courses from admin instead
+
+
 ## API Reference
+
+
+## General trainee APIs
+
+#### enroll a trainee in a course
+
+```
+  patch /trainee/addCourseToTrainee/:id
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of the trainee |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course to be enrolled in |
+
+#### mark a lesson as seen to update the course progress
+
+```
+http
+  patch /trainee/addLessonRecord
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `lessonId`      | `mongoose.ObjectId` | **Required**. Id of the lesson that has been seen |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course to be enrolled in |
+
+#### checks if the exercise is passed or not given the trainee's answers for it to update the course progress.
+
+```
+  patch /trainee/addExerciseRecord
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course containing the exercise |
+| `subtitleId`      | `mongoose.ObjectId` | **Required**. Id of the subtitle containing the exercise |
+| `exerciseId`      | `mongoose.ObjectId` | **Required**. Id of the exercise |
+| `answers`      | `list` | **Required**. list of answers to the questions of the exercise |
+
+#### report a complaint to the admins
+
+```
+  patch /trainee/addComplaint
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `title`      | `string` | **Required**. title of the complaint |
+| `body`      | `string` | **Required**. content of the complaint |
+| `reportedCourse`      | `mongoose.ObjectId` | **Required**. Id of the course to be reported |
+| `reportType`      | `string` | **Required**. type of the report |
+
+#### view the contents of a subtitle
+
+```
+  POST /trainee/loadSubtitle
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course containing the subtitle |
+| `subtitleId`      | `mongoose.ObjectId` | **Required**. Id of the Required subtitle |
+
+#### view the answers to a given exercise
+
+```
+  POST /trainee/loadExamAnswers
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course containing the exercise |
+| `subtitleId`      | `mongoose.ObjectId` | **Required**. Id of the subtitle containing the exercise |
+| `exerciseId`      | `mongoose.ObjectId` | **Required**. Id of the Required exercise that has the answers |
+
+#### view all the courses currently enrolled in
+
+```
+  GET /trainee/myCourses
+```
+
+does not take Parameters.
+
+#### view all subtitles of a given course
+
+```
+  GET /trainee/getSubtitles
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. Id of the course containing the exercise |
+
+
+#### view my information
+
+```
+  GET /trainee/getMyInfo
+```
+
+does not take Parameters.
+
+#### edit my information
+
+```
+  PATCH /trainee/editTraineeInfo
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `String` | **Required**. new name to be set |
+| `gender`      | `String` | **Required**. new gender to be set |
+| `email`      | `email` | **Required**.  new email to be set|
+
+#### edit my Password
+
+```
+  PATCH /trainee/editPassword
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `oldPassword`      | `String` | **Required**. old password to be replaced |
+| `newPassword`      | `String` | **Required**. new password to be set |
+
+#### add a side note to a lesson
+
+```
+  PATCH /trainee/addNote
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. id of course containing the lesson |
+| `lessonId`      | `mongoose.ObjectId` | **Required**. id of lesson that contains the note |
+| `note`      | `String` | **Required**. content of the note |
+
+#### load all the lessons that I viewed
+
+```
+  GET /trainee/getLessonsList/:courseId
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. id of course containing the lesson |
+
+#### load an instructor's profile
+
+```
+  POST /trainee/viewInstructor
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `instructorId`      | `mongoose.ObjectId` | **Required**. id of instructor to be viewed |
+
+#### download all the notes in a course
+
+```
+  GET /trainee/downloadNotes/:courseId
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. id of course containing notes to be download |
+
+#### download the certificate of completion of a completed course
+
+```
+  GET /trainee/downloadCertificate/:courseId
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `mongoose.ObjectId` | **Required**. id of a completed course to download its certificate |
+
+
+
 ### instructor's APIs
 #### create a course
 
