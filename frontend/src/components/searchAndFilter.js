@@ -5,6 +5,9 @@ import { useParams, useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../stylesheets/search.css'
 import Drawer from '../utility/Drawer';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+
 const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instructorFilter }) => {
   const location = useLocation()
   const history = useHistory()
@@ -17,7 +20,8 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const [subjects, setSubjects] = useState([])
   const [allSubjects, setAllSubjects] = useState(null)
   const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(10000)
+  const [maxPrice, setMaxPrice] = useState(100)
+  const [price, setPrice] = useState([0, 100]);
   const [rating, setRating] = useState(0)
   const userId = useParams()
 
@@ -110,6 +114,12 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
       search()
   }
 
+  const handlePrice = (e, newValue) => {
+    setPrice(newValue)
+    setMinPrice(newValue[0])
+    setMaxPrice(newValue[1])
+  }
+
   const removeSubject = (subject) => {
     setSubjects(subjects.filter(function (value) {
       return value !== subject
@@ -120,7 +130,8 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     setSubjects([])
     setRating(0)
     setMinPrice(0)
-    setMaxPrice(10000)
+    setMaxPrice(100)
+    setPrice([0, 100])
   }
 
   useEffect(() => {
@@ -180,8 +191,8 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const side = <div className='filters'>
     {!instructorFilter &&
       <div>
-        <input type="text" placeholder='Search in your courses' value={instructorSearchValue} onChange={(e) => setInstructorSearchValue(e.target.value)} onKeyUp={handleSearch} />
-        <button onClick={search}>search</button>
+        <input type="text" placeholder='Search in your courses' value={instructorSearchValue} onChange={(e) => setInstructorSearchValue(e.target.value)} onKeyUp={handleSearch}
+          style={{ width: '100%' }} />
       </div>
     }
     <div className='subject'>
@@ -199,9 +210,18 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     {!isCorporateTrainee &&
       <div className='fiters-price'>
         <h5>Price</h5>
-        <span>Min : </span><input type="number" style={{ width: '175px', marginLeft: '4px' }} onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
-        <span>Max : </span><input type="number" style={{ width: '175px' }} onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} />
+        {/* <span>Min : </span><input type="number" style={{ width: '175px', marginLeft: '4px' }} onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
+        <span>Max : </span><input type="number" style={{ width: '175px' }} onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} /> */}
+        <Box sx={{ width: '80%' }}>
+          <Slider
+            getAriaLabel={() => 'Price'}
+            value={price}
+            onChange={handlePrice}
+            valueLabelDisplay="auto"
+          />
+        </Box>
       </div>
+
     }
     <div>
       <h5>Minimum Rating</h5>

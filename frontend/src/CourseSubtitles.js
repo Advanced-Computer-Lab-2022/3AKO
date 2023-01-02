@@ -87,8 +87,8 @@ const CourseSubtitles = () => {
                 </ToggleButtonGroup>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                     {(user && user.type == 'instructor') && <div>
-                        <Button variant="outlined" onClick={addExercise} >Add Exercise</Button>
-                        <Button variant="outlined" onClick={addLesson} >Add Lesson</Button>
+                        <Button variant="outlined" onClick={addExercise} size='small' >Add Exercise</Button>
+                        <Button variant="outlined" onClick={addLesson} size='small' >Add Lesson</Button>
                     </div>}
                 </div>
             </div>
