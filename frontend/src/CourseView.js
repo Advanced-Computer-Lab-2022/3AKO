@@ -116,7 +116,7 @@ const CourseView = (props) => {
             <div>
               <h1 style={{ color: 'white', fontWeight: 'bold' }}>{courseData.title}</h1>
               <h4 style={{ color: 'white' }}>{courseData.subject}</h4>
-              <span><span style={{ color: "white" }}>Taught by </span><Link>{courseData.instructorName}</Link></span>
+              <span><span style={{ color: "white" }}>Taught by </span><Link to={`/viewInstructor/${courseData.instructorId}`}>{courseData.instructorName}</Link></span>
 
 
               {((user && user.type !== 'corporate trainee') && !isWelcome) ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const StyledNavbar = ({ handleExchangeRate }) => {
-  const { user } = useUserContext()
+  const { user, loading } = useUserContext()
   const { logout } = useLogout()
   const history = useHistory()
   const location = useLocation()
@@ -53,6 +53,95 @@ const StyledNavbar = ({ handleExchangeRate }) => {
     if (location.pathname !== '/search')
       setSearchValue('')
   }, [location])
+
+  useEffect(()=>{
+
+    if(location.pathname.indexOf('/signup') === 0){
+      if(user){
+        history.push('/')
+      }
+    }
+    if(location.pathname.indexOf("/login") === 0){
+      if(user){
+        history.push('/')
+      }
+    }
+    if(location.pathname.indexOf("/forgotPassword") === 0){
+      if(user){
+        history.push('/')
+      }
+    }
+    if(location.pathname.indexOf("/resetpassword") === 0){
+      if(user){
+        history.push('/')
+      }
+    }
+    if(location.pathname.indexOf('/instructor/incompleteCourse') === 0){
+      if(!loading){
+        if(!user || user.type!=='instructor'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf('/instructor/myCourses') === 0){
+      if(!loading){
+        if(!user || user.type!=='instructor'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/instructor/addCourse") === 0){
+      if(!loading){
+        if(!user || user.type!=='instructor'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/admin/addInstructor") === 0){
+      if(!loading){
+        if(!user || user.type!=='admin'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/admin/addAdmin") === 0){
+      if(!loading){
+        if(!user || user.type!=='admin'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/admin/addCorporateTrainee") === 0){
+      if(!loading){
+        if(!user || user.type!=='admin'){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/trainee/myCourses") === 0){
+      if(!loading){
+        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/trainee/CourseSubtitles") === 0){
+      if(!loading){
+        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+          history.push('/')
+        }
+      }
+    }
+    if(location.pathname.indexOf("/trainee/rateCourse") === 0){
+      if(!loading){
+        if(!user || !(user.type == 'corporate trainee' || user.type === 'individual trainee')){
+          history.push('/')
+        }
+      }
+    }
+
+
+  },[location,loading,user])
 
   const navigate = (url) => {
     history.push(url)
