@@ -12,6 +12,7 @@ import { useUserContext } from "./hooks/useUserContext";
 import { Button } from "@mui/material";
 import LessonView from "./components/lessonView";
 import SubtitleExercise from './subtitleExercise.js'
+import CourseView from "./CourseView";
 
 
 const CourseSubtitles = () => {
@@ -96,6 +97,7 @@ const CourseSubtitles = () => {
     const { courseId } = useParams()
     const [subtitles, setSubtitles] = useState([])
     useEffect(() => {
+        setMaterialBody(<CourseView isWelcome={true} />)
         if (user && user.type == 'instructor') {
 
             axios({ method: 'get', url: `http://localhost:5000/course/getCourseInfo/${courseId}`, withCredentials: true }).then((response) => {
@@ -127,7 +129,7 @@ const CourseSubtitles = () => {
     }, [loading, state])
     return (
         <div className='course-subtitles'>
-            <ResponsiveDrawer stateChanger={setState} courseId={courseId} materialBody={materialBody} drawer={
+            <ResponsiveDrawer setMaterialBody={setMaterialBody} stateChanger={setState} courseId={courseId} materialBody={materialBody} drawer={
                 <Accordion >
                     {subtitles && subtitles.map((subtitle, index) => (
                         <Accordion.Item eventKey={index} style={{ borderRadius: "0" }} className="accordion-item">

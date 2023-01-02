@@ -13,4 +13,5 @@ router.get('/searchByText/:text', searchByText)
 router.get('/reviews/:courseId', getCourseReviews)
 router.get('/getPriceInfo/:courseId', getPriceInfo)
 
+
 module.exports = router

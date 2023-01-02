@@ -27,8 +27,8 @@ import {
 import AddUser from "./addUser";
 import CourseRequest from "./courseRequest";
 import Complaints from "./complaints";
+import AddDiscount from "./addDiscount";
 import RefundRequest from "./refundRequest";
-
 export default function AdminHome() {
     const [page, setPage] = useState("Add User");
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -111,7 +111,7 @@ export default function AdminHome() {
                         sx={{ textAlign: "center" }}
                         onClick={() => {
                             setPage("Add Discount");
-                            setMaterialBody(<div>under construction</div>);
+                            setMaterialBody(<AddDiscount/>);
                         }}
                     >
                         <ListItemText primary={"Add Discount"} />
