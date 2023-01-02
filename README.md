@@ -314,9 +314,9 @@ does not take parameters.
 
 #### close a published course
 
-``http
+```
   POST /instructor/closeCourse
-``
+```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
