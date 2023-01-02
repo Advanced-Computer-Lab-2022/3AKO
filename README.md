@@ -15,7 +15,8 @@
  - [API References](#api-references)
   * [General trainee APIs](#General-trainee-APIs)
   * [Instructor APIs](#instructor's-APIs)
- 
+  * [Admin APIs](#admin-APIs)
+
 ## Project Description
  
 ### Course 
@@ -142,9 +143,41 @@ subtitles, outlines, price and instructor
 Corporate trainees have the same features as individual ones except they
 don't deal with payments and request courses from admin instead
 
+### Instructor
+
+- Search and filter his courses
+![search](https://i.ibb.co/h84425L/instructor-Search.png)
+
+- Create a new course
+![create](https://i.ibb.co/6NHyrwd/create.png)
+
+- Add subtitles in his unpublished course
+![addsubtitles](https://i.ibb.co/8gG5tzB/addsub.png)
+
+- Add lessons in his unpublished course
+![addlesson](https://i.ibb.co/3rQnF9T/addlesson.png)
+
+- Add exams in his unpublished course
+![addexercise](https://i.ibb.co/wsDcKpD/exercise.png)
+
+### Administrator
+
+- Add users to the system including instructors, admins and corporate trainees.
+![addUser](https://i.ibb.co/GkkLBr8/adduser.png)
+
+- Add discount to a set of courses
+![addDisc](https://i.ibb.co/T2BGxx5/add-Discount.png)
+
+- Resolve complaints
+![resolve](https://i.ibb.co/qrSKYH7/resolve-Reports.png)
+
+- Accept or reject Corporate trainees' requests to join courses
+![requests](https://i.ibb.co/7z0d4QV/course-Requests.png)
+
+- Accept or reject Individual trainees' refund requests
+![refund](https://i.ibb.co/P6x5qjs/refund-Requests.png)
 
 ## API Reference
-
 
 ## General trainee APIs
 
@@ -516,3 +549,120 @@ does not take parameters.
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `courseId`      | `mongoose.ObjectId` | *Required*. Id of the course to be closed |
+
+
+## Admin APIs
+
+#### add a new admin to the system, with a given username and password
+
+```
+  GET /admin/addAdmin
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `username`      | `String` | **Required**. username of the new admin |
+| `password`      | `String` | **Required**. password of the new admin |
+
+#### add a new instructor to the system, with a given username and password
+
+```
+  GET /admin/addInstructor
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `username`      | `String` | **Required**. username of the new instructor |
+| `password`      | `String` | **Required**. password of the new instructor |
+
+#### add a new Corporate Trainee to the system, with a given username and password
+
+```
+  GET /admin/addCorporateTrainee
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `username`      | `String` | **Required**. username of the new Corporate Trainee |
+| `password`      | `String` | **Required**. password of the new Corporate Trainee |
+
+#### add a new Corporate Trainee to the system, with a given username and password
+
+```
+  PATCH /admin/addCourseToTrainee
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `mongoose.ObjectId` | **Required**. id of the Corporate Trainee to whom we will add the course |
+| `courseId`      | `mongoose.ObjectId` | **Required**. id of the course to be added to the trainee |
+
+
+
+
+#### view all pending complaints
+```
+  GET /admin/getPendingComplaints
+```
+
+does not take Parameters.
+
+#### view the contents of complaint given its id
+
+```
+  PATCH /admin/loadComplaint
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `complaintId`      | `mongoose.ObjectId` | **Required**. id of the complaint to be viewed |
+
+#### resolve a complaint given its id
+
+```
+  PATCH /admin/resolveComplaint
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `complaintId`      | `mongoose.ObjectId` | **Required**. id of the complaint to be resolved |
+
+#### mark a specific as pending if needs further follow ups
+
+```
+  PATCH /admin/markComplaintPending
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `complaintId`      | `mongoose.ObjectId` | **Required**. id of the complaint to be resolved |
+
+#### get all Corporate trainees requests to get access to courses
+
+```
+  PATCH /admin/getCourseRequests
+```
+
+does not take parameters.
+
+#### view all course refund requests
+
+```
+  GET /admin/getRefundRequests
+```
+
+does not take parameters.
+
+#### mark a specific as pending if needs further follow ups
+
+```
+  PATCH /admin/answerRefundRequest
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `requestId`      | `mongoose.ObjectId` | **Required**. id of the request to be handled |
+| `response`      | `String` | **Required**. reply to request whether accepted or rejected |
+
+
+
