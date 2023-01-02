@@ -166,7 +166,8 @@ const StyledNavbar = ({ handleExchangeRate }) => {
         {user && user.type == 'instructor' && <li className={style.borderHover}><Nav.Link onClick={() => navigate('/instructor/myCourses')}>my courses</Nav.Link></li>}
         {!user && <li className={style.borderHover}><Nav.Link onClick={() => navigate('/login')} >Login</Nav.Link></li>}
         {!user && <li><Nav.Link onClick={() => navigate('/signUp')} ><button className="style3">Join Now</button></Nav.Link></li>}
-        {user && <li><NavDropdown title={<CgProfile style={{ width: '26px', height: '26px' }} />}>
+        {user && user.type === 'admin' && <li><Nav.Link onClick={handleLogout} ><button className="style3">Log out</button></Nav.Link></li>}
+        {user && user.type !== 'admin' && <li><NavDropdown title={<CgProfile style={{ width: '26px', height: '26px' }} />}>
           <NavDropdown.Item onClick={handleEdit} className={style.dropdownItem}>Edit profile</NavDropdown.Item>
           {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem} onClick={() => navigate('/instructor/addCourse')} >Create course</NavDropdown.Item>}
           {user && user.type === 'instructor' && <NavDropdown.Item className={style.dropdownItem} onClick={ViewEarnings}>Earnings</NavDropdown.Item>}
