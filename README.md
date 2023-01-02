@@ -5,6 +5,7 @@
 ## Table of Contents
 - [Project Description](#project-description)
 - [Tools and Frameworks](#tools-and-frameworks)
+- [Installation](#Installation)
 - [Features](#features)
   * [Guest Functionalities](#guest)
   * [General User Functionalities](#General-user)
@@ -75,6 +76,17 @@ If your application stores any data (user profiles, content, comments, uploads, 
  
 That’s where MongoDB comes in: JSON documents created in your React.js front end can be sent to the Express.js server, where they can be processed and (assuming they’re valid) stored directly in MongoDB for later retrieval. Again, if you’re building in the cloud, you’ll want to look at Atlas. If you’re looking to set up your own MERN stack, read on!
 
+## Installation
+To get started, you will need to do the following:
+
+#### Install Node
+- To install Node, go to https://nodejs.org/en/ and download either the LTS version or the current version.
+
+#### Have or Install a Code Editor
+- You can use any code editor of your choice for this tutorial. However, for the sake of demonstration, we will be using VS Code editor with the plugin prettier and vscode icons.
+
+#### Install dependencies 
+- Run script **npm i** in the frontend and backend directories using the terminal
 
 ## Features 
  
