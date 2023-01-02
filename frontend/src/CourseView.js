@@ -112,6 +112,9 @@ const CourseView = (props) => {
 
   useEffect(() => {
     if (user && user.type !== 'instructor') {
+      if (courseData)
+        if (user.courseList.filter(function (e) { return e.courseId === courseData._id; }).length > 0)
+          setIsOwned(true)
 
     }
   }, [loading, courseData])
@@ -128,7 +131,7 @@ const CourseView = (props) => {
 
               {(user && user.type !== 'corporate trainee') ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
               }
-              {(!user) ? <Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : (user.type == 'instructor') ? <div></div> : (false) ? <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : <Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>}
+              {(!user) ? <Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : (user.type == 'instructor') ? <div></div> : (!isOwned) ? <Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button> : <Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>}
             </div>
             <div className="video" style={{ marginTop: '58px' }}>
               <iframe width="648" height="364.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
