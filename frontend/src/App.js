@@ -121,8 +121,8 @@ function App() {
               <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
                 <LessonView />
               </Route>
-              <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
-                <Rate />
+              <Route exact path="/trainee/rateCourse/:courseId">
+                <Rate type={'course'}/>
               </Route>
 
               <Route exact path="/instructor/incompleteCourse/:courseId">
