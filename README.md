@@ -132,7 +132,7 @@ same as the guest and have more features.
 ### instructor's APIs
 #### create a course
 
-```http
+```
   POST /instructor/createCourse
 ```
 
@@ -150,7 +150,7 @@ same as the guest and have more features.
 
 #### Get instructor's info
 
-```http
+```
   GET /instructor/getInstructor
 ```
 
@@ -159,7 +159,7 @@ does not take parameters.
 
 #### Get instructor's courses
 
-```http
+```
   GET /instructor/viewMyCourses
 ```
 
@@ -167,14 +167,14 @@ does not take parameters.
 
 #### Get all instructor's Subjects in which he gave courses 
 
-```http
+```
   GET /instructor/viewMySubjects
 ```
 
 does not take parameters.
 #### Get instructor's contract state
 
-```http
+```
   GET /instructor/getContractState
 ```
 
@@ -182,7 +182,7 @@ does not take parameters.
 
 #### set instructor's contract state
 
-```http
+```
   PATCH /instructor/setContractState
 ```
 
@@ -192,7 +192,7 @@ does not take parameters.
 
 #### set instructor's info
 
-```http
+```
   patch /instructor/editMyInfo
 ```
 
@@ -205,7 +205,7 @@ does not take parameters.
 
 #### add new lesson to a course
 
-```http
+```
   patch /instructor/addLesson
 ```
 
@@ -220,7 +220,7 @@ does not take parameters.
 
 #### add an exercise to a subtitle
 
-```http
+```
   patch /instructor/addExercise
 ```
 
@@ -233,7 +233,7 @@ does not take parameters.
 
 #### load all questions of an Exercise
 
-```http
+```
   POST /instructor/loadExercise
 ```
 
@@ -245,7 +245,7 @@ does not take parameters.
 
 #### add a promotion to a course
 
-```http
+```
   patch /instructor/addPromotion
 ```
 
@@ -257,7 +257,7 @@ does not take parameters.
 
 #### edit instructor's password
 
-```http
+```
   patch /instructor/editPassword
 ```  
 
@@ -268,7 +268,7 @@ does not take parameters.
 
 #### send a complaint to the admins
 
-```http
+```
   POST /instructor/addComplaint
 ```
 
@@ -281,7 +281,7 @@ does not take parameters.
 
 #### add new subtitle to a course
 
-```http
+```
   patch /instructor/addSubtitleToCourse
 ```
 
@@ -293,7 +293,7 @@ does not take parameters.
 
 #### get all contents of a subtitle
 
-```http
+```
   POST /instructor/loadSubtitle
 ```
 
@@ -304,7 +304,7 @@ does not take parameters.
 
 #### publish a non-published course
 
-```http
+```
   POST /instructor/publishCourse
 ```
 
