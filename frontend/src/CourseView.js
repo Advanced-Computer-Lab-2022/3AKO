@@ -214,8 +214,7 @@ const CourseView = (props) => {
               </Accordion >
             ))}
           </div>
-          <Rate type={'course'}></Rate>
-          <RatingCard course={courseData} key={courseData._id} />
+          {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee'))? <Rate type={'course'}></Rate>: <div></div>}  <RatingCard course={courseData} key={courseData._id} />
           <Dialog open={open} onClose={handleClose}>
             {!corporateError && <DialogTitle ><b>Request this course from admins </b></DialogTitle>
 

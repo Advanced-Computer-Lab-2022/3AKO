@@ -6,8 +6,10 @@ import { useParams } from "react-router-dom";
 import CourseCard from "./courseCard";
 import RatingCard from "./RatingCard";
 import Rate from "./rate";
+import { useUserContext } from "../hooks/useUserContext";
 const InstructorView = () => {
     const {id} = useParams()
+    const {user} = useUserContext()
     const [instructorData,setInstructorData] = useState('')
     useEffect(()=>{
         const execute = async()=>{
@@ -29,8 +31,8 @@ const InstructorView = () => {
             {instructorData.courses.map((c)=>{
                     <CourseCard course={c} isInstructor={false} userId={' '} isCorporateTrainee={true} key={c._id} />
             })}
-            <Rate type={'instructor'}></Rate>
-        <RatingCard course={instructorData}></RatingCard>
+            {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee'))? <Rate type={'instructor'}></Rate>: <div></div>
+}        <RatingCard course={instructorData}></RatingCard>
         </div>
             }
     </div> );
