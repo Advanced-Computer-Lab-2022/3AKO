@@ -31,6 +31,7 @@ import Payment from "./components/Payment";
 import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 import Reports from "./Reports";
+import InstructorView from "./components/InstructorView";
 function App() {
   const { user, loading } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -139,6 +140,9 @@ function App() {
             </Route>
             <Route exact path="/payment/:courseId">
               <Payment />
+            </Route>
+            <Route exact path="/viewInstructor/:id">
+              <InstructorView />
             </Route>
             <Route exact path="/reports">
               <Reports />
