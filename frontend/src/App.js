@@ -31,7 +31,22 @@ import Payment from "./components/Payment";
 import SearchPage from "./searchPage";
 import InstructorProfileView from "./InstructorProfileView";
 import Reports from "./Reports";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { purple } from '@mui/material/colors';
+import Button from '@mui/material/Button';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      // Purple and green play nicely together.
+      main: '#A00407',
+    },
+    secondary: {
+      // This is green.A700 as hex.
+      main: '#E00018',
+    },
+  },
+});
 function App() {
   const { user, loading } = useUserContext()
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -43,110 +58,113 @@ function App() {
   };
 
   return (
+
     <Router>
-      <div className="App">
-        <header>
-          <Navbar handleExchangeRate={handleExchangeRate} />
-        </header>
-        <div style={{ 'margin-top': '70px' }}>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <header>
+            <Navbar handleExchangeRate={handleExchangeRate} />
+          </header>
+          <div style={{ 'margin-top': '70px' }}>
 
-          <Switch >
+            <Switch >
 
-            <Route exact path="/">
-              {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
-            </Route>
+              <Route exact path="/">
+                {!user || user.type !== 'admin' ? <Home /> : <AdminHome />}
+              </Route>
 
-            <Route exact path="/search">
-              <SearchPage />
-            </Route>
+              <Route exact path="/search">
+                <SearchPage />
+              </Route>
 
-            {/* {!user ? <SearchPage /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <SearchPage /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />} */}
+              {/* {!user ? <SearchPage /> : (user.type == 'corporate trainee' || user.type === 'individual trainee') ? <SearchPage /> : user.type === 'instructor' ? <InstructorCourses /> : <AdminHome />} */}
 
-            <Route exact path="/course/:courseId">
-              <CourseView isWelcome={false} exchangeRate={exchangeRate} currency={currency} />
-            </Route>
+              <Route exact path="/course/:courseId">
+                <CourseView isWelcome={false} exchangeRate={exchangeRate} currency={currency} />
+              </Route>
 
-            <Route exact path="/instructor/addCourse">
-              {(user && user.type === 'instructor') ? <AddCourse /> : user ? <Redirect to="/" /> : loading ? <AddCourse /> : <Redirect to="/login" />}
-            </Route>
+              <Route exact path="/instructor/addCourse">
+                {(user && user.type === 'instructor') ? <AddCourse /> : user ? <Redirect to="/" /> : loading ? <AddCourse /> : <Redirect to="/login" />}
+              </Route>
 
-            <Route exact path="/instructor/myCourses">
-              <InstructorCourses />
-            </Route>
+              <Route exact path="/instructor/myCourses">
+                <InstructorCourses />
+              </Route>
 
-            <Route exact path="/admin/addInstructor">
-              <AddInstructor />
-            </Route>
+              <Route exact path="/admin/addInstructor">
+                <AddInstructor />
+              </Route>
 
-            <Route exact path="/admin/addAdmin">
-              <AddAdmin />
-            </Route>
+              <Route exact path="/admin/addAdmin">
+                <AddAdmin />
+              </Route>
 
-            <Route exact path="/admin/addCorporateTrainee">
-              <AddCorporateTrainee />
-            </Route>
+              <Route exact path="/admin/addCorporateTrainee">
+                <AddCorporateTrainee />
+              </Route>
 
-            {/* <Route exact path="/trainee/myCourses">
+              {/* <Route exact path="/trainee/myCourses">
             <MyCoursesTrainee />
           </Route> */}
-            <Route exact path={"/trainee/myCourses"}>
-              {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
-            </Route>
-            <Route exact path="/trainee/CourseSubtitles/:courseId">
-              <CourseSubtitles />
-            </Route>
-            <Route exact path="/instructor/incompleteCourse/exercise/:courseId/:subtitleId/:exerciseId">
-              <SubtitleExercise />
-            </Route>
-            <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
-              <LessonView />
-            </Route>
-            <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
-              <Rate />
-            </Route>
+              <Route exact path={"/trainee/myCourses"}>
+                {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <MyCoursesTrainee /> : (!loading && !user) ? <Redirect to="/login" /> : user ? <Redirect to="/" /> : <MyCoursesTrainee />}
+              </Route>
+              <Route exact path="/trainee/CourseSubtitles/:courseId">
+                <CourseSubtitles />
+              </Route>
+              <Route exact path="/instructor/incompleteCourse/exercise/:courseId/:subtitleId/:exerciseId">
+                <SubtitleExercise />
+              </Route>
+              <Route exact path="/instructor/incompleteCourse/lesson/:courseId/:subtitleId">
+                <LessonView />
+              </Route>
+              <Route exact path="/trainee/rateCourse/:id/:courseId/:courseId">
+                <Rate />
+              </Route>
 
-            <Route exact path="/instructor/incompleteCourse/:courseId">
-              <CourseSubtitles />
-            </Route>
-            <Route exact path="/login">
-              <LogIn />
-            </Route>
-            <Route exact path="/signup">
-              <SignUp />
-            </Route>
-            <Route exact path="/instructor/profile">
-              <InstructorProfile />
-            </Route>
-            <Route exact path="/trainee/profile">
-              <TraineeProfile />
-            </Route>
-            <Route exact path="/trainee/viewInstructorProfile">
-              <InstructorProfileView instructorId={"6382b88604535ae16caf113d"} />
-            </Route>
-            <Route exact path="/forgotPassword">
-              <ForgotPassword />
-            </Route>
-            <Route exact path="/resetpassword/:token">
-              <ResetPassword />
-            </Route>
-            <Route exact path="/admin/home">
-              <AdminHome />
-            </Route>
-            <Route exact path="/payment-success/:courseId">
-              <PaymentSuccess />
-            </Route>
-            <Route exact path="/checkout/:courseId">
-              <Checkout />
-            </Route>
-            <Route exact path="/payment/:courseId">
-              <Payment />
-            </Route>
-            <Route exact path="/reports">
-              <Reports />
-            </Route>
-          </Switch>
+              <Route exact path="/instructor/incompleteCourse/:courseId">
+                <CourseSubtitles />
+              </Route>
+              <Route exact path="/login">
+                <LogIn />
+              </Route>
+              <Route exact path="/signup">
+                <SignUp />
+              </Route>
+              <Route exact path="/instructor/profile">
+                <InstructorProfile />
+              </Route>
+              <Route exact path="/trainee/profile">
+                <TraineeProfile />
+              </Route>
+              <Route exact path="/trainee/viewInstructorProfile">
+                <InstructorProfileView instructorId={"6382b88604535ae16caf113d"} />
+              </Route>
+              <Route exact path="/forgotPassword">
+                <ForgotPassword />
+              </Route>
+              <Route exact path="/resetpassword/:token">
+                <ResetPassword />
+              </Route>
+              <Route exact path="/admin/home">
+                <AdminHome />
+              </Route>
+              <Route exact path="/payment-success/:courseId">
+                <PaymentSuccess />
+              </Route>
+              <Route exact path="/checkout/:courseId">
+                <Checkout />
+              </Route>
+              <Route exact path="/payment/:courseId">
+                <Payment />
+              </Route>
+              <Route exact path="/reports">
+                <Reports />
+              </Route>
+            </Switch>
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     </Router >
   );
 }
