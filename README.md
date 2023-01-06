@@ -684,6 +684,9 @@ does not take parameters.
 
 
 # Testing
+API testing was done using Postman, a request was sent with a given body and a specific response was expected.
+various test cases were used in the process of testing these APIs, cases where the body is valid, not valid, with user authentication, or without user authentication.  In this section, different outcomes of API responses will be shown.
+
 
 ## Trainee Routes Testing
 
