@@ -17,6 +17,11 @@
   * [General trainee APIs](#General-trainee-APIs)
   * [Instructor APIs](#instructor's-APIs)
   * [Admin APIs](#admin-APIs)
+- [Testing](#testing)
+  * [Trainee Routes Testing](#Trainee-Routes-Testing)
+  * [Instructor Routes Testing](#Instructor-Routes-Testing)
+  * [Admin Routes Testing](#Admin-Routes-Testing)
+- [Acknowledgements](#Acknowledgements)
 
 ## Project Description
  
@@ -676,5 +681,710 @@ does not take parameters.
 | `requestId`      | `mongoose.ObjectId` | **Required**. id of the request to be handled |
 | `response`      | `String` | **Required**. reply to request whether accepted or rejected |
 
+
+
+# Testing
+
+## Trainee Routes Testing
+
+| header |   POST /user/login|
+| :-------- | :------- | 
+| body | {"username": "ahmed","password" : "123"}| 
+| response | {"name": "Ahmed","type": "individual trainee","courseList": []} |
+
+| header |   POST /user/login|
+| :-------- | :------- | 
+| body | {"username": "ahme","password" : "123"}| 
+| response | {"error": "Invalid username"}|
+
+| header |   POST /user/login|
+| :-------- | :------- | 
+| body | {"username": "","password" : ""}| 
+| response | {"error": "Must fill username and password"} |
+
+testing logout with user logged in
+| header |   POST /user/logout|
+| :-------- | :------- | 
+| response | {"message": "loged out successfully"} |
+
+testing logout with user not logged in
+
+| header |   POST /user/logout|
+| :-------- | :------- | 
+| response |{"error": "Token required"} |
+
+| header |   PATCH /trainee/addCourseToTrainee/:id|
+| :-------- | :------- | 
+| body | {"courseId" : "6382cf852a928dbf577f1888"}| 
+| response | {course data} |
+
+| header |   PATCH /trainee/addCourseToTrainee/:id|
+| :-------- | :------- | 
+| body | {"courseId" : "6382cf852a928dbf577f1889"}| 
+| response | {"error" : "invalid course id"} |
+
+| header |   PATCH /trainee/addTraineeInfo|
+| :-------- | :------- | 
+| body | { "name" : "ahmed", "gender": "male" }| 
+| response | {updated trainee document} |
+
+testing while logged in
+| header |   PATCH /trainee/addTraineeInfo|
+| :-------- | :------- | 
+| body | { "name" : "ahmed", "gender": "male" }| 
+| response | {updated trainee document} |
+
+testing while logged out
+| header |   PATCH /trainee/addTraineeInfo|
+| :-------- | :------- | 
+| body | { "name" : "ahmed", "gender": "male" }| 
+| response | {"error": "Token required"} |
+
+testing while logged in
+| header |   GET /trainee/myCourses|
+| :-------- | :------- | 
+| response | [{"title": "corurse title","courseId": "course id","progress": number,"status": "coures status"},...] |
+
+testing while logged out
+| header |   GET /trainee/myCourses|
+| :-------- | :------- | 
+| response | {"error": "Token required"} |
+
+testing while logged in, owning the course and first time correctly solving the exercise
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {"grade": "grade from this exercise"} |
+
+testing while logged out
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {"error": "Token required"} |
+
+testing while logged in, but not owning the course 
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {"error": "You do not own this course"} |
+
+testing while logged in, owning the course, but failing the exam
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {"grade": "Exam Failed"} |
+
+testing while logged in as a trinee
+| header |   PATCH /trainee/addComplaint|
+| :-------- | :------- | 
+| body | {"title" : "title of the complaint", "body": "body of the complaint", "reportedCourse": "id of the reported course", "reportType":"type"}| 
+| response | {"message": "successful"} |
+
+testing while logged out
+| header |   PATCH /trainee/addComplaint|
+| :-------- | :------- | 
+| body | {"title" : "title of the complaint", "body": "body of the complaint", "reportedCourse": "id of the reported course", "reportType":"type"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as a trinee and owning the course
+| header |   GET /loadSubtitle/:courseId/:subtitleId|
+| :-------- | :------- | 
+| response | {subtitle data without answers} |
+
+testing while logged in as a trinee and not owning the course
+| header |   GET /loadSubtitle/:courseId/:subtitleId|
+| :-------- | :------- | 
+| response | {"error": "You do not own this course"} |
+
+testing while logged out
+| header |   GET /loadSubtitle/:courseId/:subtitleId|
+| :-------- | :------- | 
+| response | {"error": "Token required"} |
+
+| header |   POST /trainee/loadExamAnswers|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {array of exam answers} |
+
+testing with invalid course id
+| header |   POST /trainee/loadExamAnswers|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this exercise", "subtitleId": " subititle of this exercise", "exerciseId": "exercise id", "answers": "array of numbers" }| 
+| response | {"error":"null does not have a property subtitles"} |
+
+testing while logged in as a trinee and owning the course
+| header |    GET /trainee/getSubtitles|
+| :-------- | :------- | 
+| body | { "courseId":"course id"}}| 
+| response | {course subitles} |
+
+testing while logged in as a trinee and not owning the course
+| header |    GET /trainee/getSubtitles|
+| :-------- | :------- | 
+| body | { "courseId":"course id"}| 
+| response | {"error": "You do not own this course"} |
+
+testing while logged out
+| header |    GET /trainee/getSubtitles|
+| :-------- | :------- | 
+| body | { "courseId":"course id"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as a trainee
+| header |    GET /trainee/getMyInfo|
+| :-------- | :------- | 
+| response | {"name"","gender","email"} |
+
+testing while logged out
+| header |    GET /trainee/getMyInfo|
+| :-------- | :------- | 
+| response | {"error": "Token required"} |
+
+testing while logged in with correct old password
+| header |    PATCH /trainee/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {user data} |
+
+testing while logged in with incorrect old password
+| header |    PATCH /trainee/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {"error":"Wrong Password"}|
+
+testing while logged out
+| header |    PATCH /trainee/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {"error": "Token required"}|
+
+testing while logged in as a trainee while owning the course
+| header |    PATCH /trainee/addNote|
+| :-------- | :------- | 
+| body | {"courseId":"id of the course of this note", "lessonId":"id of the lesson of this note", "note":"note text"}| 
+| response | {updated date}|
+
+testing while logged in as a trainee and not owning the coures
+| header |    PATCH /trainee/addNote|
+| :-------- | :------- | 
+| body | {"courseId":"id of the course of this note", "lessonId":"id of the lesson of this note", "note":"note text"}| 
+| response | {"error": "You do not own this course"}|
+
+testing while logged out
+| header |    PATCH /trainee/addNote|
+| :-------- | :------- | 
+| body | {"courseId":"id of the course of this note", "lessonId":"id of the lesson of this note", "note":"note text"}| 
+| response | {"error": "Token required"}|
+
+
+testing while logged in as a trainee while owning the course
+| header |    GET /trainee/getLessonsList/:courseId|
+| :-------- | :------- | 
+| response | {list of lessons this trainee opened and their notes}|
+
+testing while logged in as a trainee and not owning the course
+| header |    GET /trainee/getLessonsList/:courseId|
+| :-------- | :------- | 
+| response | {"error": "You do not own this course"}|
+
+testing while logged in as a trainee and not owning the course
+| header |    GET /trainee/getLessonsList/:courseId|
+| :-------- | :------- | 
+| response | {"error": "You do not own this course"}|
+
+testing while logged out
+| header |    GET /trainee/getLessonsList/:courseId|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as a trainee
+| header |    POST /trainee/viewInstructor|
+| :-------- | :------- | 
+| body | {"instructorId":"id of the instructor"}| 
+| response | {instructor data}|
+
+testing with correct 
+| header |    POST /trainee/viewInstructor|
+| :-------- | :------- | 
+| body | {"instructorId":"id of the instructor"}| 
+| response | {instructor data}|
+
+testing while logged in as a trainee
+| header |    POST /trainee/viewInstructor|
+| :-------- | :------- | 
+| body | {"instructorId":"id of the instructor"}| 
+| response | {instructor data}|
+
+
+testing while logged in as a trainee and owning the coures
+| header |    GET /trainee/downloadNotes/:courseId|
+| :-------- | :------- | 
+| response | {notes pdf file}|
+
+testing while logged in as a trainee and not owning the coures
+| header |    GET /trainee/downloadNotes/:courseId|
+| :-------- | :------- | 
+| response | {"error": "You do not own this course"}|
+
+testing while logged out or as another user type
+| header |    GET /trainee/downloadNotes/:courseId|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as a trainee and owning the coures
+| header |    GET /trainee/downloadCertificate/:courseId|
+| :-------- | :------- | 
+| response | {certificate pdf file}|
+
+testing while logged in as a trainee and not owning the coures
+| header |    GET /trainee/downloadCertificate/:courseId|
+| :-------- | :------- | 
+| response | {"error": "You do not own this course"}|
+
+testing while logged out or as another user type
+| header |    GET /trainee/downloadCertificate/:courseId|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in, owning the course and first time viewing this lesson
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this lesson", "lessonId": " lesson id"}| 
+| response | { "message": "Successful" } |
+
+testing while logged in, not owning the course
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this lesson", "lessonId": " lesson id"}| 
+| response | {"error": "You do not own this course"} |
+
+testing while logged out
+| header |   PATCH /trainee/addExerciseRecord|
+| :-------- | :------- | 
+| body | { "courseId":"course id of this lesson", "lessonId": " lesson id"}| 
+| response | {"error": "Token required"} |
+
+
+## Instructor Routes Testing 
+
+testing while logged in as an instructor
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"title","outlines","summary","previewVideo","subject","price","totalHours","imageURL"}| 
+| response | {created course id}|
+
+testing while logged out
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"title","outlines","summary","previewVideo","subject","price","totalHours","imageURL"}| 
+| response | {"error": "Token required"}|
+
+testing while logged in not as an instructor
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"title","outlines","summary","previewVideo","subject","price","totalHours","imageURL"}| 
+| response | {"error": ""You are not an authorized instructor"}|
+
+testing while logged in as an instructor
+| header |   GET /instructor/getInstructor|
+| :-------- | :------- | 
+| response | {instructor data}|
+
+testing while logged out
+| header |   GET /instructor/getInstructor|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor
+| header |   GET /instructor/viewMyCourses|
+| :-------- | :------- | 
+| response | {instructor courses data}|
+
+testing while logged out
+| header |   GET /instructor/viewMyCourses|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor
+| header |   GET /instructor/viewMySubjects|
+| :-------- | :------- | 
+| response | {instructor courses subjects}|
+
+testing while logged out
+| header |   GET /instructor/viewMySubjects|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor
+| header |   GET /instructor/getContractState|
+| :-------- | :------- | 
+| response | {instructor contract state accepted or not yet }|
+
+testing while logged out
+| header |   GET /instructor/getContractState|
+| :-------- | :------- | 
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor
+| header |   PATCH /instructor/setContractState|
+| :-------- | :------- | 
+| body | {"state"} |
+| response | {updated instructor data}|
+
+testing while logged out
+| header |   PATCH /instructor/setContractState|
+| :-------- | :------- | 
+| body | {"state"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor
+| header |   PATCH /instructor/editMyInfo|
+| :-------- | :------- | 
+| body | {"name", "gender", "biography", "email"} |
+| response | {updated instructor data}|
+
+testing while logged out
+| header |   PATCH /instructor/editMyInfo|
+| :-------- | :------- | 
+| body | {"name", "gender", "biography", "email"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   PATCH /instructor/addLesson|
+| :-------- | :------- | 
+| body | {"vidUrl", "courseId", "subtitleId", "title", "readings', "description"} |
+| response | {updated course data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   PATCH /instructor/addLesson|
+| :-------- | :------- | 
+| body | {"vidUrl", "courseId", "subtitleId", "title", "readings', "description"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   PATCH /instructor/addLesson|
+| :-------- | :------- | 
+| body | {"vidUrl", "courseId", "subtitleId", "title", "readings', "description"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   PATCH /instructor/addExercise|
+| :-------- | :------- | 
+| body | {"courseId", "title", "subtitleId", "questions"} |
+| response | {updated course data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   PATCH /instructor/addExercise|
+| :-------- | :------- | 
+| body | {"courseId", "title", "subtitleId", "questions"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   PATCH /instructor/addExercise|
+| :-------- | :------- | 
+| body | {"courseId", "title", "subtitleId", "questions"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   POST /instructor/loadExercise|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId", "exerciseId"} |
+| response | {exercise data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   POST /instructor/loadExercise|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId", "exerciseId"}  |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   POST /instructor/loadExercise|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId", "exerciseId"}  |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   PATCH /instructor/addPromotion|
+| :-------- | :------- | 
+| body | {"courseId", "discount", "date"} |
+| response | {updated course data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   PATCH /instructor/addPromotion|
+| :-------- | :------- | 
+| body | {"courseId", "discount", "date"}  |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   PATCH /instructor/addPromotion|
+| :-------- | :------- | 
+| body | {"courseId", "discount", "date"}  |
+| response | {"error": "Token required"}|
+
+testing while logged in with correct old password
+| header |    PATCH /instructor/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {user data} |
+
+testing while logged in with incorrect old password
+| header |    PATCH /instructor/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {"error":"Wrong Password"}|
+
+testing while logged out
+| header |    PATCH /instructor/editPassword|
+| :-------- | :------- | 
+| body | { "oldPassword":"old value of the password", "newPassword":"the updated password"}| 
+| response | {"error": "Token required"}|
+
+testing while logged in as a trinee
+| header |   PATCH /instructor/addComplaint|
+| :-------- | :------- | 
+| body | {"title" : "title of the complaint", "body": "body of the complaint", "reportedCourse": "id of the reported course", "reportType":"type"}| 
+| response | {"message": "successful"} |
+
+testing while logged out
+| header |   PATCH /instructor/addComplaint|
+| :-------- | :------- | 
+| body | {"title" : "title of the complaint", "body": "body of the complaint", "reportedCourse": "id of the reported course", "reportType":"type"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   patch /instructor/addSubtitleToCourse|
+| :-------- | :------- | 
+| body | {"courseId", "title", "totalHourse"} |
+| response | {updated course data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   patch /instructor/addSubtitleToCourse|
+| :-------- | :------- | 
+| body | {"courseId", "title", "totalHourse"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   patch /instructor/addSubtitleToCourse|
+| :-------- | :------- | 
+| body | {"courseId", "title", "totalHourse"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   POST /instructor/loadSubtitle|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId"} |
+| response | {subtitle data}|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   POST /instructor/loadSubtitle|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   POST /instructor/loadSubtitle|
+| :-------- | :------- | 
+| body | {"courseId", "subtitleId"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   POST /instructor/publishCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | { "message": "successful" }|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   POST /instructor/publishCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   POST /instructor/publishCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | {"error": "Token required"}|
+
+testing while logged in as an instructor and he/she is the author the course
+| header |   POST /instructor/closeCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | { "message": "successful" }|
+
+testing while logged in as an instructor and he/she is not the author the course
+| header |   POST /instructor/closeCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | {"error":"You do not have access to this Course"}|
+
+testing while logged out
+| header |   POST /instructor/closeCourse|
+| :-------- | :------- | 
+| body | {"courseId"} |
+| response | {"error": "Token required"}|
+
+## Admin Routes Testing
+
+testing while logged in as an admin and username given is unique
+| header |   POST /admin/addAdmin|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {created document} |
+
+testing while logged in as an admin and username given is not unique
+| header |   POST /admin/addAdmin|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {"error":"This username already exists"} |
+
+testing while logged out
+| header |   POST /admin/addAdmin|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as an admin and username given is unique
+| header |   POST /admin/addInstructor|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {created document} |
+
+testing while logged in as an admin and username given is not unique
+| header |   POST /admin/addInstructor|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {"error":"This username already exists"} |
+
+testing while logged out
+| header |   POST /admin/addInstructor|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as an admin and username given is unique
+| header |   POST /admin/addCorporateTrainee|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {created document} |
+
+testing while logged in as an admin and username given is not unique
+| header |   POST /admin/addCorporateTrainee|
+| :-------- | :------- | 
+| body | { "username", "password"}| 
+| response | {"error":"This username already exists"} |
+
+testing while logged out
+| header |   POST /admin/addCorporateTrainee|
+| :-------- | :------- | 
+| body | {"courseId" : "6382cf852a928dbf577f1888"}| 
+| response | {"error": "Token required"} |
+
+testing while logged in as an admin
+| header |   PATCH /admin/answerRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"message": "successful"} |
+
+testing while logged in as an admin but with a response that isn't accept or reject
+| header |   PATCH /admin/answerRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"error": "No such request"}|
+
+testing while logged out
+| header |   PATCH /admin/answerRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   GET /admin/getPendingComplaints|
+| :-------- | :------- | 
+| response |{list of unresolved complaints}|
+
+testing while logged out
+| header |   GET /admin/getPendingComplaints|
+| :-------- | :------- | 
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   PATCH /admin/loadComplaint|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{complaint content}|
+
+testing while logged out
+| header |   PATCH /admin/loadComplaint|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   PATCH /admin/resolveComplaint|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{"success": true }|
+
+testing while logged out
+| header |   PATCH /admin/resolveComplaint|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   PATCH /admin/markComplaintPending|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{"success": true }|
+
+testing while logged out
+| header |   PATCH /admin/markComplaintPending|
+| :-------- | :------- | 
+| body | {"complaintId"} |
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   GET /admin/getCourseRequests|
+| :-------- | :------- | 
+| response |{all pending course requests}|
+
+testing while logged out
+| header |   GET /admin/getCourseRequests|
+| :-------- | :------- | 
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   GET /admin/getRefundRequests|
+| :-------- | :------- | 
+| response |{all pending refund requests}|
+
+testing while logged out
+| header |   GET /admin/getRefundRequests|
+| :-------- | :------- | 
+| response |{"error": "Token required"}|
+
+testing while logged in as an admin
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"message": "successful"} |
+
+testing while logged in as an admin but with a response that isn't accept or reject
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"error": "No such request"}|
+
+testing while logged out
+| header |   PATCH /admin/answerRefundRequest|
+| :-------- | :------- | 
+| body | {"requestId":"id of the course request", "response":"not accept or reject"}| 
+| response |{"error": "Token required"}|
+
+
+# Acknowledgements
+
+ - [The Net Ninja MERN stack tutorial](https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&ab_channel=TheNetNinja)
+ - [The Net Ninja MERN authentication tutorial](https://www.youtube.com/watch?v=WsRBmwNkv3Q&list=PL4cUxeGkcC9g8OhpOZxNdhXggFz2lOuCT&ab_channel=TheNetNinja)
 
 
