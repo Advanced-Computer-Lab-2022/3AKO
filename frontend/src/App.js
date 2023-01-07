@@ -95,17 +95,17 @@ function App() {
                 <InstructorCourses />
               </Route>
 
-              <Route exact path="/admin/addInstructor">
+              {/* <Route exact path="/admin/addInstructor">
                 <AddInstructor />
-              </Route>
+              </Route> */}
 
-              <Route exact path="/admin/addAdmin">
+              {/* <Route exact path="/admin/addAdmin">
                 <AddAdmin />
-              </Route>
+              </Route> */}
 
-              <Route exact path="/admin/addCorporateTrainee">
+              {/* <Route exact path="/admin/addCorporateTrainee">
                 <AddCorporateTrainee />
-              </Route>
+              </Route> */}
 
               {/* <Route exact path="/trainee/myCourses">
             <MyCoursesTrainee />
@@ -123,7 +123,7 @@ function App() {
                 <LessonView />
               </Route>
               <Route exact path="/trainee/rateCourse/:courseId">
-                <Rate type={'course'}/>
+                <Rate type={'course'} />
               </Route>
 
               <Route exact path="/instructor/incompleteCourse/:courseId">
@@ -172,7 +172,7 @@ function App() {
                 <Earnings />
               </Route>
               <Route path="*">
-              <PageNotFound />
+                <PageNotFound />
               </Route>
             </Switch>
           </div>
