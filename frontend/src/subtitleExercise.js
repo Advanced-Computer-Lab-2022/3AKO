@@ -34,7 +34,7 @@ const SubtitleExercise = ({ courseId, subtitleId, stateChanger }) => {
         axios({
             method: 'patch', url: `http://localhost:5000/instructor/addExercise`, data: {
                 courseId: courseId,
-                title: "exerciseTitle",
+                title: titleValue,
                 subtitleId: subtitleId,
                 questions: questions
             }, withCredentials: true
