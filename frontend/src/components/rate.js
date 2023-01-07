@@ -61,23 +61,26 @@ const Rate = ({ type }) => {
     return (
         <div>
             {!hasReview && <form onSubmit={handleSubmit} >
-                <Rating className='rating'
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)} />
-                <br />
-                <TextField
-                    id="outlined-multiline-static"
-                    label="Review"
-                    multiline
-                    rows={4}
-                    margin="normal"
-                    inputProps={{ maxLength: 200 }}
-                    style={{ width: 600 }}
-                    onChange={(e) => setReview(e.target.value)}
-                    value={review}
-                />
-                <br />
-                <Button variant='contained' type='submit'>add review</Button>
+                <Box sx={{ p: 1, borderRadius: "0.5rem", border: "1px solid #bbb", margin: '24px' }}>
+
+                    <Rating className='rating'
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)} />
+                    <br />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Review"
+                        multiline
+                        rows={4}
+                        margin="normal"
+                        inputProps={{ maxLength: 200 }}
+                        style={{ width: 600 }}
+                        onChange={(e) => setReview(e.target.value)}
+                        value={review}
+                    />
+                    <br />
+                    <Button variant='contained' type='submit'>add review</Button>
+                </Box>
             </form >
             }
             {hasReview &&

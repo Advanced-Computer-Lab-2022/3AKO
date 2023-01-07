@@ -140,6 +140,9 @@ const CourseView = (props) => {
       }
     }
     start()
+    console.log(user)
+    console.log(user.type)
+    console.log(courseData)
   }, [])
   const [isOwned, setIsOwned] = useState(false)
 
@@ -167,10 +170,10 @@ const CourseView = (props) => {
               }
               {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) :
                 (user.type == 'instructor' && courseData.status == "published" && courseData.instructorId == user._id) ?
-                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
+                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Add Promotion</Button> <Button onClick={() => { setCloseCourseDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Close Course</Button></div>) :
                   (user.type == 'instructor' || isWelcome) ? (<div></div>) :
                     ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) :
-                      (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
+                      (<Link to={`/trainee/CourseSubtitles/${courseData._id}`} style={{ textDecoration: 'none' }}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
             </div>
             <div className="video" style={{ marginTop: '58px' }}>
               <iframe width="648" height="364.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
