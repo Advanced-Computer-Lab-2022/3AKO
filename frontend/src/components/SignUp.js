@@ -20,8 +20,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const theme = createTheme();
-
 export default function SignUp() {
   const [gender, setGender] = useState('')
   const { signup, isLoading, error } = useSignup()
@@ -55,132 +53,126 @@ export default function SignUp() {
 
   return (
     <div>
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} >
-                  <TextField
-                    autoComplete="given-name"
-                    name="name"
-                    type='text'
-                    required
-                    fullWidth
-                    id="name"
-                    label="Name"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} >
-                  <TextField
-                    required
-                    fullWidth
-                    type='text'
-                    id="username"
-                    label="username"
-                    name="username"
-                    autoComplete="user-name"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    type='email'
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                  />
-                </Grid>
-                {/* <Grid item xs={12}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} >
+                <TextField
+                  autoComplete="given-name"
+                  name="name"
+                  type='text'
+                  required
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} >
+                <TextField
+                  required
+                  fullWidth
+                  type='text'
+                  id="username"
+                  label="username"
+                  name="username"
+                  autoComplete="user-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  type='email'
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid> */}
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="gender"
-                    label="gender"
-                    select
-                    id="gender"
-                    value={gender}
-                    onChange={(e) => { setGender(e.target.value) }}
-                  >
-                    <MenuItem value="male">Male</MenuItem>
-
-                    <MenuItem value="female">Female</MenuItem>
-                  </TextField>
-
-                </Grid>
-              </Grid>
-              {error && (
-
-                <Grid item xs={12} marginTop={2}>
-                  <Alert severity="error" fullWidth>
-                    {/* <AlertTitle>Error</AlertTitle> */}
-                    {error}
-                  </Alert>
-                </Grid>
-              )}
-
               <Grid item xs={12}>
-                <Checkbox required label='agreement' name='agreement' id='agreement' color="primary" />
-                <span>I agree to the <Link onClick={() => { setDialogOpen(true) }}>terms of service</Link></span>
-              </Grid>
+                <TextField
+                  required
+                  fullWidth
+                  name="gender"
+                  label="gender"
+                  select
+                  id="gender"
+                  value={gender}
+                  onChange={(e) => { setGender(e.target.value) }}
+                >
+                  <MenuItem value="male">Male</MenuItem>
 
-              <Button disabled={isLoading}
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign Up
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link href="/login" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
+                  <MenuItem value="female">Female</MenuItem>
+                </TextField>
+
               </Grid>
-            </Box>
+            </Grid>
+            {error && (
+
+              <Grid item xs={12} marginTop={2}>
+                <Alert severity="error" fullWidth>
+                  {/* <AlertTitle>Error</AlertTitle> */}
+                  {error}
+                </Alert>
+              </Grid>
+            )}
+
+            <Grid item xs={12}>
+              <Checkbox required label='agreement' name='agreement' id='agreement' color="primary" />
+              <span>I agree to the <Link onClick={() => { setDialogOpen(true) }} style={{ color: '#A00407' }}>terms of service</Link></span>
+            </Grid>
+
+            <Button disabled={isLoading}
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2" style={{ color: '#A00407' }}>
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
-        </Container>
-
-
-
-      </ThemeProvider>
-
+        </Box>
+      </Container>
       <Dialog
         open={dialogOpen}
         onClose={() => { setDialogOpen(false) }}

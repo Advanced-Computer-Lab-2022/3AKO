@@ -21,7 +21,6 @@ const Earnings = () => {
                 console.log(response.data);
             });
 
-
     }, [])
 
     return (
@@ -31,7 +30,7 @@ const Earnings = () => {
                 <Table sx={{ minWidth: 650 }} size='large' aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Start Date</TableCell>
+                            <TableCell align="center">Start Date</TableCell>
                             <TableCell align="center">Earnings&nbsp;($)</TableCell>
                         </TableRow>
                     </TableHead>
@@ -41,8 +40,8 @@ const Earnings = () => {
                                 key={earning._id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row">
-                                    {earning.startDate}
+                                <TableCell component="th" scope="row" align="center">
+                                    {earning.startDate.substring(0, 10)}
                                 </TableCell>
                                 {/* <TableCell align="right"></TableCell> */}
                                 <TableCell align="center">{earning.sum}</TableCell>

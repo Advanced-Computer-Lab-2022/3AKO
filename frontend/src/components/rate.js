@@ -4,27 +4,27 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography,Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 
 const Rate = ({ type }) => {
 
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState('')
     const [hasReview, setHasReview] = useState(false)
-    const {id,courseId,instructorId} = useParams()
+    const { id, courseId, instructorId } = useParams()
     useEffect(() => {
         const getReviews = () => {
             var url = ''
-            if (type === 'course'){
+            if (type === 'course') {
                 url = `trainee/reviewedCourse/${courseId}`
             }
             else {
-                url = `trainee/reviewedInstructor/${id||instructorId}`
+                url = `trainee/reviewedInstructor/${id || instructorId}`
             }
-            axios({method:'get',url:`http://localhost:5000/${url}`,withCredentials:true})
+            axios({ method: 'get', url: `http://localhost:5000/${url}`, withCredentials: true })
                 .then((response) => {
                     console.log(response.data);
-                    if(!response.data.message){
+                    if (!response.data.message) {
                         setHasReview(response.data)
                     }
                 })
@@ -46,12 +46,12 @@ const Rate = ({ type }) => {
         }
         else if (type === 'instructor') {
             url = 'trainee/rateInstructor'
-            data.instructorId = id||instructorId
+            data.instructorId = id || instructorId
         }
         console.log(data);
-        console.log({url});
+        console.log({ url });
         axios({ method: 'patch', url: `http://localhost:5000/${url}`, withCredentials: true, data })
-            .then((response)=> {
+            .then((response) => {
                 setHasReview(data)
                 //alert("review added successfully")
             })
@@ -81,11 +81,12 @@ const Rate = ({ type }) => {
             </form >
             }
             {hasReview &&
-                <Box sx={{ p: 1, borderRadius: "0.5rem", border: "1px solid #bbb" }}>
-                {/* <Typography fontWeight="bold">{reviewer || "Anonymous "}</Typography> */}
-                <Rating value={hasReview.rating} readOnly precision={0.5} />
-                <Typography>{hasReview.comment}</Typography>
-              </Box>
+                <Box sx={{ p: 1, borderRadius: "0.5rem", border: "1px solid #bbb", margin: '24px' }}>
+                    <Typography fontWeight='bold'>Your Review</Typography>
+                    {/* <Typography fontWeight="bold">{reviewer || "Anonymous "}</Typography> */}
+                    <Rating value={hasReview.rating} readOnly precision={0.5} />
+                    <Typography>{hasReview.comment}</Typography>
+                </Box>
             }
 
         </div>

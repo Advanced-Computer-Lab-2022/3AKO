@@ -7,7 +7,7 @@ import '../stylesheets/search.css'
 import Drawer from '../utility/Drawer';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-
+import { Divider } from '@mui/material';
 const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, instructorFilter }) => {
   const location = useLocation()
   const history = useHistory()
@@ -20,8 +20,9 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const [subjects, setSubjects] = useState([])
   const [allSubjects, setAllSubjects] = useState(null)
   const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(100)
-  const [price, setPrice] = useState([0, 100]);
+  const [maxPrice, setMaxPrice] = useState(0)
+  const [price, setPrice] = useState(null)
+  const [sliderBounds, setSliderBounds] = useState([0, 0])
   const [rating, setRating] = useState(0)
   const userId = useParams()
 
@@ -35,12 +36,17 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const fetchCourses = async () => {
     await axios({ method: "get", url: coursesFetch, withCredentials: true }).then(
       (res) => {
-        setCourses(res.data)
-        setAllCourses(res.data)
-        setSearchedCourses(res.data)
-        divideCourses(res.data)
-
-
+        const fetchedCourses = res.data
+        setCourses(fetchedCourses)
+        setAllCourses(fetchedCourses)
+        setSearchedCourses(fetchedCourses)
+        divideCourses(fetchedCourses)
+        const min = Math.min.apply(Math, fetchedCourses.map(function (course) { return course.price; }))
+        const max = Math.max.apply(Math, fetchedCourses.map(function (course) { return course.price; }))
+        setMaxPrice(max)
+        setMinPrice(min)
+        setPrice([min, max])
+        setSliderBounds([min, max])
       }
     ).catch(error => {
       alert('invalid request')
@@ -110,7 +116,6 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   }
 
   const handleSearch = (e) => {
-    console.log(e.key)
     if (e.key === 'Enter')
       search()
   }
@@ -150,10 +155,6 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     }
   }
 
-  useEffect(() => {
-    console.log(subjects)
-  }, [subjects])
-
   const body = <div className="courses">
     {courses && courses.map((course) => (
       <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
@@ -162,23 +163,23 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
 
   // instructor Courses /////////////////////////////
   const instructorBody = <div className="instructorCourses">
-    <h3>Published Courses </h3>
-    <hr></hr>
+    <Divider className='h3' textAlign='left'>Published Courses</Divider>
+
     <div className='courses'>
       {publishedCourses && publishedCourses.map((course) => (
 
         <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
       ))}
     </div>
-    <h3>Unpublished Courses </h3>
-    <hr></hr>
+    <Divider className='h3' textAlign='left'>Unplublished Courses</Divider>
+
     <div className='courses'>
       {unpublishedCourses && unpublishedCourses.map((course) => (
         <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
       ))}
     </div>
-    <h3>Closed Courses</h3>
-    <hr></hr>
+    <Divider className='h3' textAlign='left'>Closed Courses</Divider>
+
     <div className='courses'>
       {closedCourses && closedCourses.map((course) => (
         <CourseCard course={course} isInstructor={!instructorFilter} userId={userId} isCorporateTrainee={isCorporateTrainee} key={course._id} />
@@ -192,12 +193,13 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
   const side = <div className='filters'>
     {!instructorFilter &&
       <div>
-        <input type="text" placeholder='Search in your courses' value={instructorSearchValue} onChange={(e) => setInstructorSearchValue(e.target.value)} onKeyUp={handleSearch}
+        <input type="search" placeholder='Search in your courses' value={instructorSearchValue} onChange={(e) => setInstructorSearchValue(e.target.value)} onKeyUp={handleSearch}
           style={{ width: '100%' }} />
       </div>
     }
     <div className='subject'>
-      <h5>Subject</h5>
+      <Divider className='h5' textAlign='left'>Subject</Divider>
+
       {allSubjects && allSubjects.map((subject) => (
         <FormControlLabel className='checkbox-with-label' control={<Checkbox sx={{
           color: '#E00018',
@@ -210,22 +212,27 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
     </div>
     {!isCorporateTrainee &&
       <div className='fiters-price'>
-        <h5>Price</h5>
+        <Divider className='h5' textAlign='left'>Price</Divider>
+
         {/* <span>Min : </span><input type="number" style={{ width: '175px', marginLeft: '4px' }} onChange={(e) => setMinPrice(e.target.value)} value={minPrice} />
         <span>Max : </span><input type="number" style={{ width: '175px' }} onChange={(e) => setMaxPrice(e.target.value)} value={maxPrice} /> */}
         <Box sx={{ width: '80%' }}>
-          <Slider
+          {price && <Slider
             getAriaLabel={() => 'Price'}
             value={price}
+            max={sliderBounds[1]}
+            min={sliderBounds[0]}
             onChange={handlePrice}
             valueLabelDisplay="auto"
-          />
+            style={{ color: '#E00018', marginLeft: '10px' }}
+          />}
         </Box>
       </div>
 
     }
     <div>
-      <h5>Minimum Rating</h5>
+      <Divider className='h5' textAlign='left'>Minimum Rating</Divider>
+
       <Rating className='rating'
         value={rating}
         onChange={(e) => setRating(e.target.value)} />

@@ -10,10 +10,12 @@
     height: 100%;
 }
 
-.filters h5 {
-    border-bottom: 1px solid #666;
-    width: 80%;
-    font-weight: bold;
+.filters .h5 {
+    margin-bottom: 10px;
+}
+
+.instructorCourses .h3 {
+    margin: 15px 0;
 }
 
 .filters .checkbox-with-label {
@@ -23,4 +25,13 @@
 .filters button {
     margin-left: -10px;
     margin-right: -10px;
+}
+
+.filters input {
+    width: 100%;
+    padding: 5px 10px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
