@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CourseCard from "./components/courseCard";
 import { AiOutlineCopyrightCircle } from 'react-icons/ai';
-
+import { useUserContext } from "./hooks/useUserContext";
 const Home = () => {
+  const { user, loading } = useUserContext()
   const [mostPopular, setMostPopular] = useState([])
   const [mostViewed, setMostViewed] = useState([])
   const fetchCourses = async () => {
@@ -36,8 +37,9 @@ const Home = () => {
         <h1>The sky is your limit</h1>
         <div className='content'>
           <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero illum, fugiat qui mollitia labore laudantium cupiditate reiciendis earum, praesentium suscipit fugit? Iure officia nobis pariatur, quis omnis doloremque similique qui.</p>
-          <Link to={'/signUp'}><button className='style1'>JOIN NOW</button></Link>
-        </div>
+          {
+            (!user && !loading) && <Link to={'/signUp'}><button className='style1'>JOIN NOW</button></Link>
+          }        </div>
       </div>
       <div className="ourCourses">
         <div className="flex-container">
