@@ -57,7 +57,7 @@ const createCourse = async (req, res) => {
 
 const getAllSubjects = async (req, res) => {
     try {
-        const subjects = await courseModel.distinct("subject");
+        const subjects = await courseModel.distinct("subject", { status: "published" });
         res.status(200).json(subjects);
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -86,7 +86,7 @@ const filterOnPrice = async (minPrice, maxPrice) => {
 };
 
 const filter = async (req, res) => {
-    const {} = req.body;
+    const { } = req.body;
     const priceFiltered = filterOnPrice();
     const subjectFiltered = filterOnSubject();
 };
@@ -122,13 +122,13 @@ const searchForCourses = async (req, res) => {
 //         res.status(400).json({error:err.message})
 //     }
 // }
-const deleteCourse = async(req,res)=>{
+const deleteCourse = async (req, res) => {
     try {
         const id = req._id;
         const { courseId } = req.body;
-        const ret = await courseModel.deleteOne({_id:courseId})
+        const ret = await courseModel.deleteOne({ _id: courseId })
         res.status(200).json(ret)
-    } catch(err){
+    } catch (err) {
         res.status(400).json({ error: err.message });
 
     }

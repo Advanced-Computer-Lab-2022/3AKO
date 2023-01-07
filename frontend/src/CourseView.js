@@ -160,17 +160,17 @@ const CourseView = (props) => {
             <div>
               <h1 style={{ color: 'white', fontWeight: 'bold' }}>{courseData.title}</h1>
               <h4 style={{ color: 'white' }}>{courseData.subject}</h4>
-              <span><span style={{ color: "white" }}>Taught by </span><Link to={`/viewInstructor/${courseData.instructorId}`}>{courseData.instructorName}</Link></span>
+              <span><span style={{ color: "white" }}>Taught by </span><Link to={`/viewInstructor/${courseData.instructorId}`} style={{ color: '#E00018' }}>{courseData.instructorName}</Link></span>
 
 
               {((user && user.type !== 'corporate trainee') && !isWelcome) ? <h2 style={{ color: 'white' }}>price: {Math.round(courseData.price * exchangeRate) + " " + currency}</h2> : <div> <br /> <br /> </div>
               }
-              {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
-              (user.type == 'instructor' && courseData.status == "published" && courseData.instructorId==user._id) ? 
-                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true)}} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
-                  (user.type == 'instructor' || isWelcome)? (<div></div>) : 
-              ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) : 
-              (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
+              {(!user) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) :
+                (user.type == 'instructor' && courseData.status == "published" && courseData.instructorId == user._id) ?
+                  (<div><Button onClick={() => { setAddPromotionDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>add promotion</Button> <Button onClick={() => { setCloseCourseDialog(true) }} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>close</Button></div>) :
+                  (user.type == 'instructor' || isWelcome) ? (<div></div>) :
+                    ((!isOwned) ? (<Button onClick={enroll} variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>Enroll</Button>) :
+                      (<Link to={`/trainee/CourseSubtitles/${courseData._id}`}><Button variant="contained" size="large" style={{ backgroundColor: '#A00407' }}>View Course</Button></Link>))}
             </div>
             <div className="video" style={{ marginTop: '58px' }}>
               <iframe width="648" height="364.5" src={"https://www.youtube.com/embed/" + courseData.previewVideo} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -178,7 +178,7 @@ const CourseView = (props) => {
           </div>
 
           <div className="course-outlines"
-            style={{ border: '1px gray solid', padding: '20px', margin: '50px', width: '45%' }}
+            style={{ border: '1px gray solid', padding: '20px', margin: '40px', width: '45%' }}
           >
             <strong style={{ fontSize: '25px' }}>Course Outlines</strong>
             <ul style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -214,7 +214,7 @@ const CourseView = (props) => {
               </Accordion >
             ))}
           </div>
-          {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee'))? <Rate type={'course'}></Rate>: <div></div>}  <RatingCard course={courseData} key={courseData._id} />
+          {(user && (user.type == 'corporate trainee' || user.type === 'individual trainee')) ? <Rate type={'course'}></Rate> : <div></div>}  <RatingCard course={courseData} key={courseData._id} />
           <Dialog open={open} onClose={handleClose}>
             {!corporateError && <DialogTitle ><b>Request this course from admins </b></DialogTitle>
 
@@ -235,34 +235,34 @@ const CourseView = (props) => {
             </DialogActions>
           </Dialog>
 
-   
+
         </div >
       }
       <Dialog
-            sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
-            maxWidth="m"
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            // TransitionProps={{ onEntering: handleEntering }}
-            open={addPromotionDialog}
-            onClose={()=>{setAddPromotionDialog(false)}}
+        sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
+        maxWidth="m"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        // TransitionProps={{ onEntering: handleEntering }}
+        open={addPromotionDialog}
+        onClose={() => { setAddPromotionDialog(false) }}
 
-          >
-            <DialogTitle>add promotion</DialogTitle>
-            <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <input type="number" min={1} max={100} onChange={(e) => setPromotion(e.target.value)}  />
-              <input type="date" onChange={(e) => setEndDate(e.target.value)} min={currentDate} />
-            </DialogContent>
-            <DialogActions>
-              <Button  onClick={() => { setAddPromotionDialog(false) }}>
-                Cancel
-              </Button>
-              <Button  onClick={() => { definePromotion(); setAddPromotionDialog(false); }}>
-                add promotion
-              </Button>
+      >
+        <DialogTitle>add promotion</DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <input type="number" min={1} max={100} onChange={(e) => setPromotion(e.target.value)} />
+          <input type="date" onChange={(e) => setEndDate(e.target.value)} min={currentDate} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { setAddPromotionDialog(false) }}>
+            Cancel
+          </Button>
+          <Button onClick={() => { definePromotion(); setAddPromotionDialog(false); }}>
+            add promotion
+          </Button>
 
-            </DialogActions>
-          </Dialog>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         sx={{ '& .MuiDialog-paper': { width: '40%', maxHeight: 600 } }}
