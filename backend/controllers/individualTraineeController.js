@@ -437,7 +437,7 @@ const requestRefund = async (req, res) => {
       const courseData = await courseModel.findOne({ _id: courseId }, 'title -_id').lean()
       const thisRequested = await refundRequests.findOne({ traineeId: id, courseId: courseId, courseTitle: courseData.title })
       if (!thisRequested) {
-        await refundRequests.create({ traineeId: id, traineeUserName: traineeData.username, courseId: courseId, courseTitle: courseData.title, status: "pendding" })
+        await refundRequests.create({ traineeId: id, traineeUserName: traineeData.username, courseId: courseId, courseTitle: courseData.title, status: "pending" })
         res.status(200).json({ message: "request successful" })
       }
       else {
