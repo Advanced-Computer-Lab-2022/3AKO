@@ -41,8 +41,18 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
         setAllCourses(fetchedCourses)
         setSearchedCourses(fetchedCourses)
         divideCourses(fetchedCourses)
-        const min = Math.min.apply(Math, fetchedCourses.map(function (course) { return course.price; }))
-        const max = Math.max.apply(Math, fetchedCourses.map(function (course) { return course.price; }))
+        const min = Math.min.apply(Math, fetchedCourses.map(function (course) {
+          let discount = !course.promotion ? 0 : (new Date(course.promotion.saleEndDate) > new Date()) ? course.promotion.discount : 0
+          const adminDiscount = !course.adminPromotion ? 0 : (new Date(course.adminPromotion.saleEndDate) > new Date()) ? course.adminPromotion.discount : 0
+          if (discount < adminDiscount) discount = adminDiscount
+          return course.price - course.price * discount / 100;
+        }))
+        const max = Math.max.apply(Math, fetchedCourses.map(function (course) {
+          let discount = !course.promotion ? 0 : (new Date(course.promotion.saleEndDate) > new Date()) ? course.promotion.discount : 0
+          const adminDiscount = !course.adminPromotion ? 0 : (new Date(course.adminPromotion.saleEndDate) > new Date()) ? course.adminPromotion.discount : 0
+          if (discount < adminDiscount) discount = adminDiscount
+          return course.price - course.price * discount / 100;
+        }))
         setMaxPrice(max)
         setMinPrice(min)
         setPrice([min, max])
@@ -77,7 +87,10 @@ const SearchAndFilter = ({ coursesFetch, subjectsFetch, isCorporateTrainee, inst
 
   const handleFilter = (e) => {
     if (searchedCourses != null) {
-      const tmp = searchedCourses.filter(course => (course.price * (course.promotion !== null ? (course.promotion).discount / 100 : 1) <= maxPrice && course.price * (course.promotion !== null ? (course.promotion).discount / 100 : 1) >= minPrice && course.rating.total >= rating))
+      const tmp = searchedCourses.filter(course => (
+        course.price * (course.promotion && course.adminPromotion ? (100 - Math.max((course.promotion).discount, (course.adminPromotion).discount)) / 100 : course.promotion ? (100 - (course.promotion).discount) / 100 : course.adminPromotion ? (100 - (course.adminPromotion).discount) / 100 : 1) <= maxPrice
+        && course.price * (course.promotion && course.adminPromotion ? (100 - Math.max((course.promotion).discount, (course.adminPromotion).discount)) / 100 : course.promotion ? (100 - (course.promotion).discount) / 100 : course.adminPromotion ? (100 - (course.adminPromotion).discount) / 100 : 1) >= minPrice
+        && course.rating.total >= rating))
       const newCourses = []
       tmp.map(course => {
         if (subjects.length === 0 || subjects.includes(course.subject))
