@@ -83,9 +83,9 @@ const addLessonRecord = async (req, res) => {
         // console.log(req.body);
         const total = await courseModel.findOne({ _id: courseId }, 'materialCount -_id').lean()
         const newCourseList = await traineeModel.findOneAndUpdate({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.lessonsList': { lessonId, note: "" } }, $inc: { 'courseList.$.progress': 1 / total.materialCount } }, { new: true, upsert: true }).lean()
-        let data = newCourseList.courseList.find(l=>{return l.courseId.toString()===courseId.toString()})
-        if(data.progress>.95){
-            sendCertificate(traineeId,courseId)
+        let data = newCourseList.courseList.find(l => { return l.courseId.toString() === courseId.toString() })
+        if (data.progress > .95) {
+            sendCertificate(traineeId, courseId)
         }
         res.status(200).json({ message: "Successful" })
     } catch (err) {
@@ -117,10 +117,10 @@ const addExerciseRecord = async (req, res) => {
         }
         //adding a record only if the trainee gets more than half the answers correct
         if (grade < correctAnswers.length / 2) return res.status(200).json({ message: "Exam Failed" })
-        const newCourseList = await traineeModel.findOneAndUpdate({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.exerciseList': { exerciseId: exerciseId, grade: grade, answers } }, $inc: { 'courseList.$.progress': 1 / count } },{new:true,upsert:true})
-        let data = newCourseList.courseList.find(l=>{return l.courseId.toString()===courseId.toString()})
-        if(data.progress>.95){
-            sendCertificate(traineeId,courseId)
+        const newCourseList = await traineeModel.findOneAndUpdate({ _id: traineeId, 'courseList.courseId': courseId }, { $push: { 'courseList.$.exerciseList': { exerciseId: exerciseId, grade: grade, answers } }, $inc: { 'courseList.$.progress': 1 / count } }, { new: true, upsert: true })
+        let data = newCourseList.courseList.find(l => { return l.courseId.toString() === courseId.toString() })
+        if (data.progress > .95) {
+            sendCertificate(traineeId, courseId)
         }
         res.status(200).json({ grade })
     } catch (err) {
@@ -145,10 +145,10 @@ const myCourses = async (req, res) => {
         const id = req._id
         const myCourseData = await traineeModel.findOne({ _id: id }, 'courseList.courseId courseList.progress courseList.status -_id').lean()
         let myCourseIds = myCourseData.courseList.map(li => {
-            if(li.status && li.status=='active') return li.courseId
+            if (li.status && li.status == 'active') return li.courseId
             else return null
         })
-        myCourseIds = myCourseIds.filter(li => li!=null)
+        myCourseIds = myCourseIds.filter(li => li != null)
         // console.log(myCourseIds.filter(li => li!=null));
         // console.log(myCourseIds);
         const findHelper = async (courseId) => {
@@ -352,8 +352,8 @@ const downloadCertificate = async (req, res) => {
     }
 }
 
-const sendCertificate = async (id,courseId) => {
-    try{
+const sendCertificate = async (id, courseId) => {
+    try {
         const trainee = await traineeModel.findOne({ _id: id, courseList: { $elemMatch: { courseId: courseId, progress: { $gte: 1 } } } }, { name: 1, _id: 0, courseList: 1 })
         const courseData = await courseModel.findOne({ _id: courseId }, { instructorName: 1, title: 1 }).lean()
         var document = {
@@ -370,8 +370,8 @@ const sendCertificate = async (id,courseId) => {
 
         pdf.create(document, options2)
             .then((response) => {
-                const execute = async () =>{
-                    const data = await userModel.findOne({_id:id},'email -_id').lean()
+                const execute = async () => {
+                    const data = await userModel.findOne({ _id: id }, 'email -_id').lean()
                     await transporter.sendMail({
                         from: 'The_ACL_Company@gmail.com', // sender address
                         to: data.email, // list of receivers
@@ -408,16 +408,16 @@ const sendCertificate = async (id,courseId) => {
 
 }
 const reviewedInstructor = async (req, res) => {
-    try{
+    try {
         const id = req._id
-        const {instructorId} = req.params
-        const data = await instructorModel.findOne({_id:instructorId,'reviews.reviewerId':id},'reviews').lean()
-        if(data && data.reviews){
-            let myReview = data.reviews.find(r=>{return r.reviewerId.toString()===id.toString()})
+        const { instructorId } = req.params
+        const data = await instructorModel.findOne({ _id: instructorId, 'reviews.reviewerId': id }, 'reviews').lean()
+        if (data && data.reviews) {
+            let myReview = data.reviews.find(r => { return r.reviewerId.toString() === id.toString() })
             res.status(200).json(myReview)
         }
-        else{
-            res.status(200).json({message:"instructor unrated"})
+        else {
+            res.status(200).json({ message: "instructor unrated" })
         }
 
     }
@@ -426,16 +426,16 @@ const reviewedInstructor = async (req, res) => {
     }
 }
 const reviewedCourse = async (req, res) => {
-    try{
+    try {
         const id = req._id
-        const {courseId} = req.params
-        const data = await courseModel.findOne({_id:courseId,'reviews.reviewerId':id},'reviews').lean()
-        if(data && data.reviews){
-            let myReview = data.reviews.find(r=>{return r.reviewerId.toString()===id.toString()})
+        const { courseId } = req.params
+        const data = await courseModel.findOne({ _id: courseId, 'reviews.reviewerId': id }, 'reviews').lean()
+        if (data && data.reviews) {
+            let myReview = data.reviews.find(r => { return r.reviewerId.toString() === id.toString() })
             res.status(200).json(myReview)
         }
-        else{
-            res.status(200).json({message:"course unrated"})
+        else {
+            res.status(200).json({ message: "course unrated" })
         }
     }
     catch (err) {

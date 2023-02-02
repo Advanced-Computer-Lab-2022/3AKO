@@ -1,32 +1,88 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import {
-    AppBar,
-    Card,
-    CssBaseline,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    NativeSelect,
-    Select,
-    Toolbar,
-    Typography,
-} from "@mui/material";
-const RefundRequest = () => {
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Button, CircularProgress, Typography } from '@mui/material';
+
+
+
+
+export default function DataGridDemo() {
+
+    const columns = [
+        {
+            field: 'traineeUserName',
+            headerName: 'Trainee Username',
+            width: 150,
+
+        },
+        {
+            field: 'courseTitle',
+            headerName: 'Course title',
+            width: 300,
+
+        },
+        {
+            field: 'progress',
+            headerName: 'Progress',
+            width: 100,
+            renderCell: params => <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress variant='determinate' value={params.row.progress * 100} color='info' />
+                <Box
+                    sx={{
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Typography variant="caption" component="div" color="text.secondary">
+                        {`${Math.round(params.row.progress * 100)}%`}
+                    </Typography>
+                </Box>
+            </Box>
+
+
+        },
+        {
+            field: 'Accept Request',
+            headerName: 'Accept',
+            width: 130,
+            type: 'actions',
+            renderCell: params => <Button variant='contained' color='success' onClick={() => { answer(params, 'accept') }}>Accept</Button>
+        },
+        {
+            field: 'Reject Refund',
+            headerName: 'Reject',
+            width: 130,
+            type: 'actions',
+            renderCell: params => <Button variant='contained' color='error' onClick={() => { answer(params, 'reject') }}>Reject</Button>
+        },
+    ];
+    const answer = (params, answer) => {
+        console.log(params.row);
+        axios({
+            method: "patch",
+            url: "http://localhost:5000/admin/answerRefundRequest",
+            data: {
+                requestId: params.row._id,
+                response: answer,
+            },
+            withCredentials: true,
+        })
+            .then((res) => {
+                fetchRefundRequests();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     const [refundRequests, setRefundRequests] = useState([]);
     const fetchRefundRequests = async () => {
         await axios({
@@ -36,6 +92,7 @@ const RefundRequest = () => {
         })
             .then((res) => {
                 setRefundRequests(res.data);
+
             })
             .catch((error) => {
                 alert("invalid request");
@@ -44,67 +101,18 @@ const RefundRequest = () => {
     useEffect(() => {
         fetchRefundRequests();
     }, []);
+
     return (
-        <Box>
-            {refundRequests &&
-                refundRequests.map((refundRequest) => (
-                    <Card variant="outlined">
-                        <Typography>
-                            {refundRequest.traineeUserName}
-                            {" is requesting a refund for "}
-                            {refundRequest.courseTitle}
-                            {" course"}
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => {
-                                axios({
-                                    method: "patch",
-                                    url: "http://localhost:5000/admin/answerRefundRequest",
-                                    data: {
-                                        requestId: refundRequest._id,
-                                        response: "accept",
-                                    },
-                                    withCredentials: true,
-                                })
-                                    .then((res) => {
-                                        fetchRefundRequests();
-                                    })
-                                    .catch((error) => {
-                                        alert("invalid request");
-                                    });
-                            }}
-                        >
-                            Accept
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => {
-                                axios({
-                                    method: "patch",
-                                    url: "http://localhost:5000/admin/answerRefundRequest",
-                                    data: {
-                                        requestId: refundRequest._id,
-                                        response: "reject",
-                                    },
-                                    withCredentials: true,
-                                })
-                                    .then((res) => {
-                                        fetchRefundRequests();
-                                    })
-                                    .catch((error) => {
-                                        alert("invalid request");
-                                    });
-                            }}
-                        >
-                            Reject
-                        </Button>
-                    </Card>
-                ))}
+        <Box sx={{ height: 400, width: '80%', margin: 'auto' }}>
+            <DataGrid
+                getRowId={(row) => row._id}
+                rows={refundRequests}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                // disableSelectionOnClick
+                experimentalFeatures={{ newEditingApi: false }}
+            />
         </Box>
     );
-};
-
-export default RefundRequest;
+}

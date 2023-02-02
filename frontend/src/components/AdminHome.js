@@ -1,207 +1,131 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-
-import {
-    AppBar,
-    CssBaseline,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    NativeSelect,
-    Select,
-    Toolbar,
-    Typography,
-} from "@mui/material";
 import AddUser from "./addUser";
 import CourseRequest from "./courseRequest";
 import Complaints from "./complaints";
 import AddDiscount from "./addDiscount";
 import RefundRequest from "./refundRequest";
-export default function AdminHome() {
-    const [page, setPage] = useState("Add User");
-    const [drawerOpen, setDrawerOpen] = useState(false);
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Drawer from '@mui/material/Drawer';
+import PersonIcon from '@mui/icons-material/Person';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PercentIcon from '@mui/icons-material/Percent';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import '../stylesheets/admin.css'
+import { Toolbar, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-    const drawerWidth = 240;
-    const [materialBody, setMaterialBody] = useState(<AddUser />);
-    const drawerFun = () => {
-        return (
-            <List>
-                <ListItem key={"Add User"} disablePadding>
-                    <ListItemButton
-                        sx={{ textAlign: "center" }}
-                        onClick={() => {
-                            setPage("Add User");
-                            setMaterialBody(<AddUser />);
-                        }}
-                    >
-                        <ListItemText primary={"Add User"} />
-                    </ListItemButton>
-                </ListItem>
 
-                <Divider
-                    sx={{ borderBottomWidth: "2px", backgroundColor: "#111" }}
-                />
+const drawerWidth = 240;
 
-                <ListItem key={"Complaints"} disablePadding>
-                    <ListItemButton
-                        sx={{ textAlign: "center" }}
-                        onClick={() => {
-                            setPage("Complaints");
-                            setMaterialBody(
-                                <div>
-                                    <Complaints />
-                                </div>
-                            );
-                        }}
-                    >
-                        <ListItemText primary={"Complaints"} />
-                    </ListItemButton>
-                </ListItem>
+function ResponsiveDrawer(props) {
+    const { window } = props;
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [MaterialBody, setMaterialBody] = React.useState(<AddUser />)
+    const [alignment, setAlignment] = React.useState('web');
 
-                <Divider
-                    sx={{ borderBottomWidth: "2px", backgroundColor: "#111" }}
-                />
+    const handleChange = (event, newAlignment) => {
+        if (newAlignment !== null)
+            setAlignment(newAlignment);
+        switch (event.target.value) {
+            case 'users':
+                setMaterialBody(<AddUser />)
+                break;
+            case 'reports':
+                setMaterialBody(<Complaints />)
+                break;
+            case 'courseRequests':
+                setMaterialBody(<CourseRequest />)
+                break;
+            case 'discounts':
+                setMaterialBody(<AddDiscount />)
+                break;
 
-                <ListItem key={"CourseRequests"} disablePadding>
-                    <ListItemButton
-                        sx={{ textAlign: "center" }}
-                        onClick={() => {
-                            setPage("Course Requests");
-                            setMaterialBody(<CourseRequest />);
-                        }}
-                    >
-                        <ListItemText primary={"Course Requests"} />
-                    </ListItemButton>
-                </ListItem>
+            case 'refunds':
+                setMaterialBody(<RefundRequest />)
+                break;
 
-                <Divider
-                    sx={{ borderBottomWidth: "2px", backgroundColor: "#111" }}
-                />
-
-                <ListItem key={"RefundRequests"} disablePadding>
-                    <ListItemButton
-                        sx={{ textAlign: "center" }}
-                        onClick={() => {
-                            setPage("Refund Requests");
-                            setMaterialBody(<RefundRequest />);
-                        }}
-                    >
-                        <ListItemText primary={"Refund Requests"} />
-                    </ListItemButton>
-                </ListItem>
-
-                <Divider
-                    sx={{ borderBottomWidth: "2px", backgroundColor: "#111" }}
-                />
-
-                <ListItem key={"AddDiscount"} disablePadding>
-                    <ListItemButton
-                        sx={{ textAlign: "center" }}
-                        onClick={() => {
-                            setPage("Add Discount");
-                            setMaterialBody(<AddDiscount/>);
-                        }}
-                    >
-                        <ListItemText primary={"Add Discount"} />
-                    </ListItemButton>
-                </ListItem>
-
-                <Divider
-                    sx={{ borderBottomWidth: "2px", backgroundColor: "#111" }}
-                />
-            </List>
-        );
+            default:
+                break;
+        }
     };
-    const drawer = drawerFun();
 
-    const title = <div>{page}</div>;
+
+    const drawer = (
+        <div >
+            <ToggleButtonGroup
+                size="large"
+                fullWidth={true}
+                orientation='vertical'
+                color="primary"
+                value={alignment}
+                exclusive
+                onChange={handleChange}
+                aria-label="Platform"
+            >
+                <ToggleButton className="admin-toggle-button" value="users"><PersonIcon /> Users</ToggleButton>
+                <ToggleButton className="admin-toggle-button" value="reports"> <ReportGmailerrorredIcon /> Reports</ToggleButton>
+                <ToggleButton className="admin-toggle-button" value="courseRequests"> <MenuBookIcon /> Course Requests</ToggleButton>
+                <ToggleButton className="admin-toggle-button" value="discounts"><PercentIcon /> Discounts </ToggleButton>
+                <ToggleButton className="admin-toggle-button" value="refunds"><AttachMoneyIcon /> Refund Requests </ToggleButton>
+            </ToggleButtonGroup>
+        </div>
+    );
+
+    const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar
-                position="fixed"
-                style={{ position: "fixed", marginTop: "70px", zIndex: "0" }}
-                sx={{
-                    width: {
-                        sm: `calc(100% - ${drawerOpen ? drawerWidth : 0}px)`,
-                    },
-                    transition: "width 0.3s ease-in",
-
-                    ml: { sm: `${drawerOpen ? drawerWidth : 0}px` },
-                }}
-            >
-                <Toolbar style={{ background: "#E00018" }}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        sx={{ mr: 2 }}
-                        onClick={() => {
-                            setDrawerOpen((prev) => !prev);
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        {title}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
             <Box
-                style={{ zIndex: "0", marginTop: "70px" }}
                 component="nav"
-                sx={{
-                    width: { sm: drawerOpen ? drawerWidth : 0 },
-                    flexShrink: { sm: 0 },
-                    transition: "width 0.3s ease-in",
-                }}
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                 aria-label="mailbox folders"
             >
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-
+                <Drawer
+                    container={container}
+                    variant="temporary"
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                        display: { xs: 'block', sm: 'none' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    }}
+                >
+                    {drawer}
+                </Drawer>
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: "none", sm: "block" },
-                        "& .MuiDrawer-paper": {
-                            boxSizing: "border-box",
-                            width: drawerOpen ? drawerWidth : 0,
-                            transition: "width 0.3s ease-in",
-                            marginTop: "70px",
-                        },
+                        display: { xs: 'none', sm: 'block' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, marginTop: '70px' },
                     }}
-                    open={false}
+                    open
                 >
-                    <div> {drawer}</div>
+                    {drawer}
                 </Drawer>
             </Box>
             <Box
                 component="main"
-                sx={{
-                    flexGrow: 1,
-                    p: 3,
-                    width: {
-                        sm: `calc(100% - ${drawerOpen ? drawerWidth : 0}px)`,
-                    },
-                    transition: "width 0.3s ease-in",
-                }}
-                style={{ backgroundColor: "white", marginTop: "70px" }}
+                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
-                <Box>{materialBody}</Box>
+                <Toolbar />
+                {MaterialBody}
             </Box>
-        </Box>
+        </Box >
     );
 }
+
+ResponsiveDrawer.propTypes = {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window: PropTypes.func,
+};
+
+export default ResponsiveDrawer;
+

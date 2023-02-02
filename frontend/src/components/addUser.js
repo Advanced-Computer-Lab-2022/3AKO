@@ -1,44 +1,20 @@
 import axios from "axios";
 import { useState } from "react";
 import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import {
-    AppBar,
-    Card,
-    CssBaseline,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    NativeSelect,
-    Select,
-    TextField,
-    Toolbar,
-    Typography,
-} from "@mui/material";
+import Radio from '@mui/material/Radio';
+import { RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Button, Alert } from '@mui/material';
+
 const AddUser = () => {
-    const [userType, setUserType] = useState("Admin");
+    const [userType, setUserType] = useState("CorporateTrainee");
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
 
     const handleAdd = async (e) => {
         e.preventDefault();
-        const user = { username, password, email };
+        const user = { username, password };
         console.log(user)
         await axios({
             method: "post",
@@ -49,75 +25,95 @@ const AddUser = () => {
             .then((res) => {
                 setUsername("");
                 setPassword("");
-                setEmail("");
                 setError(null);
                 setSuccess(`${userType} Added Successfully`);
+                console.log("SUCCESS");
             })
             .catch((error) => {
-                setError(error);
+                setError(error.response.data.error)
+                setSuccess(null)
+                console.log(error);
+
             });
     };
 
     return (
-        <Box>
-            <form className="addUser" onSubmit={handleAdd}>
-                <Typography variant="caption">Select user type</Typography>
-                <Box>
-                    <Select
-                        defaultValue={"Admin"}
-                        onChange={(e) => {
-                            setUserType(e.target.value);
-                        }}
+        <div>
+            <form onSubmit={handleAdd} action="">
+                <FormLabel sx={{ fontSize: '25px', fontFamily: 'poppins' }} className="px-4 py-2">Add User</FormLabel>
+                <br />
+
+                <FormControl style={{ border: '1px solid lightgray', padding: '40px' }}  >
+                    <FormLabel id="demo-radio-buttons-group-label">User type</FormLabel>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue="female"
+                        name="radio-buttons-group"
+                        value={userType}
+                        onChange={(e) => setUserType(e.target.value)}
                     >
-                        <MenuItem value={"Admin"}>Admin</MenuItem>
-                        <MenuItem value={"Instructor"}>Instructor</MenuItem>
-                        <MenuItem value={"CorporateTrainee"}>
-                            Corporate Trainee
-                        </MenuItem>
-                    </Select>
-                </Box>
+                        <FormControlLabel value="CorporateTrainee" control={<Radio />} label="Corporate Trainee" />
+                        <FormControlLabel value="Instructor" control={<Radio />} label="Instructor" />
+                        <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
+                    </RadioGroup>
+                    <TextField pattern="\S(.*\S)?" required value={username} onChange={(e) => { setUsername(e.target.value) }} className="my-3" label="Username" variant="outlined" />
+                    <TextField pattern=".*\S+.*" required value={password} onChange={(e) => { setPassword(e.target.value) }} sx={{ width: '350px' }} className="mb-4" label="Password" variant="outlined" type={'password'} />
+                    {(success || error) && < Alert className="mb-3" severity={success ? "success" : 'error'}>{success}{error}</Alert>}
 
-                <h3>add {userType}</h3>
+                    <Button type="submit" style={{ display: 'block' }} variant="contained">ADD {(userType === "CorporateTrainee") && "Corporate Trainee"} {(userType !== "CorporateTrainee") && userType}</Button>
 
-                <div>
-                    <Typography>Username</Typography>
-                    <TextField
-                        type="text"
-                        onChange={(e) => setUsername(e.target.value)}
-                        value={username}
-                        required
-                    />
-                </div>
+                </FormControl>
+            </form>
+            {/* 
+            <Box>
+                <form className="addUser" onSubmit={handleAdd}>
+                    <Typography variant="caption">Select user type</Typography>
+                    <Box>
+                        <Select
+                            defaultValue={"Admin"}
+                            onChange={(e) => {
+                                setUserType(e.target.value);
+                            }}
+                        >
+                            <MenuItem value={"Admin"}>Admin</MenuItem>
+                            <MenuItem value={"Instructor"}>Instructor</MenuItem>
+                            <MenuItem value={"CorporateTrainee"}>
+                                Corporate Trainee
+                            </MenuItem>
+                        </Select>
+                    </Box>
 
-                <div>
-                    <Typography>Password</Typography>
-                    <TextField
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        required
-                    />
-                </div>
+                    <h3>add {userType}</h3>
 
-                {userType !== "Admin" && (
                     <div>
-                        <Typography>Email</Typography>
+                        <Typography>Username</Typography>
                         <TextField
-                            type="email"
-                            onChange={(e) => setEmail(e.target.value)}
-                            value={email}
+                            type="text"
+                            onChange={(e) => setUsername(e.target.value)}
+                            value={username}
                             required
                         />
                     </div>
-                )}
 
-                <Button type="submit">Add {userType}</Button>
+                    <div>
+                        <Typography>Password</Typography>
+                        <TextField
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            required
+                        />
+                    </div>
 
-                {success && <div>{success}</div>}
 
-                {error && <div className="error">{error}</div>}
-            </form>
-        </Box>
+                    <Button type="submit">Add {userType}</Button>
+
+                    {success && <div>{success}</div>}
+
+                    {error && <div className="error">{error}</div>}
+                </form>
+            </Box> */}
+        </div >
     );
 };
 

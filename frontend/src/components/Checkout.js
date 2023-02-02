@@ -27,8 +27,8 @@ const Checkout = () => {
         if (loading) return
         if (user && user.type === 'individual trainee') {
             if (user.courseList.find((course) => { return course.courseId.toString() === courseId.toString() })) {
-                history.push(`/trainee/CourseSubtitles/${courseId}`)
-                return
+                // history.push(`/trainee/CourseSubtitles/${courseId}`)
+                // return
             }
             axios({ method: 'get', url: 'http://localhost:5000/individualTrainee/getMyData', withCredentials: true }).then((response) => {
                 console.log(response.data);

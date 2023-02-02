@@ -1,32 +1,60 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import {
-    AppBar,
-    Card,
-    CssBaseline,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    NativeSelect,
-    Select,
-    Toolbar,
-    Typography,
-} from "@mui/material";
-const CourseRequest = () => {
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Button, CircularProgress, Typography } from '@mui/material';
+
+
+export default function DataGridDemo() {
+
+    const columns = [
+        {
+            field: 'corporateUserName',
+            headerName: 'Trainee Username',
+            width: 150,
+
+        },
+        {
+            field: 'courseTitle',
+            headerName: 'Course title',
+            width: 300,
+
+        },
+        {
+            field: 'Accept Request',
+            headerName: 'Accept',
+            width: 130,
+            type: 'actions',
+            renderCell: params => <Button variant='contained' color='success' onClick={() => { answer(params, 'accept') }}>Accept</Button>
+        },
+        {
+            field: 'Reject Refund',
+            headerName: 'Reject',
+            width: 130,
+            type: 'actions',
+            renderCell: params => <Button variant='contained' color='error' onClick={() => { answer(params, 'reject') }}>Reject</Button>
+        },
+    ];
+    const answer = (params, answer) => {
+        console.log(params.row);
+        axios({
+            method: "patch",
+            url: "http://localhost:5000/admin/answerRequest",
+            data: {
+                requestId: params.row._id,
+                response: answer,
+            },
+            withCredentials: true,
+        })
+            .then((res) => {
+                fetchCoursesRequests()
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     const [coursesRequests, setCoursesRequests] = useState([]);
     const fetchCoursesRequests = async () => {
         await axios({
@@ -36,6 +64,7 @@ const CourseRequest = () => {
         })
             .then((res) => {
                 setCoursesRequests(res.data);
+                console.log(res.data);
             })
             .catch((error) => {
                 alert("invalid request");
@@ -45,66 +74,16 @@ const CourseRequest = () => {
         fetchCoursesRequests();
     }, []);
     return (
-        <Box>
-            {coursesRequests &&
-                coursesRequests.map((courseRequest) => (
-                    <Card variant="outlined">
-                        <Typography>
-                            {courseRequest.corporateUserName}
-                            {" is requesting to join "}
-                            {courseRequest.courseTitle}
-                            {" course"}
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => {
-                                axios({
-                                    method: "patch",
-                                    url: "http://localhost:5000/admin/answerRequest",
-                                    data: {
-                                        requestId: courseRequest._id,
-                                        response: "accept",
-                                    },
-                                    withCredentials: true,
-                                })
-                                    .then((res) => {
-                                        fetchCoursesRequests();
-                                    })
-                                    .catch((error) => {
-                                        alert("invalid request");
-                                    });
-                            }}
-                        >
-                            Accept
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => {
-                                axios({
-                                    method: "patch",
-                                    url: "http://localhost:5000/admin/answerRequest",
-                                    data: {
-                                        requestId: courseRequest._id,
-                                        response: "reject",
-                                    },
-                                    withCredentials: true,
-                                })
-                                    .then((res) => {
-                                        fetchCoursesRequests();
-                                    })
-                                    .catch((error) => {
-                                        alert("invalid request");
-                                    });
-                            }}
-                        >
-                            Reject
-                        </Button>
-                    </Card>
-                ))}
+        <Box sx={{ height: 400, width: '80%', margin: 'auto' }}>
+            <DataGrid
+                getRowId={(row) => row._id}
+                rows={coursesRequests}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                // disableSelectionOnClick
+                experimentalFeatures={{ newEditingApi: false }}
+            />
         </Box>
     );
-};
-
-export default CourseRequest;
+}

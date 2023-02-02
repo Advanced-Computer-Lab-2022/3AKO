@@ -25,6 +25,10 @@ const refundRequestsSchema = new Schema(
             type: String,
             default: "pending",
         },
+        progress: {
+            type: Number,
+            required: true
+        }
     },
     { timestamps: true }
 );

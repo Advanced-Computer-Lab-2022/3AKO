@@ -714,6 +714,19 @@ const closeCourse = async (req, res) => {
     }
 }
 
+const getCourseImage = async (req, res) => {
+    const { courseId } = req.body
+    try {
+        console.log(courseId);
+        const img = await courseModel.findOne({ _id: courseId }, 'imageURL -_id')
+        console.log(img)
+        res.status(200).json(img)
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 module.exports = {
@@ -752,4 +765,5 @@ module.exports = {
     publishCourse,
     closeCourse,
     deleteCourse,
+    getCourseImage,
 };

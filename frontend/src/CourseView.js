@@ -75,6 +75,7 @@ const CourseView = (props) => {
     })
   }
   const enroll = () => {
+
     if (loading) return
     if (user && user.type === 'individual trainee') {
       history.push(`/checkout/${courseId}`)
@@ -127,7 +128,8 @@ const CourseView = (props) => {
   }
 
   useEffect(() => {
-    console.log(props.currency);
+
+    console.log(user);
     setExchangeRate(props.exchangeRate)
     setCurrency(props.currency)
   }, [props.currency])
@@ -140,25 +142,27 @@ const CourseView = (props) => {
       }
     }
     start()
-    console.log(user)
-    console.log(user.type)
-    console.log(courseData)
   }, [])
   const [isOwned, setIsOwned] = useState(false)
 
   useEffect(() => {
     if (user && user.type !== 'instructor') {
-      if (courseData)
-        if (user.courseList.filter(function (e) { return e.courseId === courseData._id; }).length > 0)
+      if (courseData) {
+        if (user.courseList.filter(function (e) { console.log(e.courseId === courseData._id); return e.courseId === courseData._id; }).length > 0 && user.courseList.filter(function (e) { return e.courseId === courseData._id; })[0].status === 'active') {
+          setIsOwned(true)
+        }
+        if (user && user.type === 'corporate trainee' && user.courseList.filter(function (e) { return e.courseId === courseData._id; }).length > 0)
           setIsOwned(true)
 
+      }
     }
+    console.log('isOwned' + isOwned);
   }, [loading, courseData])
   return (
 
-    <div>
+    <div className="im here" >
       {courseData &&
-        <div>
+        <div >
           <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', backgroundColor: 'black', padding: '50px  0 50px 150px', height: '300px' }}>
             <div>
               <h1 style={{ color: 'white', fontWeight: 'bold' }}>{courseData.title}</h1>

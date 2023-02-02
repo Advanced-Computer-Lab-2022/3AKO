@@ -85,7 +85,7 @@ function ResponsiveDrawer(props) {
             }).catch((error) => {
                 console.log(error);
             });
-            console.log("course deleted");
+        console.log("course deleted");
         history.push(`/instructor/myCourses`);
     }
     return (
@@ -124,7 +124,7 @@ function ResponsiveDrawer(props) {
                 </Box >
                 <Box
                     component="main"
-                    sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                    sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
                     style={{ backgroundColor: "white" }}
                 >
 
@@ -176,7 +176,7 @@ function ResponsiveDrawer(props) {
                     <Button autoFocus onClick={() => { deleteCourse(); setDeleteCourseDialog(false); }}>
                         delete course
                     </Button>
-                    
+
                 </DialogActions>
             </Dialog>
         </div>

@@ -30,6 +30,21 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme, graduated }) => ({
     },
 }));
 const MyCourse = ({ course }) => {
+    const [img, setImg] = useState('')
+    useEffect(() => {
+        axios({
+            method: "post",
+            url: `http://localhost:5000/trainee//getCourseImage/`,
+            withCredentials: true,
+            data: { courseId: course.courseId },
+        })
+            .then((res) => {
+                console.log(res.data);
+                setImg(res.data.imageURL)
+            })
+            .catch((error) => {
+            });
+    }, [])
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -158,7 +173,7 @@ const MyCourse = ({ course }) => {
 
 
                         <div style={{ display: 'flex', felxDirection: "row", height: "150px" }}>
-                            <img src="https://www.educationafter12th.com/wp-content/uploads/2016/11/digital-marketing-seo-course-detail-syllabus.jpg" alt="" style={{ borderRadius: " 10px 0 0 10px" }} />
+                            <img src={img} alt="" style={{ borderRadius: " 10px 0 0 10px" }} />
                             <div className='p-4' style={{ width: "100%", display: "flex", flexWrap: "wrap", alignItems: "center", columnGap: "10px" }}>
                                 <h3 style={{ width: "100%" }}>{course.title}</h3>
                                 <BorderLinearProgress graduated={course.progress >= 1} variant="determinate" value={course.progress * 100} style={{ width: "70%" }} />

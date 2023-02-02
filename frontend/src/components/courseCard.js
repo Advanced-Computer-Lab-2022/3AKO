@@ -145,7 +145,7 @@ const CourseCard = ({ course, isInstructor, isCorporateTrainee }) => {
                     emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />} /> <span className='num-rating'>({course.numOfRatings})</span>
                   <i class="bi bi-clock p-2 "></i> <span>{course.totalHours} hours</span>
                 </div>
-                {!isCorporateTrainee && <div className='price'>Price : {price}</div>}
+                {(!user || user.type !== 'corporateTrainee') && <div className='price'>Price : {price}</div>}
               </div>
               {/* </Typography> */}
             </CardContent>

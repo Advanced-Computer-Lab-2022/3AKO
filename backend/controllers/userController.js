@@ -75,7 +75,7 @@ const login = async (req, res) => {
             const token = createToken(user._id)
             if (user.type === 'trainee') {
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 });
-                const trainee = await traineeModel.findOne({ _id: user._id }, 'name type courseList.courseId -_id').lean()
+                const trainee = await traineeModel.findOne({ _id: user._id }, 'name type courseList.courseId courseList.status -_id').lean()
                 res.status(200).json(trainee)
             }
             else if (user.type === 'instructor') {
@@ -194,7 +194,8 @@ const restoreData = async (req, res) => {
         const id = req._id
         const user = await userModel.findOne({ _id: id }, 'type -_id')
         if (user.type === 'trainee') {
-            const trainee = await traineeModel.findOne({ _id: id }, 'name type courseList.courseId -_id').lean()
+            const trainee = await traineeModel.findOne({ _id: id }, 'name type courseList.courseId courseList.status -_id').lean()
+
             res.status(200).json(trainee)
         }
         else if (user.type === 'instructor') {

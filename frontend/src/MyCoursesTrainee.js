@@ -10,6 +10,8 @@ const MyCoursesTrainee = () => {
   const { user, loading } = useUserContext()
   const [courses, setCourses] = useState([])
   const history = useHistory()
+
+
   useEffect(() => {
     const fetchMyCourses = async () => {
       await axios({ method: "get", url: 'http://localhost:5000/trainee/myCourses', withCredentials: true }).then((response) => {

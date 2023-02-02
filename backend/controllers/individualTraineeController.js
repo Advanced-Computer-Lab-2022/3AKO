@@ -208,9 +208,16 @@ const payWithWallet = async (req, res) => {
       await individualTraineeModel.updateOne({ _id: id }, { $inc: { wallet: (-price) }, $push: { payments: { courseId, purchaseDate: new Date(), status: 'completed', method: 'wallet', amount: price, paymentIntentId: '' } } })
       // add coures record to trainee
       const newCourseRecord = await new courseRecordModel({ courseId: courseId })
-      await traineeModel.updateOne({ _id: id }, { $addToSet: { courseList: newCourseRecord } }, { new: true, upsert: true })
-      // update the number of purchases for the course
-      await courseModel.updateOne({ _id: courseId }, { $inc: { numOfPurchases: 1 } })
+      const check = await traineeModel.findOne({ _id: id }, { courseList: { $elemMatch: { courseId: courseId } } }).lean()
+      if (check && check.courseList && check.courseList.length !== 0) {
+        console.log("course readded");
+        await traineeModel.updateOne({ _id: id, 'courseList.courseId': courseId }, { 'courseList.$.status': "active" }, { new: true, upsert: true });
+      }
+      else {
+        console.log("course added");
+        await traineeModel.updateOne({ _id: id }, { $addToSet: { courseList: newCourseRecord } }, { new: true, upsert: true })
+        await courseModel.updateOne({ _id: courseId }, { $inc: { numOfPurchases: 1 } })
+      }
       // get the instructor percentage of the payment
       const precentageData = await agreementModel.findOne({}, 'instructorCut -_id').lean()
       const percentage = precentageData.instructorCut
@@ -233,6 +240,7 @@ const payWithWallet = async (req, res) => {
 
   }
   catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message })
   }
 }
@@ -262,9 +270,16 @@ const payWithCard = async (req, res) => {
               await individualTraineeModel.updateOne({ _id: id }, { $push: { payments: { courseId, purchaseDate: new Date(), status: 'completed', method: 'card', amount: price, paymentIntentId: paymentIntentId } } })
               // add coures record to trainee
               const newCourseRecord = await new courseRecordModel({ courseId: courseId })
-              await traineeModel.updateOne({ _id: id }, { $addToSet: { courseList: newCourseRecord } }, { new: true, upsert: true })
+              const check = await traineeModel.findOne({ _id: id }, { courseList: { $elemMatch: { courseId: courseId } } }).lean()
+              if (check && check.courseList && check.courseList.length !== 0) {
+                await traineeModel.updateOne({ _id: id, 'courseList.courseId': courseId }, { 'courseList.$.status': "active" }, { new: true, upsert: true });
+              }
+              else {
+
+                await traineeModel.updateOne({ _id: id }, { $addToSet: { courseList: newCourseRecord } }, { new: true, upsert: true })
+                await courseModel.updateOne({ _id: courseId }, { $inc: { numOfPurchases: 1 } })
+              }
               // update the number of purchases for the course
-              await courseModel.updateOne({ _id: courseId }, { $inc: { numOfPurchases: 1 } })
               // get the instructor percentage of the payment
               const precentageData = await agreementModel.findOne({}, 'instructorCut -_id').lean()
               const percentage = precentageData.instructorCut
@@ -433,11 +448,13 @@ const requestRefund = async (req, res) => {
     if (!courseId) throw new Error("courseId is required")
     const data = await individualTraineeModel.findOne({ _id: id }, { wallet: 0, _id: 0, payments: { $elemMatch: { courseId: courseId, status: 'completed' } } }).lean()
     if (data && data.payments && data.payments[0]) {
+      const progress = await traineeModel.findOne({ _id: id }, { courseList: { $elemMatch: { courseId: courseId } } })
+      console.log("progressssssssssssssssssssssssssssssssssssssssss" + progress.courseList[0].progress);
       const traineeData = await userModel.findOne({ _id: id }, 'username -_id').lean()
       const courseData = await courseModel.findOne({ _id: courseId }, 'title -_id').lean()
       const thisRequested = await refundRequests.findOne({ traineeId: id, courseId: courseId, courseTitle: courseData.title })
       if (!thisRequested) {
-        await refundRequests.create({ traineeId: id, traineeUserName: traineeData.username, courseId: courseId, courseTitle: courseData.title, status: "pending" })
+        await refundRequests.create({ traineeId: id, traineeUserName: traineeData.username, courseId: courseId, courseTitle: courseData.title, status: "pending", progress: progress.courseList[0].progress })
         res.status(200).json({ message: "request successful" })
       }
       else {

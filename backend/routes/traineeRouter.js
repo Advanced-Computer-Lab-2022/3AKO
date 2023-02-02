@@ -4,7 +4,7 @@ const { addCourseToTrainee, addLessonRecord, addExerciseRecord, addTraineeInfo, 
 
 const { addComplaint } = require('../controllers/complaintController')
 
-const { loadSubtitle, loadExamAnswers, rateCourse, getSubtitles } = require('../controllers/courseController')
+const { loadSubtitle, loadExamAnswers, rateCourse, getSubtitles, getCourseImage } = require('../controllers/courseController')
 
 const { rateInstructor } = require('../controllers/instructorController')
 
@@ -58,8 +58,10 @@ router.get('/downloadNotes/:courseId', requireOwnership, downloadNotes)
 
 router.get('/downloadCertificate/:courseId', requireOwnership, downloadCertificate)
 
-router.get('/reviewedCourse/:courseId', requireOwnership,reviewedCourse)
+router.get('/reviewedCourse/:courseId', requireOwnership, reviewedCourse)
 
-router.get('/reviewedInstructor/:instructorId',requireTrainee ,reviewedInstructor)
+router.get('/reviewedInstructor/:instructorId', requireTrainee, reviewedInstructor)
+
+router.post('/getCourseImage/', getCourseImage)
 
 module.exports = router

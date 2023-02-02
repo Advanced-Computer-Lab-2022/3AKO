@@ -1,8 +1,21 @@
 import { Button } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BsFillCheckCircleFill } from 'react-icons/bs'
+import { useUserContext } from "../hooks/useUserContext";
+import { useEffect } from "react";
+import axios from "axios";
 const PaymentSuccess = () => {
     const { courseId } = useParams()
+    const { user, dispatch } = useUserContext()
+    useEffect(() => {
+        axios({ method: 'get', url: 'http://localhost:5000/user/restoreData', withCredentials: true }).then((response) => {
+            dispatch({ type: 'RESTORE', payload: response.data })
+            console.log("newdata");
+            console.log(response.data);
+        }).catch((error) => {
+            console.log(error);
+        })
+    }, [])
     return (
 
         <div className="payment-success-content">

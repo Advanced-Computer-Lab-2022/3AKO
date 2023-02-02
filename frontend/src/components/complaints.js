@@ -1,42 +1,85 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    AppBar,
-    Card,
-    CssBaseline,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    NativeSelect,
-    Select,
-    TextField,
-    Toolbar,
-    Typography,
-} from "@mui/material";
-const CourseRequest = () => {
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Button, Dialog, DialogContent, DialogTitle, DialogActions, DialogContentText } from '@mui/material';
+
+
+
+
+export default function DataGridDemo() {
+
+    const columns = [
+        {
+            field: 'username',
+            headerName: 'Username',
+            width: 150,
+
+        },
+        {
+            field: 'courseTitle',
+            headerName: 'Course title',
+            width: 300,
+
+        },
+        {
+            field: 'title',
+            headerName: 'Report title',
+            width: 200,
+        },
+        {
+            field: 'reportType',
+            headerName: 'Report type',
+            width: 100,
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            width: 100,
+        },
+
+        {
+            field: 'Accept Request',
+            headerName: 'Accept',
+            width: 130,
+            type: 'actions',
+            renderCell: params => <Button variant='contained' onClick={() => { viewReport(params) }}>View Report</Button>
+        },
+
+    ];
+    const answer = (answer) => {
+        axios({
+            method: "patch",
+            url: `http://localhost:5000/admin/${answer}`,
+            data: {
+                complaintId: complaintId,
+            },
+            withCredentials: true,
+        })
+            .then((res) => {
+                fetchComplaints();
+                setDialogOpen(false)
+            })
+            .catch((error) => {
+            });
+    }
+    const [dialogTitle, setDialogTitle] = useState('')
+    const [dialogBody, setDialogBody] = useState('')
+    const [complaintId, setComplaintId] = useState('')
+    const [followups, setFollowUps] = useState([]);
+
+    const viewReport = (params) => {
+        setDialogOpen(true)
+        setDialogTitle(params.row.title)
+        setDialogBody(params.row.body)
+        setComplaintId(params.row._id)
+        setFollowUps(params.row.followUps)
+
+    }
+
     const [complaints, setComplaints] = useState([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const fetchComplaints = async () => {
         await axios({
             method: "get",
@@ -45,124 +88,54 @@ const CourseRequest = () => {
         })
             .then((res) => {
                 setComplaints(res.data);
+                console.log(res.data);
             })
             .catch((error) => {
-                alert("invalid request");
             });
     };
     useEffect(() => {
         fetchComplaints();
     }, []);
 
-
-
-const Complaint = ({ complaint }) => {
-    const [reportId, setReportId] = useState(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
     return (
         <div>
-            <Accordion style={{ margin: "10px 0" }}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "100%",
-                            margin: "0 20px",
-                        }}
-                    >
-                        <Typography style={{ fontWeight: "bold" }}>
-                            {complaint.title}
-                        </Typography>
-                        <Typography
-                            style={
-                                complaint.status == "resolved"
-                                    ? { color: "#4BB543" }
-                                    : complaint.status == "pending"
-                                    ? { color: "#FFCC00" }
-                                    : { color: "red" }
-                            }
-                        >
-                            {complaint.status}
-                        </Typography>
-                    </div>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>{complaint.body}</Typography>
+            <Box sx={{ height: 400, width: '80%', margin: 'auto' }}>
+                <DataGrid
+                    getRowId={(row) => row._id}
+                    rows={complaints}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    // disableSelectionOnClick
+                    experimentalFeatures={{ newEditingApi: false }}
+                />
+            </Box>
+            <Dialog
+                open={dialogOpen}
+                onClose={() => { setDialogOpen(false) }}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {dialogTitle}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {dialogBody}
+                    </DialogContentText>
                     <ul>
-                        {complaint.followUps &&
-                            complaint.followUps.map((followUp) => (
-                                <li>{followUp}</li>
-                            ))}
+                        {followups && followups.map((followup) => (
+                            <li>{followup}</li>
+                        ))}
                     </ul>
-                </AccordionDetails>
-            </Accordion>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' color='warning' onClick={() => answer('markComplaintPending')}>Mark as pending</Button>
+                    <Button variant='contained' color='success' onClick={() => { answer('resolveCompalint') }} autoFocus>
+                        Resolve
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
-};
-
-    return (
-        <Box>
-            {complaints &&
-                complaints.map((complaint) => (
-                    <Card
-                        variant="outlined"
-                        sx={{
-                            padding: "0.5rem",
-                        }}
-                    >
-                        <Typography style={{ fontWeight: "bold" }}>
-                            {complaint.username}
-                            {" is complaining about "}
-                            {complaint.courseTitle}
-                        </Typography>
-                        <Complaint complaint={complaint} key={complaint._id} />
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={async () => {
-                                const res = await axios.patch(
-                                    "http://localhost:5000/admin/resolveCompalint",
-                                    {
-                                        complaintId: complaint._id,
-                                    },
-                                    { withCredentials: true }
-                                );
-                                fetchComplaints();
-                            }}
-                        >
-                            resolve
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => {
-                                axios({
-                                    method: "patch",
-                                    url: "http://localhost:5000/admin/markComplaintPending",
-                                    data: {
-                                        complaintId: complaint._id,
-                                    },
-                                    withCredentials: true,
-                                })
-                                    .then((res) => {
-                                        fetchComplaints();
-                                    })
-                                    .catch((error) => {
-                                        alert("invalid request");
-                                    });
-                            }}
-                        >
-                            Mark as pending
-                        </Button>
-                    </Card>
-                ))}
-        </Box>
-    );
-};
-
-export default CourseRequest;
+}
